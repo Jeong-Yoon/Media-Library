@@ -25,7 +25,7 @@
         />
       </div>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
       <v-btn
         href="https://github.com/vuetifyjs/vuetify/releases/latest"
@@ -38,13 +38,14 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <HelloWorld />
     </v-content>
   </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld';
+import request from "request";
 
 export default {
   name: 'App',
@@ -56,5 +57,12 @@ export default {
   data: () => ({
     //
   }),
+  mounted(){
+    request('http://localhost:8081/api/test', function(error, response, body){
+      window.console.log('error:', error);
+      window.console.log('statusCode:', response && response.statusCode);
+      window.console.log('body:', body);
+    });
+  }
 };
 </script>
