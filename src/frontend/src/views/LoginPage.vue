@@ -3,9 +3,7 @@
   <div id="sign-in">
     <div class="group">
       <h1 class="login">
-        <a>
-          로그인
-        </a>
+        <a>로그인</a>
       </h1>
       <form
         class="form"
@@ -23,9 +21,7 @@
               <span
                 v-if="!isUseremailValid && email"
                 class="warning"
-              >
-                Please enter an email address
-              </span>
+              >Please enter an email address</span>
             </p>
           </label>
           <label
@@ -64,19 +60,18 @@
           로그인
         </button>
       </form>
-    
+
       <hr class="hr1">
-      
+
       <h5 class="signup">
         <!-- <a href="/views/SignupPage.vue"> -->
-        <a> <router-link to="/signup">회원가입</router-link>
+        <a>
+          <router-link to="/signup">회원가입</router-link>
         </a>
       </h5>
-      
+
       <h5 class="forget">
-        <a href="#!">
-          아이디 / 비밀번호 찾기
-        </a>
+        <a href="#!">아이디 / 비밀번호 찾기</a>
       </h5>
     </div>
   </div>
@@ -84,8 +79,8 @@
 
 
 <script>
-import { validateEmail } from '@/utils/validation';
-import { mapActions } from 'vuex'
+import { validateEmail } from "@/utils/validation";
+import { mapActions } from "vuex";
 
 // const user = 'user'
 
@@ -93,7 +88,7 @@ export default {
   // props: {
   //   source: String
   // },
-  data(){
+  data() {
     return {
       email : '',
       password : '',
@@ -102,12 +97,12 @@ export default {
     };
   },
   computed: {
-    isUseremailValid(){
+    isUseremailValid() {
       return validateEmail(this.email);
-    },
+    }
   },
-  created(){
-    this.returnPath = this.$route.query.rPath || '/';
+  created() {
+    this.returnPath = this.$route.query.rPath || "/";
   },
   methods: {
     ...mapActions(['LOGIN']),
@@ -148,19 +143,16 @@ export default {
         console.log(e);
       }
     },
-    initForm(){
-      this.email = '',
-      this.password = ''
+    initForm() {
+      (this.email = ""), (this.password = "");
     }
   }
-}
+};
 </script>
 
 
 
 <style lang="scss" scoped>
-
-   
 // Media queries
 @mixin screen-lg {
   @media only screen and (max-width: 1200px) {
@@ -183,8 +175,6 @@ export default {
   }
 }
 
-
-
 .input-checkbox {
   input[type="checkbox"] {
     visibility: hidden;
@@ -199,9 +189,8 @@ export default {
       display: block;
       float: left;
       font-size: 23px;
-      
     }
-   }
+  }
 
   input + label {
     i.is-checked {
@@ -222,116 +211,103 @@ export default {
     color: #666;
     font-weight: 400;
     margin-left: 30px;
-     &:hover {
+    &:hover {
       text-decoration: underline;
-    
     }
   }
 }
 
-
-
-
-#sign-in{
-    text-align: center;
-    padding: 80px 70px;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    @include screen-sm {
-        width: 98%;
-        padding: 50px 30px;
-        max-width: 470px;
-    }
-    h1.login a {
-        font-size: 30px;
-        color: #666666;
-        display: block;
-        margin-bottom: 50px;
-        
-    }
-    form {
-        .insert-area label {
-            // display: block;
-            width: 100%;
-            // border: 1px;
-            // margin-bottom: 10px;
-            font-size: 0;
-            color: #e2e2e2;
-            input {
-                border: none;
-                padding: 13px 15px;
-                background: #e3e2e1;
-                width: 100%;
-                font-size: 16px;
-                // box-sizing: border-box;
-                color: #333333;
-                &:focus {
-                outline: 0;
-              }
-            }
+#sign-in {
+  text-align: center;
+  padding: 80px 70px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  @include screen-sm {
+    width: 98%;
+    padding: 50px 30px;
+    max-width: 470px;
+  }
+  h1.login a {
+    font-size: 30px;
+    color: #666666;
+    display: block;
+    margin-bottom: 50px;
+  }
+  form {
+    .insert-area label {
+      // display: block;
+      width: 100%;
+      // border: 1px;
+      // margin-bottom: 10px;
+      font-size: 0;
+      color: #e2e2e2;
+      input {
+        border: none;
+        padding: 13px 15px;
+        background: #e3e2e1;
+        width: 100%;
+        font-size: 16px;
+        // box-sizing: border-box;
+        color: #333333;
+        &:focus {
+          outline: 0;
         }
-      
-        .login-option {
-              margin-bottom: 25px;
-        }
-        
-          .login-option .label{
-            position: relative;
-            display: block;
-
-          }
-
-          .login-option .check-mark{
-           
-            content: "";
-            width: 20px;
-            height: 20px;
-            background-color: #e3e2e1;
-            position: absolute;
-            left : 160px;
-            border-radius: 50%;
-            transition: .1s;
-            margin-bottom: 10px;
-          }
-
-
-      .login-option .label .checkbox:checked + .check-mark{
-        
-        background-color: #a49988;
-        transition: .1s;
       }
-      .login-option .label .checkbox:checked + .check-mark:after{
-        
-        content: "";
-        position: absolute;
-        width: 10px;
-        transition: .1s;
-        height: 5px;
-        top:45%;
-        left:50%;
-        border-left: 2px solid #fff;
-        border-bottom: 2px solid #fff;
-        transform: translate(-50%, -50%) rotate(-45deg);  
-      }
-
-        
-      .btn-login {
-            display: nome;
-            width: 100%;
-            height: 50px;
-            // line-height: 46px;
-            background: #474346;
-            color: #ffffff;
-            font-weight: 400;
-            margin-bottom: 30px;
-            font-size: 17px;
-        }
     }
-  
+
+    .login-option {
+      margin-bottom: 25px;
+    }
+
+    .login-option .label {
+      position: relative;
+      display: block;
+    }
+
+    .login-option .check-mark {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-color: #e3e2e1;
+      position: absolute;
+      left: 160px;
+      border-radius: 50%;
+      transition: 0.1s;
+      margin-bottom: 10px;
+    }
+
+    .login-option .label .checkbox:checked + .check-mark {
+      background-color: #a49988;
+      transition: 0.1s;
+    }
+    .login-option .label .checkbox:checked + .check-mark:after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      transition: 0.1s;
+      height: 5px;
+      top: 45%;
+      left: 50%;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    .btn-login {
+      display: nome;
+      width: 100%;
+      height: 50px;
+      // line-height: 46px;
+      background: #474346;
+      color: #ffffff;
+      font-weight: 400;
+      margin-bottom: 30px;
+      font-size: 17px;
+    }
+  }
 }
-
 
 * {
   list-style: none;
@@ -340,46 +316,44 @@ export default {
 }
 
 .btn {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 300;
-    // background: transparent;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    cursor: pointer;
-    border: 1px solid transparent;
-  
-    -webkit-transition: all 0.3s; -moz-transition: all 0.3s; -ms-transition: all 0.3s; -o-transition: all 0.3s; transition: all 0.3s;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 300;
+  // background: transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 1px solid transparent;
+
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
 .btn:hover {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-
-
 .hr1 {
-    border: 0;
-    height: 1px;
-    background: #ccc;
-    margin-bottom: 30px;
-  }
+  border: 0;
+  height: 1px;
+  background: #ccc;
+  margin-bottom: 30px;
+}
 
 .signup a {
-       font-size : 15px;
-       color : #666666;
-       float: left;
-       
+  font-size: 15px;
+  color: #666666;
+  float: left;
 }
 
 .forget a {
-       font-size : 15px;
-       color : #666666;
-       float: right;
+  font-size: 15px;
+  color: #666666;
+  float: right;
 }
-
-
-
 </style>

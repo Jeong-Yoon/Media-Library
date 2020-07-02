@@ -4,12 +4,8 @@
       <div class="list">
         <ul class="menu-root">
           <li id="usage">
-            <p class="p1">
-              {{ use_capacity }}GB /
-            </p>
-            <p class="p2">
-              / {{ total_capacity }}GB
-            </p>
+            <p class="p1">{{ use_capacity }}GB /</p>
+            <p class="p2">{{ total_capacity }}GB</p>
             <div id="progress">
               <k-progress
                 :percent="80"
@@ -19,31 +15,29 @@
                 :line-height="7"
               />
             </div>
-            <p class="p3">
-              여유{{ spare_capacity }}GB
-            </p>
+            <p class="p3">여유{{ spare_capacity }}GB</p>
           </li>
-          <hr class="top">
+          <hr class="top" />
           <div class="document">
             <perfect-scrollbar>
-              <li><h3>개인 문서함</h3></li>
-              <hr class="middle">
-              <li><h3>공유 문서함</h3></li>
-              <hr class="middle">
-              <li><h3>앨범</h3></li>
+              <li>
+                <h3>개인 문서함</h3>
+              </li>
+              <hr class="middle1" />
+              <li>
+                <h3>공유 문서함</h3>
+              </li>
+              <hr class="middle2" />
+              <li>
+                <h3>앨범</h3>
+              </li>
             </perfect-scrollbar>
           </div>
-          <hr class="bottom">
+          <hr class="bottom" />
           <li class="trash">
             <router-link to="/">
-              <img
-                src="@/assets/image/trash.png"
-                alt="trash logo"
-                height="30px"
-              >
-              <p class="p4">
-                휴지통
-              </p>
+              <img src="@/assets/image/trash.png" alt="trash logo" height="30px" />
+              <p class="p4">휴지통</p>
             </router-link>
           </li>
         </ul>
@@ -60,13 +54,13 @@ export default {
       use_capacity: "409",
       total_capacity: "512",
       percentage: 80,
-      spare_capacity: "102",
+      spare_capacity: "102"
     };
-  },
+  }
 };
 </script>
 
-<style>
+<style scoped>
 li {
   padding-left: 15px;
   padding-right: 15px;
@@ -116,6 +110,7 @@ user agent stylesheet div {
   font-size: 15px;
   color: #a49988;
   float: left;
+  margin-left: 7px;
 }
 .p3 {
   font-size: 10px;
@@ -141,11 +136,16 @@ user agent stylesheet div {
 .top {
   position: fixed;
   width: 215px;
-  background-color: white;
   margin-bottom: 30px;
 }
-.middle {
-  border: solid 1px #e3e2e1;
+.middle1 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+  width: 185px;
+}
+.middle2 {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-left: 15px;
@@ -156,7 +156,6 @@ user agent stylesheet div {
   position: fixed;
   width: 215px;
   bottom: 85px;
-  background-color: white;
 }
 .document {
   margin-top: 25px;

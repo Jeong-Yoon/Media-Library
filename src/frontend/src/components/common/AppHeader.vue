@@ -11,7 +11,7 @@
     </div>
     <div class="user">
       <div v-if="username !== undefined">
-        <p>{{ username }}님 환영합니다.</p> 
+        <p>{{ username }}님 환영합니다.</p>
         <!-- <li @click="logout"> -->
         <span @click="logout">
           <router-link
@@ -33,36 +33,36 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from "vuex";
 
 export default {
   // el: "#user",
-  computed:{
+  computed: {
     ...mapState({
-      username: state => state.userInfo.username
+      username: (state) => state.userInfo.username,
     }),
     // userInfo : function(){
     //   return this.$store.state.userInfo
     // }
   },
   methods: {
-    ...mapMutations(['LOGOUT']),
+    ...mapMutations(["LOGOUT"]),
     mouseover: function() {
       this.class.add("animate__animated animate__pulse");
     },
     mouseleave: function() {
       this.class.remove;
     },
-    logout(){
-      console.log(this.username)
+    logout() {
+      console.log(this.username);
       // this.$store.commit("setUserInfo", '');
       // this.$store.commit("token",null);
       // localStorage.removeItem("vuex");
       // localStorage.removeItem("token");
       console.log(this.username);
       this.LOGOUT();
-			this.$router.push('/login');
-		},
+      this.$router.push("/login");
+    },
   },
 };
 </script>
