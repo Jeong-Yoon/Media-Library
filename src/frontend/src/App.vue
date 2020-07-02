@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <AppHeader />
-    <div class="app-contents">
+    <router-view />
+    <div
+      v-if="token !== null"
+      class="app-contents"
+    >
       <Navigation />
-      <router-view />
       <own-document-box />
     </div>
   </div>
@@ -13,6 +16,7 @@
 import AppHeader from "@/components/common/AppHeader.vue";
 import Navigation from "@/components/common/Navigation.vue";
 import OwnDocumentBox from "@/components/OwnDocumentBox.vue";
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -22,6 +26,11 @@ export default {
   },
   data() {
     return {};
+  },
+  computed:{
+    ...mapState({
+      token : state => state.token
+    })
   },
 };
 </script>

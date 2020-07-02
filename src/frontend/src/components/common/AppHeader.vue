@@ -2,7 +2,11 @@
   <header>
     <div>
       <router-link to="/">
-        <img src="@/assets/image/logo.png" alt="main logo" height="20px" />
+        <img
+          src="@/assets/image/logo.png"
+          alt="main logo"
+          height="20px"
+        >
       </router-link>
     </div>
     <div class="user">

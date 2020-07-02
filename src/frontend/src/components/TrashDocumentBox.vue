@@ -3,39 +3,67 @@
     <div class="content">
       <div class="top-content">
         <span class="all">
-          <input type="checkbox" class="checkbox" id="check" />
-          <label for="check"></label>
+          <input
+            id="check"
+            type="checkbox"
+            class="checkbox"
+          >
+          <label for="check" />
         </span>
-        <button class="b1">새폴더</button>
-        <button class="b2">폴더</button>
-        <button class="b3">사진</button>
-        <button class="b4">동영상</button>
+        <button class="b1">
+          새폴더
+        </button>
+        <button class="b2">
+          폴더
+        </button>
+        <button class="b3">
+          사진
+        </button>
+        <button class="b4">
+          동영상
+        </button>
         <form class="search">
-          <select id="key" name="keyword" class="key">
-            <option value="file_origin_name">파일명</option>
-            <option value="contents_atribute">확장자</option>
-            <option value="contents_reg_date">등록일</option>
+          <select
+            id="key"
+            name="keyword"
+            class="key"
+          >
+            <option value="file_origin_name">
+              파일명
+            </option>
+            <option value="contents_atribute">
+              확장자
+            </option>
+            <option value="contents_reg_date">
+              등록일
+            </option>
           </select>
           <input
             type="text"
             name="search"
             placeholder="Search.."
             class="value"
-          />
-          <button type="submit" class="submit">
+          >
+          <button
+            type="submit"
+            class="submit"
+          >
             <img
               src="@/assets/image/search.png"
               alt="search logo"
               height="15px"
-            />
+            >
           </button>
         </form>
       </div>
-      <hr />
+      <hr>
 
       <div class="bottom-content">
         <ul class="list_thumb">
-          <li class="li" title="2020">
+          <li
+            class="li"
+            title="2020"
+          >
             <label for="">
               <div class="thumb">
                 <span class="folder">
@@ -45,7 +73,7 @@
                     width="150"
                     height="150"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  />
+                  >
                 </span>
               </div>
               <div class="info">
@@ -54,7 +82,10 @@
             </label>
           </li>
 
-          <li class="li" title="june.jpg">
+          <li
+            class="li"
+            title="june.jpg"
+          >
             <label for="">
               <div class="thumb">
                 <span class="file">
@@ -64,7 +95,7 @@
                     width="150"
                     height="150"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  />
+                  >
                 </span>
               </div>
               <div class="info">
