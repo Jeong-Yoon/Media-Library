@@ -43,7 +43,6 @@ public class FolderController {
 		folderUserDTO.setUser_id(addFolderDTO.getReg_user());
 		folderUserDTO.setFolder_id(folder_id);
 		int result = folderService.addFolderUser(folderUserDTO);
-		//folders_users_info 채워넣기
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 	

@@ -46,9 +46,9 @@
             <label class="label">
               <input
                 id="checkbox"
+                v-model="saveId"
                 type="checkbox"
                 class="checkbox"
-                checked="checked"
               >
               <!-- <input type="checkbox" class="checkbox" id="save_email"> -->
               <span class="check-mark" />
@@ -97,6 +97,7 @@ export default {
     return {
       email : '',
       password : '',
+      saveId:'',
       returnPath: ''
     };
   },
@@ -111,9 +112,13 @@ export default {
   methods: {
     ...mapActions(['LOGIN']),
     submitForm(){
+      console.log(this.saveId);
       this.LOGIN({ email: this.email, password: this.password })
       .then(() => {
         this.parseJwt(this.$store.state.token);
+        // if(this.saveId){
+        //   this.$cookie.set('email', this.email)
+        // }
         this.$router.push(this.returnPath);
       })
       .catch(error => {

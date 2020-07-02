@@ -15,7 +15,7 @@
         <!-- <li @click="logout"> -->
         <span @click="logout">
           <router-link
-            to="/login"
+            to="/"
           >
             로그아웃</router-link></span>
         <!-- </li> -->
