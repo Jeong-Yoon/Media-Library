@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-app-bar
+  <!-- <v-app> -->
+  <!-- <v-app-bar
       app
       color="primary"
       dark
@@ -35,34 +35,48 @@
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
-    </v-app-bar>
+    </v-app-bar> -->
 
-    <v-content>
-      <HelloWorld />
-    </v-content>
-  </v-app>
+  <!-- <v-content>
+    <HelloWorld />
+  </v-content>
+  </v-app> -->
+  <div id="app">
+    <AppHeader />
+    <router-link to="/login">
+      ssdfsd
+    </router-link>
+    <router-view />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-import request from "request";
+import AppHeader from "@/components/common/AppHeader.vue";
+// import HelloWorld from './components/HelloWorld';
+// import request from "request";
 
 export default {
-  name: 'App',
+  // name: 'App',
 
   components: {
-    HelloWorld,
+    AppHeader
+    // HelloWorld,
   },
 
   data: () => ({
     //
   }),
   mounted(){
-    request('http://localhost:8081/api/test', function(error, response, body){
-      window.console.log('error:', error);
-      window.console.log('statusCode:', response && response.statusCode);
-      window.console.log('body:', body);
-    });
+    // request('http://localhost:8081/api/test', function(error, response, body){
+    //   window.console.log('error:', error);
+    //   window.console.log('statusCode:', response && response.statusCode);
+    //   window.console.log('body:', body);
+    // });
   }
 };
 </script>
+
+<style>
+@import "./assets/css/reset.css";
+@import "./assets/css/common.css";
+</style>
