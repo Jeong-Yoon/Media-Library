@@ -6,14 +6,61 @@
       </router-link>
     </div>
     <div class="user">
-      <router-link to="/login">Login</router-link>
-      <router-link to="/signup">Signup</router-link>
+      <div v-if="username !== undefined">
+        <p>{{ username }}님 환영합니다.</p> 
+        <!-- <li @click="logout"> -->
+        <span @click="logout">
+          <router-link
+            to="/login"
+          >
+            로그아웃</router-link></span>
+        <!-- </li> -->
+      </div>
+      <div v-else>
+        <router-link to="/login">
+          Login
+        </router-link>
+        <router-link to="/signup">
+          Signup
+        </router-link>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
-export default {};
+import { mapMutations, mapState } from 'vuex';
+
+export default {
+  // el: "#user",
+  computed:{
+    ...mapState({
+      username: state => state.userInfo.username
+    }),
+    // userInfo : function(){
+    //   return this.$store.state.userInfo
+    // }
+  },
+  methods: {
+    ...mapMutations(['LOGOUT']),
+    mouseover: function() {
+      this.class.add("animate__animated animate__pulse");
+    },
+    mouseleave: function() {
+      this.class.remove;
+    },
+    logout(){
+      console.log(this.username)
+      // this.$store.commit("setUserInfo", '');
+      // this.$store.commit("token",null);
+      // localStorage.removeItem("vuex");
+      // localStorage.removeItem("token");
+      console.log(this.username);
+      this.LOGOUT();
+			this.$router.push('/login');
+		},
+  },
+};
 </script>
 
 <style scoped>
@@ -73,5 +120,8 @@ a.router-link-exact-active {
   color: #ffffff;
   text-shadow: 2px 8px 6px rgba(0, 0, 0, 0.2),
     0px -3px 20px rgba(255, 255, 255, 0.4);
+}
+p {
+  display: inline-block;
 }
 </style>

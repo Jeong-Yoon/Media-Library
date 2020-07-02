@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="folder">
+	<select id="getfoldersbyparent">
+		<![CDATA[
+			select * 
+			from folders
+			where folder_parent = #{id}
+		]]>
+	</select>
+	<select id="chkfolderid">
+		<![CDATA[
+			select (*) 
+			from folders_users_info
+			where folder_id = #{folder_id}
+		]]>
+		
+	</select>
+	<insert id="addfolder" parameterType="addfolderdto">
+		<![CDATA[
+			insert into folders 
+            (folder_id, folder_type, folder_name, folder_path, folder_parent, folder_reg_user, folder_update_user) 
+			values
+			(NEXTVAL('seq_folder'),#{type}, #{name}, #{path}, #{parent}, #{reg_user}, #{update_user})
+			RETURNING folder_id
+		]]>
+	</insert>
+	
+	<insert id="addfolderuser">
+		<![CDATA[
+			insert into folders_users_info
+			(user_id, folder_id, folder_master_type)
+			values
+			(#{user_id}, #{folder_id}, #{master_type}) 
+		]]>
+	</insert>
+	
+	<select id="getfolderlistbyparentid" parameterType="long" resultType="foldervo">
+		<![CDATA[
+			select * 
+			from folders
+			where folder_parent = #{id}
+		]]>
+	</select>
+	
+	<update id="changefoldername" parameterType="foldernamedto">
+		<![CDATA[
+			update folders
+			set 
+			folder_name = #{change_name},
+			folder_update_user = #{update_user},
+			folder_update_date = DEFAULT
+			where folder_id = #{folder_id}
+		]]>
+		
+	</update>
+</mapper>

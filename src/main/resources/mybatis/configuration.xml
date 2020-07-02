@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+			<typeAlias type="com.inzent.medialibrary.dto.LoginDTO" alias="logindto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.UserVO" alias="uservo"/>
+			<typeAlias type="com.inzent.medialibrary.dto.SignUpDTO" alias="signupdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.FolderVO" alias="foldervo"/>
+			<typeAlias type="com.inzent.medialibrary.dto.AddFolderDTO" alias="addfolderdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.FolderNameDTO" alias="foldernamedto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.ContentVO" alias="contentvo"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mybatis/mappers/user.xml"/>
+		<mapper resource="mybatis/mappers/folder.xml"/>
+		<mapper resource="mybatis/mappers/content.xml"/>
+	</mappers>
+
+</configuration>
