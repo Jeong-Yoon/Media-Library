@@ -108,7 +108,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 hr {
   border: solid 1px #e3e2e1;
   margin-top: 10px;

@@ -3,8 +3,10 @@
     <div class="content">
       <div class="top-content">
         <span class="all">
-          <input type="checkbox" class="checkbox" id="check" />
-          <label for="check"></label>
+          <label for="check">
+            <input type="checkbox" class="checkbox" id="check" />
+            <span class="check-mark" />
+          </label>
         </span>
         <button class="b1">새폴더</button>
         <button class="b2">폴더</button>
@@ -16,27 +18,23 @@
             <option value="contents_atribute">확장자</option>
             <option value="contents_reg_date">등록일</option>
           </select>
-          <input
-            type="text"
-            name="search"
-            placeholder="Search.."
-            class="value"
-          />
+          <input type="text" name="search" placeholder="Search.." class="value" />
           <button type="submit" class="submit">
             <img
               src="@/assets/image/search.png"
               alt="search logo"
               height="15px"
+              class="search-icon"
             />
           </button>
         </form>
       </div>
-      <hr />
+      <hr class="top-hr" />
 
       <div class="bottom-content">
         <ul class="list_thumb">
           <li class="li" title="2020">
-            <label for="">
+            <label for>
               <div class="thumb">
                 <span class="folder">
                   <img
@@ -55,7 +53,7 @@
           </li>
 
           <li class="li" title="june.jpg">
-            <label for="">
+            <label for>
               <div class="thumb">
                 <span class="file">
                   <img
@@ -90,29 +88,27 @@ import quickMenu from "vue-quick-menu";
 
 export default {
   components: {
-    quickMenu,
+    quickMenu
   },
   data() {
     return {
-      count: 3,
-      icons: ["fa fa-github", "fa fa-comment", "fa fa-code"],
+      count: 2,
+      icons: ["fa fa-folder", "fa fa-file"],
       list: [
         { isLink: true, url: "/" },
         { isLink: true, url: "/" },
-        { isLink: true, url: "/" },
+        { isLink: true, url: "/" }
       ],
       position: "bottom-right",
-      backgroundColor: "#474346",
+      backgroundColor: "#474346"
     };
-  },
+  }
 };
 </script>
 
-<style>
+<style scoped>
 hr {
-  border: solid 1px #e3e2e1;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 .content {
   position: relative;
@@ -180,6 +176,7 @@ input[id="check"]:checked + .check-mark:after {
   font-size: 12px;
   text-align: center;
   outline: none;
+  border: none;
 }
 .b3 {
   background-color: #a49988;
@@ -191,6 +188,7 @@ input[id="check"]:checked + .check-mark:after {
   font-size: 12px;
   text-align: center;
   outline: none;
+  border: none;
 }
 .b4 {
   background-color: #474346;
@@ -203,6 +201,7 @@ input[id="check"]:checked + .check-mark:after {
   font-size: 12px;
   border: none;
   outline: none;
+  border: none;
 }
 button:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
@@ -238,18 +237,18 @@ input:hover {
   vertical-align: middle;
 }
 option {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  text-align: center;
+  background-color: #a49988;
 }
-option:hover {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  text-align-last: center;
-  font-size: 12px;
-  outline: none;
+option:before {
+  content: ">";
+  font-size: 20px;
+  display: none;
+  padding-right: 10px;
+  padding-left: 5px;
+  color: #fff;
+}
+option:hover:before {
+  display: inline;
 }
 .value {
   border: 1px solid #a49988;
@@ -269,21 +268,24 @@ option:hover {
   text-align: center;
   outline: none;
   vertical-align: middle;
+  border: none;
+}
+.search-icon {
+  border: none;
 }
 
 /* bottom div */
-
 img {
   border: 2px solid #e3e2e1;
 }
 .li {
   float: left;
   margin-bottom: 10px;
+  margin-right: 15px;
 }
 .thumb {
   width: 150px;
   height: 150px;
-  border: 2px solid #e3e2e1;
 }
 .info {
   margin-top: 11px;

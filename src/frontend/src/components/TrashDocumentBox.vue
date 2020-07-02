@@ -3,11 +3,7 @@
     <div class="content">
       <div class="top-content">
         <span class="all">
-          <input
-            id="check"
-            type="checkbox"
-            class="checkbox"
-          >
+          <input id="check" type="checkbox" class="checkbox" />
           <label for="check" />
         </span>
         <button class="b1">
@@ -23,11 +19,7 @@
           동영상
         </button>
         <form class="search">
-          <select
-            id="key"
-            name="keyword"
-            class="key"
-          >
+          <select id="key" name="keyword" class="key">
             <option value="file_origin_name">
               파일명
             </option>
@@ -43,27 +35,21 @@
             name="search"
             placeholder="Search.."
             class="value"
-          >
-          <button
-            type="submit"
-            class="submit"
-          >
+          />
+          <button type="submit" class="submit">
             <img
               src="@/assets/image/search.png"
               alt="search logo"
               height="15px"
-            >
+            />
           </button>
         </form>
       </div>
-      <hr>
+      <hr />
 
       <div class="bottom-content">
         <ul class="list_thumb">
-          <li
-            class="li"
-            title="2020"
-          >
+          <li class="li" title="2020">
             <label for="">
               <div class="thumb">
                 <span class="folder">
@@ -73,7 +59,7 @@
                     width="150"
                     height="150"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  >
+                  />
                 </span>
               </div>
               <div class="info">
@@ -82,10 +68,7 @@
             </label>
           </li>
 
-          <li
-            class="li"
-            title="june.jpg"
-          >
+          <li class="li" title="june.jpg">
             <label for="">
               <div class="thumb">
                 <span class="file">
@@ -95,7 +78,7 @@
                     width="150"
                     height="150"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  >
+                  />
                 </span>
               </div>
               <div class="info">
@@ -139,7 +122,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 hr {
   border: solid 1px #e3e2e1;
   margin-top: 10px;
