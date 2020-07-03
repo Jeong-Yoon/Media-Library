@@ -213,11 +213,12 @@
             job:this.job,
           })
           .then(() => {
+            alert('회원 가입을 완료했습니다.')
             this.$router.push('/login');
           })
           .catch(error => {
-            this.error = error.data.error;
             alert('회원가입을 실패했습니다.')
+            this.error = error.data.error;
             this.initForm();
           });
         }

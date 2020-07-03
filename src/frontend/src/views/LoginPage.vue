@@ -5,38 +5,63 @@
       <h1 class="login">
         <a>로그인</a>
       </h1>
-      <form class="form" @submit.prevent="submitForm">
+      <form
+        class="form"
+        @submit.prevent="submitForm"
+      >
         <div class="insert-area">
           <label for="email">
-            <input id="email" v-model="email" type="text" placeholder="이메일" />
+            <input
+              id="email"
+              v-model="email"
+              type="text"
+              placeholder="이메일"
+            >
             <p class="validation-text">
-              <span v-if="!isUseremailValid && email" class="warning">Please enter an email address</span>
+              <span
+                v-if="!isUseremailValid && email"
+                class="warning"
+              >Please enter an email address</span>
             </p>
           </label>
-          <label for="password" class="password">
+          <label
+            for="password"
+            class="password"
+          >
             <input
               id="password"
               v-model="password"
               type="password"
               autocomplete="off"
               placeholder="비밀번호"
-            />
+            >
           </label>
         </div>
         <div class="login-option">
           <div class="input-checkbox">
             <label class="label">
-              <input id="checkbox" type="checkbox" class="checkbox" checked="checked" />
+              <input
+                id="checkbox"
+                v-model="saveId"
+                type="checkbox"
+                class="checkbox"
+              >
               <!-- <input type="checkbox" class="checkbox" id="save_email"> -->
               <span class="check-mark" />
               <span>이메일 저장</span>
             </label>
           </div>
         </div>
-        <button :disabled="!isUseremailValid || !password" type="submit" class="btn btn-login">로그인</button>
+        <button
+          :disabled="!isUseremailValid || !password"
+          type="submit"
+          class="btn btn-login"
+        >
+          로그인
+        </button>
       </form>
 
-      <hr class="hr1" />
+      <hr class="hr1">
 
       <h5 class="signup">
         <!-- <a href="/views/SignupPage.vue"> -->
@@ -56,7 +81,6 @@
 <script>
 import { validateEmail } from "@/utils/validation";
 import { mapActions } from "vuex";
-
 // const user = 'user'
 
 export default {
@@ -65,9 +89,10 @@ export default {
   // },
   data() {
     return {
-      email: "",
-      password: "",
-      returnPath: ""
+      email : '',
+      password : '',
+      saveId:'',
+      returnPath: ''
     };
   },
   computed: {
@@ -77,20 +102,33 @@ export default {
   },
   created() {
     this.returnPath = this.$route.query.rPath || "/";
+    if(this.$cookie.get('email') && this.$cookie.get('saveId')){
+      this.email = this.$cookie.get('email');
+      this.saveId = this.$cookie.get('saveId');
+    }
   },
   methods: {
-    ...mapActions(["LOGIN"]),
-    submitForm() {
+    ...mapActions(['LOGIN']),
+    submitForm(){
+      console.log(this.saveId);
       this.LOGIN({ email: this.email, password: this.password })
-        .then(() => {
-          this.parseJwt(this.$store.state.token);
-          this.$router.push(this.returnPath);
-        })
-        .catch(error => {
-          this.error = error.data.error;
-          alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
-          this.initForm();
-        });
+      .then(() => {
+        this.parseJwt(this.$store.state.token);
+        console.log(this.saveId)
+        if(this.saveId){
+          this.$cookie.set('email', this.email)
+          this.$cookie.set('saveId', this.saveId)
+        } else if(this.saveId === false){
+          this.$cookie.delete('email');
+          this.$cookie.delete('saveId')
+        }
+        this.$router.push(this.returnPath);
+      })
+      .catch(error => {
+        this.error = error.data.error;
+        alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
+        this.initForm();
+      });
     },
     parseJwt(token) {
       try {
@@ -114,7 +152,8 @@ export default {
       }
     },
     initForm() {
-      (this.email = ""), (this.password = "");
+      this.email = "", 
+      this.password = "";
     }
   }
 };

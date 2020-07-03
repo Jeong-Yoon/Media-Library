@@ -2,7 +2,11 @@
   <header>
     <div>
       <router-link to="/">
-        <img src="@/assets/image/logo.png" alt="main logo" height="20px" />
+        <img
+          src="@/assets/image/logo.png"
+          alt="main logo"
+          height="20px"
+        >
       </router-link>
     </div>
     <div class="user">
@@ -10,8 +14,10 @@
         <p>{{ username }}님 환영합니다.</p>
         <!-- <li @click="logout"> -->
         <span @click="logout">
-          <router-link to="/login"> 로그아웃</router-link></span
-        >
+          <router-link
+            to="/"
+          >
+            로그아웃</router-link></span>
         <!-- </li> -->
       </div>
       <div v-else>
@@ -48,14 +54,8 @@ export default {
       this.class.remove;
     },
     logout() {
-      console.log(this.username);
-      // this.$store.commit("setUserInfo", '');
-      // this.$store.commit("token",null);
-      // localStorage.removeItem("vuex");
-      // localStorage.removeItem("token");
-      console.log(this.username);
       this.LOGOUT();
-      this.$router.push("/login");
+      this.$router.push('/login')
     },
   },
 };

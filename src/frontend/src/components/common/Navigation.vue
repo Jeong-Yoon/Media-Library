@@ -4,8 +4,12 @@
       <div class="list">
         <ul class="menu-root">
           <li id="usage">
-            <p class="p1">{{ use_capacity }}GB /</p>
-            <p class="p2">{{ total_capacity }}GB</p>
+            <p class="p1">
+              {{ use_capacity }}GB /
+            </p>
+            <p class="p2">
+              {{ total_capacity }}GB
+            </p>
             <div id="progress">
               <k-progress
                 :percent="80"
@@ -15,29 +19,37 @@
                 :line-height="7"
               />
             </div>
-            <p class="p3">여유{{ spare_capacity }}GB</p>
+            <p class="p3">
+              여유{{ spare_capacity }}GB
+            </p>
           </li>
-          <hr class="top" />
+          <hr class="top">
           <div class="document">
             <perfect-scrollbar>
               <li>
                 <h3>개인 문서함</h3>
               </li>
-              <hr class="middle1" />
+              <hr class="middle1">
               <li>
                 <h3>공유 문서함</h3>
               </li>
-              <hr class="middle2" />
+              <hr class="middle2">
               <li>
                 <h3>앨범</h3>
               </li>
             </perfect-scrollbar>
           </div>
-          <hr class="bottom" />
+          <hr class="bottom">
           <li class="trash">
             <router-link to="/">
-              <img src="@/assets/image/trash.png" alt="trash logo" height="30px" />
-              <p class="p4">휴지통</p>
+              <img
+                src="@/assets/image/trash.png"
+                alt="trash logo"
+                height="30px"
+              >
+              <p class="p4">
+                휴지통
+              </p>
             </router-link>
           </li>
         </ul>
