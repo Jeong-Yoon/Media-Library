@@ -2,12 +2,12 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <span class="all">
-          <label for="check">
-            <input type="checkbox" class="checkbox" id="check" />
-            <span class="check-mark" />
-          </label>
-        </span>
+        <div class="agree">
+          <div class="all_agree">
+            <input type="checkbox" id="a1" name="전체동의" />
+            <label for="a1"></label>
+          </div>
+        </div>
         <button class="b1">새폴더</button>
         <button class="b2">폴더</button>
         <button class="b3">사진</button>
@@ -124,43 +124,40 @@ user agent stylesheet div {
 }
 
 /* top div */
-input[id="check"] + label {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #e3e2e1;
-  cursor: pointer;
-  margin-right: 10px;
-  vertical-align: top;
-  text-align: center;
-  border-radius: 4px;
+.agree {
+  padding-right: 10px;
 }
-input[id="check"] {
+.agree input[type="checkbox"] {
   display: none;
 }
-input[id="check"]:checked + label {
-  background-color: #e3e2e1;
+.agree input[type="checkbox"] + label {
+  width: 30px;
+  height: 30px;
+  background: #d2cdc5;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  margin-right: 10px;
 }
-input[id="check"]:checked + .check-mark:after {
-  content: "";
+.agree input[type="checkbox"] + label:hover {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+}
+.agree input[type="checkbox"]:checked + label {
+  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
+  float: left;
+}
+.agree input[type="checkbox"] + label span {
   position: absolute;
-  width: 10px;
-  transition: 0.1s;
-  height: 5px;
-  top: 45%;
-  left: 50%;
-  border-left: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-  transform: translate(-50%, -50%) rotate(-45deg);
+  left: 0px;
+  display: block;
 }
-
 .b1 {
   background-color: white;
   color: #474346;
   border: 1px solid #d2cdc5;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
@@ -171,7 +168,7 @@ input[id="check"]:checked + .check-mark:after {
   color: white;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
@@ -183,7 +180,7 @@ input[id="check"]:checked + .check-mark:after {
   color: white;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
@@ -196,7 +193,7 @@ input[id="check"]:checked + .check-mark:after {
   margin-right: 10px;
   border-radius: 4px;
   text-align: center;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   border: none;
@@ -250,9 +247,14 @@ option:before {
 option:hover:before {
   display: inline;
 }
+input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
 .value {
   border: 1px solid #a49988;
-  width: 300px;
+  width: 200px;
   height: 30px;
   text-align: center;
   font-size: 12px;
@@ -273,7 +275,6 @@ option:hover:before {
 .search-icon {
   border: none;
 }
-
 /* bottom div */
 img {
   border: 2px solid #e3e2e1;

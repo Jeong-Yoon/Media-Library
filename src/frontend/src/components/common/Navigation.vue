@@ -62,7 +62,7 @@ export default {
 
 <style scoped>
 li {
-  padding-left: 15px;
+  padding-left: 25px;
   padding-right: 15px;
 }
 a {
@@ -95,8 +95,8 @@ user agent stylesheet div {
   display: block;
 }
 #usage {
-  padding-left: 30px;
-  margin-right: -30px;
+  padding-left: 25px;
+  margin-right: -50px;
   padding-top: 15px;
   padding-bottom: 10px;
 }
@@ -115,14 +115,14 @@ user agent stylesheet div {
 .p3 {
   font-size: 10px;
   color: #e3e2e1;
-  padding-left: 90px;
+  padding-left: 115px;
 }
 .p4 {
   font-size: 10px;
   color: #a49988;
 }
 #progress {
-  width: 200px;
+  width: 225px;
   clear: both;
   padding-top: 5px;
 }
@@ -141,16 +141,18 @@ user agent stylesheet div {
 .middle1 {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 15px;
+  margin-left: 25px;
   margin-right: 15px;
-  width: 185px;
+  width: 170px;
+  border: 1px solid #e3e2e1;
 }
 .middle2 {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 15px;
+  margin-left: 25px;
   margin-right: 15px;
-  width: 185px;
+  width: 170px;
+  border: 1px solid #e3e2e1;
 }
 .bottom {
   position: fixed;
