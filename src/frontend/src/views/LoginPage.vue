@@ -81,7 +81,6 @@
 <script>
 import { validateEmail } from "@/utils/validation";
 import { mapActions } from "vuex";
-
 // const user = 'user'
 
 export default {
@@ -103,6 +102,10 @@ export default {
   },
   created() {
     this.returnPath = this.$route.query.rPath || "/";
+    if(this.$cookie.get('email') && this.$cookie.get('saveId')){
+      this.email = this.$cookie.get('email');
+      this.saveId = this.$cookie.get('saveId');
+    }
   },
   methods: {
     ...mapActions(['LOGIN']),
@@ -111,9 +114,14 @@ export default {
       this.LOGIN({ email: this.email, password: this.password })
       .then(() => {
         this.parseJwt(this.$store.state.token);
-        // if(this.saveId){
-        //   this.$cookie.set('email', this.email)
-        // }
+        console.log(this.saveId)
+        if(this.saveId){
+          this.$cookie.set('email', this.email)
+          this.$cookie.set('saveId', this.saveId)
+        } else if(this.saveId === false){
+          this.$cookie.delete('email');
+          this.$cookie.delete('saveId')
+        }
         this.$router.push(this.returnPath);
       })
       .catch(error => {
@@ -144,7 +152,8 @@ export default {
       }
     },
     initForm() {
-      (this.email = ""), (this.password = "");
+      this.email = "", 
+      this.password = "";
     }
   }
 };

@@ -54,14 +54,8 @@ export default {
       this.class.remove;
     },
     logout() {
-      console.log(this.username);
-      // this.$store.commit("setUserInfo", '');
-      // this.$store.commit("token",null);
-      // localStorage.removeItem("vuex");
-      // localStorage.removeItem("token");
-      console.log(this.username);
       this.LOGOUT();
-      this.$router.push("/login");
+      this.$router.push('/login')
     },
   },
 };
