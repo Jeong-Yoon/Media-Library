@@ -35,16 +35,6 @@ const routes = [
     name: 'signup',
     component: () => import('@/views/SignupPage.vue'),
   },
-  {
-    path:'/slide',
-    name:'Slide',
-    component: () => import('@/views/SlideShowPage.vue'),
-  },
-  {
-    path:'/image',
-    name:'Image',
-    component: () => import('@/views/ImageViewing.vue')
-  }
 ]
 
 const router = new VueRouter({
