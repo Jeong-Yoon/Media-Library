@@ -8,13 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddFolderDTO {
-	private String type;
+	private Long folder_id;
 	@NotNull
-	private String name;
+	private String newFolderName;
 	private String path;
 	@NotNull
 	private Long parent;
 	@NotNull
+	private String userEmail;
 	private Long reg_user;
 	private Long update_user;
 }

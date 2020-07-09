@@ -10,6 +10,7 @@ import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
 import com.inzent.medialibrary.repository.FolderDAO;
+import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.service.FolderService;
 
 @Service
@@ -17,9 +18,19 @@ public class FolderServiceImpl implements FolderService{
 
 	@Autowired
 	private FolderDAO folderDAO;
-
+	@Autowired
+	private UserDAO userDAO;
+	
 	@Override
 	public Long addFolder(AddFolderDTO addFolderDTO) {
+		if(addFolderDTO.getNewFolderName().length() == 0) {
+			addFolderDTO.setNewFolderName("새폴더");
+		}
+		Long user_id = userDAO.getUserIdByEmail(addFolderDTO.getUserEmail());
+		String path = userDAO.getFolderPathById(addFolderDTO.getParent());
+		addFolderDTO.setReg_user(user_id);
+		addFolderDTO.setUpdate_user(user_id);
+		addFolderDTO.setPath(path + "/" + addFolderDTO.getNewFolderName());
 		return folderDAO.addFolder(addFolderDTO);
 	}
 
@@ -36,5 +47,15 @@ public class FolderServiceImpl implements FolderService{
 	@Override
 	public int changeFolderName(FolderNameDTO folderNameDTO) {
 		return folderDAO.changeFolderName(folderNameDTO);
+	}
+
+	@Override
+	public Long getfolderIdByUserId(Long user_id) {
+		return folderDAO.getfolderIdByUserId(user_id);
+	}
+
+	@Override
+	public Long createRootFolder(Long user_id) {
+		return folderDAO.createRootFolder(user_id);
 	}
 }

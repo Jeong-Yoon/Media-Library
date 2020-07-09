@@ -12,6 +12,8 @@
 			<typeAlias type="com.inzent.medialibrary.dto.AddFolderDTO" alias="addfolderdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.FolderNameDTO" alias="foldernamedto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.ContentVO" alias="contentvo"/>
+			<typeAlias type="com.inzent.medialibrary.dto.UploadContentDTO" alias="uploadcontentdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.ContentDetailDTO" alias="contentdetaildto"/>
 	</typeAliases>
 
 	<mappers>

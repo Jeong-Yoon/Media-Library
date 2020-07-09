@@ -3,6 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="folder">
+
 	<select id="getfoldersbyparent">
 		<![CDATA[
 			select * 
@@ -10,23 +11,45 @@
 			where folder_parent = #{id}
 		]]>
 	</select>
-	<select id="chkfolderid">
+
+	<select id="chkfolderid" parameterType="long" resultType="int">
 		<![CDATA[
-			select (*) 
+			select count(*) 
 			from folders_users_info
 			where folder_id = #{folder_id}
 		]]>
-		
 	</select>
+
 	<insert id="addfolder" parameterType="addfolderdto">
-		<![CDATA[
-			insert into folders 
-            (folder_id, folder_type, folder_name, folder_path, folder_parent, folder_reg_user, folder_update_user) 
-			values
-			(NEXTVAL('seq_folder'),#{type}, #{name}, #{path}, #{parent}, #{reg_user}, #{update_user})
-			RETURNING folder_id
-		]]>
+		insert into folders
+		(folder_id,
+		folder_name,
+		folder_path, folder_parent,
+		folder_reg_user,
+		folder_update_user)
+		values
+		(NEXTVAL('seq_folder'),
+		#{newFolderName},
+		#{path}, #{parent}, #{reg_user}, #{update_user})
+		<selectKey keyProperty="folder_id" resultType="long" order="AFTER">
+			select currval('seq_folder')
+		</selectKey>
 	</insert>
+	
+<!-- 	<insert id="addfolder" parameterType="addfolderdto">
+	with ins1 as(
+	insert into ml_schema.folders(folder_id, folder_name, folder_path,
+	folder_parent, folder_reg_user,
+	folder_update_user)
+	values
+	(NEXTVAL('ml_schema.seq_folder'), '폴더111111', '/폴더111111', 20000, 10036, 10036)
+	returning folder_id, folder_reg_user
+	)
+	insert into ml_schema.folders_users_info
+	(user_id, folder_id)
+	values
+	((select folder_reg_user from ins1),(select folder_id from ins1))
+	</insert> -->
 	
 	<insert id="addfolderuser">
 		<![CDATA[
@@ -54,6 +77,39 @@
 			folder_update_date = DEFAULT
 			where folder_id = #{folder_id}
 		]]>
-		
 	</update>
+	
+	<select id="getfolderidbyuserid" parameterType="long" resultType="long">
+		<![CDATA[
+			select folder_id
+			from folders
+			where folder_reg_user = #{user_id}
+			and folder_parent is null
+		]]>
+	</select>
+	
+	<insert id="createrootfolder">
+		<![CDATA[
+			insert into folders 
+            (folder_id, folder_name, folder_path, folder_parent, folder_reg_user, folder_update_user) 
+			values
+			(NEXTVAL('seq_folder'), '개인 문서함' , '/' , null, #{user_id}, #{user_id})
+			RETURNING folder_id
+		]]>
+	</insert>
+	
+	<select id="getfolderpathbyid" parameterType="long" resultType="string">
+		<![CDATA[
+			select folder_path 
+			from folders
+			where folder_id = #{parent}
+		]]>
+	</select>
+
+	<update id="deletefolder" parameterType="long">
+		update folders
+		set folder_delete = 'Y'
+		where folder_id = #{folderId}
+	</update>
+	
 </mapper>

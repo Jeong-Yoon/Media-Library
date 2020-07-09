@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="file">
+<mapper namespace="content">
 	
 	<select id="getcontentlistbyfolderid" parameterType="long">
 		<![CDATA[
@@ -11,4 +11,43 @@
 			where folder_id = #{folderId}
 		]]>
 	</select>
+	
+	<insert id="uploadcontent" parameterType="uploadcontentdto">
+		<![CDATA[
+			insert into contents
+			(content_id, content_type, content_origin_name, content_save_name, content_storage, content_size, content_reg_user, folder_id)
+			values
+			(NEXTVAL('seq_contents'),#{content_type}, #{content_origin_name}, #{content_save_name}, #{content_storage}, #{content_size}, #{content_reg_user}, #{folder_id})
+			RETURNING content_id
+		]]>
+	</insert>
+	
+	<resultMap type="contentdetaildto" id="contentdetaildtoresult">
+		<result property="content_id" column="content_id"/>
+		<result property="content_attribute" column="content_attribute" typeHandler="com.inzent.medialibrary.utils.JSONTypeHandler"/>
+	</resultMap>
+	
+	<insert id="uploadcontentdetail" parameterType="map">
+		<![CDATA[
+			insert into contents_details (content_id , content_attribute)
+			values
+			(#{id}, #{json, typeHandler=com.inzent.medialibrary.utils.JSONTypeHandler})
+		]]>
+	</insert>
+	
+	
+	<select id="getcontentdetail" resultMap="contentdetaildtoresult">
+		<![CDATA[
+			select *
+			from contents_details
+			where content_id = #{contentId}
+		]]>
+	</select>
+	
+	<update id="deletecontent" parameterType="long">
+		update contents
+		set content_delete = 'Y'
+		where content_id = #{contentId}
+	</update>
+
 </mapper>

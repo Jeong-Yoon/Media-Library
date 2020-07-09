@@ -18,7 +18,8 @@ public class FolderDAO {
 	private SqlSession sqlSession;
 
 	public long addFolder(AddFolderDTO addFolderDTO) {
-		return sqlSession.insert("addfolder", addFolderDTO);
+		sqlSession.insert("addfolder", addFolderDTO);
+		return addFolderDTO.getFolder_id();
 	}
 	
 	public int addFolderUser(FolderUserDTO folderUserDTO) {
@@ -37,5 +38,13 @@ public class FolderDAO {
 
 	public int changeFolderName(FolderNameDTO folderNameDTO) {
 		return sqlSession.update("changefoldername", folderNameDTO);
+	}
+
+	public Long getfolderIdByUserId(Long user_id) {
+		return sqlSession.selectOne("getfolderidbyuserid",user_id);
+	}
+
+	public long createRootFolder(Long user_id) {
+		return sqlSession.insert("createrootfolder",user_id);
 	}
 }

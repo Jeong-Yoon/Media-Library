@@ -22,8 +22,8 @@ import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
-import com.inzent.medialibrary.service.ContentService;
 import com.inzent.medialibrary.service.FolderService;
+import com.inzent.medialibrary.utils.MakeDir;
 
 @RestController
 @CrossOrigin("*")
@@ -60,7 +60,6 @@ public class FolderController {
 	
 	@DeleteMapping("/{folder_id}")
 	public ResponseEntity<?> deleteFolder(@PathVariable("folder_id") Long folderId){
-		
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

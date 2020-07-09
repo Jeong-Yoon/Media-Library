@@ -18,12 +18,20 @@ public class UserDAO {
 		return userVo;
 	}
 
-	public int signup(SignUpDTO signUpDTO) {
+	public long signup(SignUpDTO signUpDTO) {
 		return sqlSession.insert("signup",signUpDTO);
 	}
 
 	public int emailChk(String email) {
 		return sqlSession.selectOne("emailchk", email);
+	}
+
+	public long getUserIdByEmail(String email) {
+		return sqlSession.selectOne("getuseridbyemail", email);
+	}
+
+	public String getFolderPathById(Long parent) {
+		return sqlSession.selectOne("getfolderpathbyid", parent);
 	}
 	
 	

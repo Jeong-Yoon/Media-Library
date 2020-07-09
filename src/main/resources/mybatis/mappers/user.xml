@@ -16,6 +16,7 @@
 			insert into 
 			users (user_id, user_email, user_pw, user_name, user_phone, user_company, user_department, user_job)
 			values (NEXTVAL('seq_user'), #{email}, #{password}, #{name}, #{phone}, #{company}, #{department}, #{job});
+			RETURNING user_id
 		]]>
 	</insert>
 	
@@ -24,6 +25,14 @@
 			select count(*)
 			from users
 			where user_email = #{email} 
+		]]>
+	</select>
+	
+	<select id="getuseridbyemail" parameterType="string" resultType="long">
+		<![CDATA[
+			select user_id
+			from users
+			where user_email = #{email}
 		]]>
 	</select>
 </mapper>

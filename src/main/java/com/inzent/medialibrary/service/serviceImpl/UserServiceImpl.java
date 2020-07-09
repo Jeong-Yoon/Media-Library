@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
 import com.inzent.medialibrary.dto.UserVO;
+import com.inzent.medialibrary.repository.FolderDAO;
 import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.security.JwtService;
 import com.inzent.medialibrary.service.UserService;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public int signup(SignUpDTO signUpDTO) {
+	public Long signup(SignUpDTO signUpDTO) {
 		String encodePw = passwordEncoder.encode(signUpDTO.getPassword());
 		signUpDTO.setPassword(encodePw);
 		return userDao.signup(signUpDTO);
@@ -42,5 +43,9 @@ public class UserServiceImpl implements UserService {
 	public int emailChk(String email) {
 		return userDao.emailChk(email);
 	}
-
+	
+	@Override
+	public long getUserIdByEmail(String email) {
+		return userDao.getUserIdByEmail(email);
+	}
 }
