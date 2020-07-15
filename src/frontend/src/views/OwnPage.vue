@@ -3,13 +3,7 @@
     <div class="content">
       <div class="top-content">
         <div class="agree">
-          <input
-            type="checkbox"
-            id="a1"
-            name="전체동의"
-            @click="selectAll"
-            v-model="allSelected"
-          />
+          <input type="checkbox" id="a1" name="전체동의" @click="selectAll" v-model="allSelected" />
           <label for="a1"></label>
         </div>
         <div v-if="this.ids.length > 0">
@@ -26,7 +20,9 @@
           <NewFolderModal @close="closeModal" v-if="modal">
             <!-- default 슬롯 콘텐츠 -->
             <p>폴더 이름을 입력해주세요.</p>
-            <div><input class="input" v-model="newFolderName" /></div>
+            <div>
+              <input class="input" v-model="newFolderName" />
+            </div>
             <!-- /default -->
             <!-- footer 슬롯 콘텐츠 -->
             <template slot="footer">
@@ -41,12 +37,7 @@
             <option value="contents_atribute">확장자</option>
             <option value="contents_reg_date">등록일</option>
           </select>
-          <input
-            type="text"
-            name="search"
-            placeholder="Search.."
-            class="value"
-          />
+          <input type="text" name="search" placeholder="Search.." class="value" />
           <button type="submit" class="submit">
             <img
               src="@/assets/image/search.png"
@@ -91,25 +82,45 @@
           </ul>
         </div>
         <p>selected ids : {{ ids }}</p>
-        <!-- <ul class="list_thumb">
-          <li class="li" title="2020">
+        <!-- 이미지 뷰잉 용 이미지 -->
+        <ul class="list_thumb">
+          <li class="li" title="image" @click="openImageModal">
             <label for>
               <div class="thumb">
-                <span class="folder">
+                <span class="image">
                   <img
-                    src="@/assets/image/folder.png"
-                    width="150"
-                    height="150"
+                    src="@/assets/image/june.jpg"
+                    width="130"
+                    height="130"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   />
                 </span>
               </div>
               <div class="info">
-                <span class="title">2020</span>
+                <span class="title">image</span>
               </div>
             </label>
           </li>
-        </ul> -->
+          <li class="li" title="video" @click="openVideoModal">
+            <label for>
+              <div class="thumb">
+                <span class="video">
+                  <img
+                    src="@/assets/image/video.jpg"
+                    width="130"
+                    height="130"
+                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  />
+                </span>
+              </div>
+              <div class="info">
+                <span class="title">video</span>
+              </div>
+            </label>
+          </li>
+          <ImageViewingModal v-if="imageModal" />
+          <VideoViewingModal v-if="videoModal" />
+        </ul>
       </div>
     </div>
 
@@ -126,12 +137,16 @@
 <script>
 import quickMenu from "vue-quick-menu";
 import NewFolderModal from "./NewFolderModal";
+import ImageViewingModal from "./ImageViewingModal";
+import VideoViewingModal from "./VideoViewingModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
   components: {
     quickMenu,
     NewFolderModal,
+    ImageViewingModal,
+    VideoViewingModal
   },
   data() {
     return {
@@ -139,15 +154,17 @@ export default {
       icons: ["fa fa-file", "fa fa-folder"],
       list: [
         { isLink: true, url: "/uploadFile" },
-        { isLink: true, url: "/uploadFolder" },
+        { isLink: true, url: "/uploadFolder" }
       ],
       position: "bottom-right",
       backgroundColor: "#474346",
       modal: false,
+      imageModal: false,
+      videoModal: false,
       newFolderName: "",
       folderList: [],
       allSelected: true,
-      ids: [],
+      ids: []
     };
   },
   created() {
@@ -156,14 +173,14 @@ export default {
   computed: {
     ...mapState({
       userInfo: "userInfo",
-      parent: "root_folder",
-    }),
+      parent: "root_folder"
+    })
   },
   methods: {
     ...mapActions(["NEW_FOLDER", "GET_FOLDERS"]),
     async download() {},
     getFolders() {
-      this.GET_FOLDERS({ parent: this.parent }).then((list) => {
+      this.GET_FOLDERS({ parent: this.parent }).then(list => {
         console.log("ownpage list : " + list[0]);
         this.folderList = list;
         console.log("ownpage folderlist : " + this.folderList);
@@ -185,8 +202,15 @@ export default {
       }
     },
     select: function(folder_id) {
+      this.ids = [];
       this.allSelected = false;
       this.ids.push(folder_id);
+    },
+    openImageModal() {
+      this.imageModal = true;
+    },
+    openVideoModal() {
+      this.videoModal = true;
     },
     openModal() {
       this.modal = true;
@@ -202,7 +226,7 @@ export default {
         this.NEW_FOLDER({
           parent: this.parent,
           newFolderName: this.newFolderName,
-          userEmail: this.userInfo.useremail,
+          userEmail: this.userInfo.useremail
         })
           .then(() => {
             alert("폴더가 생성되었습니다.");
@@ -210,7 +234,7 @@ export default {
             this.closeModal();
             this.getFolders();
           })
-          .catch((error) => {
+          .catch(error => {
             alert("폴더 생성에 실패했습니다.");
             this.error = error.data.error;
             this.newFolderName = "";
@@ -218,8 +242,8 @@ export default {
             this.getFolders();
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

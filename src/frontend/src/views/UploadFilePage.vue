@@ -19,13 +19,12 @@
         <div class="input-group-append">
           <div>
             <span class="attach-file" @click="onClickFileS">
-              <i class="fa fa-paperclip"> </i>
+              <!--<input v-model="attachFiles" type="file"/>-->
+              <i class="fa fa-paperclip"></i>
             </span>
           </div>
           <div>
-            <button class="upload-button" @click="onClickUpload">
-              Upload
-            </button>
+            <button class="upload-button" @click="onClickUpload">Upload</button>
           </div>
         </div>
         <input
@@ -50,6 +49,7 @@ export default {
     return {
       filename: "",
       imageSrc: "",
+      attachFiles: []
     };
   },
   methods: {
@@ -87,8 +87,8 @@ export default {
         };
         reader.readAsDataURL(file);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
