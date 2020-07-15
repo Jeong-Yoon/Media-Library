@@ -2,33 +2,21 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <span class="all">
-          <input id="check" type="checkbox" class="checkbox" />
-          <label for="check" />
-        </span>
-        <button class="b1">
-          새폴더
-        </button>
-        <button class="b2">
-          폴더
-        </button>
-        <button class="b3">
-          사진
-        </button>
-        <button class="b4">
-          동영상
-        </button>
+        <div class="agree">
+          <div class="all_agree">
+            <input type="checkbox" id="a1" name="전체동의" />
+            <label for="a1"></label>
+          </div>
+        </div>
+        <button class="b1">휴지통 비우기</button>
+        <button class="b2">폴더</button>
+        <button class="b3">사진</button>
+        <button class="b4">동영상</button>
         <form class="search">
           <select id="key" name="keyword" class="key">
-            <option value="file_origin_name">
-              파일명
-            </option>
-            <option value="contents_atribute">
-              확장자
-            </option>
-            <option value="contents_reg_date">
-              등록일
-            </option>
+            <option value="file_origin_name">파일명</option>
+            <option value="contents_atribute">확장자</option>
+            <option value="contents_reg_date">등록일</option>
           </select>
           <input
             type="text"
@@ -41,16 +29,17 @@
               src="@/assets/image/search.png"
               alt="search logo"
               height="15px"
+              class="search-icon"
             />
           </button>
         </form>
       </div>
-      <hr />
+      <hr class="top-hr" />
 
       <div class="bottom-content">
         <ul class="list_thumb">
           <li class="li" title="2020">
-            <label for="">
+            <label for>
               <div class="thumb">
                 <span class="folder">
                   <img
@@ -69,7 +58,7 @@
           </li>
 
           <li class="li" title="june.jpg">
-            <label for="">
+            <label for>
               <div class="thumb">
                 <span class="file">
                   <img
@@ -89,27 +78,16 @@
         </ul>
       </div>
     </div>
-    <quick-menu
-      :menu-count="count"
-      :icon-class="icons"
-      :menu-url-list="list"
-      :position="position"
-      :background-color="backgroundColor"
-    />
   </content>
 </template>
 
 <script>
-import quickMenu from "vue-quick-menu";
-
 export default {
-  components: {
-    quickMenu,
-  },
+  components: {},
   data() {
     return {
-      count: 3,
-      icons: ["fa fa-github", "fa fa-comment", "fa fa-code"],
+      count: 2,
+      icons: ["fa fa-folder", "fa fa-file"],
       list: [
         { isLink: true, url: "/" },
         { isLink: true, url: "/" },
@@ -124,9 +102,7 @@ export default {
 
 <style scoped>
 hr {
-  border: solid 1px #e3e2e1;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 .content {
   position: relative;
@@ -142,43 +118,40 @@ user agent stylesheet div {
 }
 
 /* top div */
-input[id="check"] + label {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #e3e2e1;
-  cursor: pointer;
-  margin-right: 10px;
-  vertical-align: top;
-  text-align: center;
-  border-radius: 4px;
+.agree {
+  padding-right: 10px;
 }
-input[id="check"] {
+.agree input[type="checkbox"] {
   display: none;
 }
-input[id="check"]:checked + label {
-  background-color: #e3e2e1;
+.agree input[type="checkbox"] + label {
+  width: 30px;
+  height: 30px;
+  background: #d2cdc5;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  margin-right: 10px;
 }
-input[id="check"]:checked + .check-mark:after {
-  content: "";
+.agree input[type="checkbox"] + label:hover {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+}
+.agree input[type="checkbox"]:checked + label {
+  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
+  float: left;
+}
+.agree input[type="checkbox"] + label span {
   position: absolute;
-  width: 10px;
-  transition: 0.1s;
-  height: 5px;
-  top: 45%;
-  left: 50%;
-  border-left: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-  transform: translate(-50%, -50%) rotate(-45deg);
+  left: 0px;
+  display: block;
 }
-
 .b1 {
   background-color: white;
   color: #474346;
   border: 1px solid #d2cdc5;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
@@ -189,22 +162,24 @@ input[id="check"]:checked + .check-mark:after {
   color: white;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
   outline: none;
+  border: none;
 }
 .b3 {
   background-color: #a49988;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   text-align: center;
   outline: none;
+  border: none;
 }
 .b4 {
   background-color: #474346;
@@ -212,11 +187,12 @@ input[id="check"]:checked + .check-mark:after {
   margin-right: 10px;
   border-radius: 4px;
   text-align: center;
-  width: 100px;
+  width: 60px;
   height: 30px;
   font-size: 12px;
   border: none;
   outline: none;
+  border: none;
 }
 button:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
@@ -252,22 +228,27 @@ input:hover {
   vertical-align: middle;
 }
 option {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  text-align: center;
+  background-color: #a49988;
 }
-option:hover {
+option:before {
+  content: ">";
+  font-size: 20px;
+  display: none;
+  padding-right: 10px;
+  padding-left: 5px;
+  color: #fff;
+}
+option:hover:before {
+  display: inline;
+}
+input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  text-align-last: center;
-  font-size: 12px;
-  outline: none;
 }
 .value {
   border: 1px solid #a49988;
-  width: 300px;
+  width: 200px;
   height: 30px;
   text-align: center;
   font-size: 12px;
@@ -283,21 +264,23 @@ option:hover {
   text-align: center;
   outline: none;
   vertical-align: middle;
+  border: none;
 }
-
+.search-icon {
+  border: none;
+}
 /* bottom div */
-
 img {
   border: 2px solid #e3e2e1;
 }
 .li {
   float: left;
   margin-bottom: 10px;
+  margin-right: 15px;
 }
 .thumb {
   width: 150px;
   height: 150px;
-  border: 2px solid #e3e2e1;
 }
 .info {
   margin-top: 11px;
