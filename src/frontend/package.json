@@ -20,6 +20,7 @@
     "mdi-vue": "^1.6.3",
     "path": "^0.12.7",
     "request": "^2.88.2",
+    "stylus-loader": "^3.0.2",
     "vue": "^2.6.11",
     "vue-button-effect": "0.0.3",
     "vue-class-component": "^7.2.3",

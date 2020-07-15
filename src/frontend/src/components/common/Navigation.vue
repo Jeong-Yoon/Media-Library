@@ -4,12 +4,8 @@
       <div class="list">
         <ul class="menu-root">
           <li id="usage">
-            <p class="p1">
-              {{ use_capacity }}GB /
-            </p>
-            <p class="p2">
-              {{ total_capacity }}GB
-            </p>
+            <p class="p1">{{ use_capacity }}GB /</p>
+            <p class="p2">{{ total_capacity }}GB</p>
             <div id="progress">
               <k-progress
                 :percent="80"
@@ -19,34 +15,38 @@
                 :line-height="7"
               />
             </div>
-            <p class="p3">
-              여유{{ spare_capacity }}GB
-            </p>
+            <p class="p3">여유{{ spare_capacity }}GB</p>
           </li>
-          <hr class="top">
+          <hr class="top" />
           <div class="document">
             <perfect-scrollbar>
               <li>
-                <h3>개인 문서함</h3>
+                <router-link to="/ownDocumentBox" class="a">
+                  <h3>개인 문서함</h3>
+                </router-link>
               </li>
-              <hr class="middle1">
+              <hr class="middle1" />
               <li>
-                <h3>공유 문서함</h3>
+                <router-link to="/shareDocumentBox" class="a">
+                  <h3>공유 문서함</h3>
+                </router-link>
               </li>
-              <hr class="middle2">
+              <hr class="middle2" />
               <li>
-                <h3>앨범</h3>
+                <router-link to="/albumDocumentBox" class="a">
+                  <h3>앨범</h3>
+                </router-link>
               </li>
             </perfect-scrollbar>
           </div>
-          <hr class="bottom">
+          <hr class="bottom" />
           <li class="trash">
-            <router-link to="/">
+            <router-link to="/trashDocumentBox" class="a">
               <img
                 src="@/assets/image/trash.png"
                 alt="trash logo"
                 height="30px"
-              >
+              />
               <p class="p4">
                 휴지통
               </p>
@@ -66,9 +66,9 @@ export default {
       use_capacity: "409",
       total_capacity: "512",
       percentage: 80,
-      spare_capacity: "102"
+      spare_capacity: "102",
     };
-  }
+  },
 };
 </script>
 
@@ -102,6 +102,7 @@ h3:hover {
   background-color: white;
   -webkit-overflow-scrolling: touch;
   -ms-overflow-style: none;
+  position: fixed;
 }
 user agent stylesheet div {
   display: block;
@@ -138,6 +139,19 @@ user agent stylesheet div {
   clear: both;
   padding-top: 5px;
 }
+.a:link {
+  text-decoration: none;
+  color: #474346;
+}
+.a:visited {
+  text-decoration: none;
+  color: #474346;
+}
+.a:active {
+  text-decoration: none;
+  color: #474346;
+}
+
 .trash {
   padding-left: 90px;
   position: fixed;

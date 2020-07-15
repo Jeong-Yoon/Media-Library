@@ -2,12 +2,8 @@
   <div id="app">
     <AppHeader />
     <router-view />
-    <div
-      v-if="token !== null"
-      class="app-contents"
-    >
+    <div v-if="token !== null" class="app-contents">
       <Navigation />
-      <own-document-box />
       <image-viewing />
       <Video-viewing />
     </div>
@@ -17,9 +13,7 @@
 <script>
 import AppHeader from "@/components/common/AppHeader.vue";
 import Navigation from "@/components/common/Navigation.vue";
-import OwnDocumentBox from "@/components/OwnDocumentBox.vue";
-import { mapState } from 'vuex';
-
+import { mapState } from "vuex";
 import ImageViewing from "@/components/ImageViewing.vue";
 import VideoViewing from "@/components/VideoViewing.vue";
 
@@ -27,17 +21,16 @@ export default {
   components: {
     AppHeader,
     Navigation,
-    OwnDocumentBox,
     ImageViewing,
     VideoViewing,
   },
   data() {
     return {};
   },
-  computed:{
+  computed: {
     ...mapState({
-      token : state => state.token
-    })
+      token: (state) => state.token,
+    }),
   },
 };
 </script>
