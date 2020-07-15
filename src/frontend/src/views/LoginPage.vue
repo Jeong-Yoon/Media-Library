@@ -116,11 +116,11 @@ export default {
         this.parseJwt(this.$store.state.token);
         console.log(this.saveId)
         if(this.saveId){
-          this.$cookie.set('email', this.email)
-          this.$cookie.set('saveId', this.saveId)
+          this.$cookie.set('email', this.email);
+          this.$cookie.set('saveId', this.saveId);
         } else if(this.saveId === false){
           this.$cookie.delete('email');
-          this.$cookie.delete('saveId')
+          this.$cookie.delete('saveId');
         }
         this.$router.push(this.returnPath);
       })

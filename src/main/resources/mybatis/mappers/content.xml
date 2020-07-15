@@ -49,5 +49,10 @@
 		set content_delete = 'Y'
 		where content_id = #{contentId}
 	</update>
-
+	
+	<select id="getcontentbyid" parameterType="long" resultType="imagedto">
+		select * 
+		from contents
+		where content_id = #{imageId}
+	</select>
 </mapper>

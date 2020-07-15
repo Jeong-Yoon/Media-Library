@@ -12,7 +12,7 @@ public interface FolderService {
 
 	public int addFolderUser(FolderUserDTO folderUserDTO);
 
-	public List<FolderVO> getFolderList(Long id);
+	public List<String> getFolderList(Long id);
 
 	public int changeFolderName(FolderNameDTO folderNameDTO);
 

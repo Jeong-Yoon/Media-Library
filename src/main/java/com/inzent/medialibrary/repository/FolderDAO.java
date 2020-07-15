@@ -1,6 +1,7 @@
 package com.inzent.medialibrary.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,13 @@ public class FolderDAO {
 		return sqlSession.insert("addfolderuser", folderUserDTO);
 	}
 
-	public List<FolderVO> getFolderList(Long id) {
-		return sqlSession.selectList("getfolderlistbyparentid", id);
+	public List<String> getFolderList(Long id) {
+		List<String> list = sqlSession.selectList("getchildren", id);
+		for(String s : list) {
+			System.out.println(s);
+		}
+		return list;
+//		return sqlSession.selectList("getfolderlistbyparentid", id);
 	}
 
 	public int changeFolderName(FolderNameDTO folderNameDTO) {

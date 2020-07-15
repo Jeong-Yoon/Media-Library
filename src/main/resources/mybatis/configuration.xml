@@ -14,6 +14,7 @@
 			<typeAlias type="com.inzent.medialibrary.dto.ContentVO" alias="contentvo"/>
 			<typeAlias type="com.inzent.medialibrary.dto.UploadContentDTO" alias="uploadcontentdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.ContentDetailDTO" alias="contentdetaildto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.ImageDTO" alias="imagedto"/>
 	</typeAliases>
 
 	<mappers>

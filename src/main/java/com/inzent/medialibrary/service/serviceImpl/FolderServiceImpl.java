@@ -40,7 +40,7 @@ public class FolderServiceImpl implements FolderService{
 	}
 
 	@Override
-	public List<FolderVO> getFolderList(Long id) {
+	public List<String> getFolderList(Long id) {
 		return folderDAO.getFolderList(id);
 	}
 

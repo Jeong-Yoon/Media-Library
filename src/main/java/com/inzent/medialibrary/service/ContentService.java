@@ -6,10 +6,12 @@ import java.util.Map;
 import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.ImageDTO;
 
 public interface ContentService {
 	public List<ContentVO> getContentList(Long folderId);
 	public int uploadContent(ContentDTO contentDTO);
 	public void uploadContentDetail(ContentDetailDTO detailDTO, Map<String, Object> json);
 	public void getContentDetail(Long contentId);
+	public ImageDTO getContentById(long image_id);
 }

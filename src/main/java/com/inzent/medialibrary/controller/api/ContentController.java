@@ -39,10 +39,11 @@ public class ContentController {
 	
 	
 	@PostMapping("/upload")
-//	public FileUploadResponse uploadContent(@RequestParam("file") MultipartFile file){
-	public ResponseEntity<?> uploadContent(@RequestBody ContentDTO contentDTO){
-//		ContentDTO cone = new ContentDTO();
-//		cone.setContent(file);
+	public FileUploadResponse uploadContent(@RequestParam("file") MultipartFile file){
+//	public ResponseEntity<?> uploadContent(@RequestBody ContentDTO contentDTO){
+		ContentDTO cone = new ContentDTO();
+		cone.setContent(file);
+		contentService.uploadContent(cone);
 		
 		//TODO
 //		Map<String, Object> json = detailDTO.getContent_attribute();
@@ -52,9 +53,9 @@ public class ContentController {
 		
 //		System.out.println(contentDTO.getContent().getContentType());
 //		System.out.println(contentDTO.getContentType());
-//        return new FileUploadResponse(file.getName(), file.getContentType(), file.getSize());
+        return new FileUploadResponse(file.getName(), file.getContentType(), file.getSize());
 
-		return new ResponseEntity<>(HttpStatus.CREATED);
+//		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/upload2")

@@ -1,6 +1,9 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -16,12 +19,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.service.FolderService;
 import com.inzent.medialibrary.utils.MakeDir;
 
@@ -46,10 +54,17 @@ public class FolderController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/{folder_id}")
-	public ResponseEntity<List<FolderVO>> getFolderList(@PathVariable("folder_id") Long id){
-		List<FolderVO> folderlist = folderService.getFolderList(id);
-		return new ResponseEntity<List<FolderVO>>(folderlist, HttpStatus.OK);
+	@PostMapping("/getfolders")
+	public ResponseEntity<List<Map<String, Object>>> getFolderList(@RequestBody ParentIdDTO parentDTO) throws JsonMappingException, JsonProcessingException{
+		
+		System.out.println("get folder");
+		List<String> list = folderService.getFolderList(parentDTO.getParent());
+		List<Map<String, Object>> folderlist = new ArrayList<Map<String,Object>>();
+		for(String s : list) {
+			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
+			folderlist.add(map);
+		}
+		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
 	}
 	
 	@PutMapping

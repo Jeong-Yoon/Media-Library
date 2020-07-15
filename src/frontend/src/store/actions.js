@@ -4,7 +4,7 @@ const actions = {
     LOGIN({commit}, {email, password}){
         return api.auth
         .login(email, password)
-        .then(({ accessToken }) => commit('LOGIN',accessToken));
+        .then(({ root_folder, accessToken }) => commit('LOGIN', {root_folder, accessToken}));
     },
     CHECK_EMAIL(_,{email}){
         return api.checkEmail.check({email})

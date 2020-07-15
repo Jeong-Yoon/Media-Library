@@ -1,6 +1,7 @@
 const state = {
     token: null,
-    userInfo:""
+    userInfo:"",
+    root_folder:""
   }
   
   export default state;

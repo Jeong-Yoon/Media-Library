@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
 import com.inzent.medialibrary.repository.ContentDAO;
 import com.inzent.medialibrary.service.ContentService;
@@ -62,11 +63,11 @@ public class ContentServiceImpl implements ContentService {
 				return 0;
 			}
 			System.out.println(ucDTO.toString());
-			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
-			Map<String, Object> map = new HashMap<String, Object>();
-			int height = image.getHeight();
-			int width = image.getWidth();
-			map.put("해상도", height + "*" + width);
+//			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			int height = image.getHeight();
+//			int width = image.getWidth();
+//			map.put("해상도", height + "*" + width);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,5 +86,10 @@ public class ContentServiceImpl implements ContentService {
 		System.out.println(cdDTO.getContent_id()+"11111111111111111111");
 		System.out.println(cdDTO.getContent_attribute());
 		System.out.println(contentDAO.getContentDetail(contentId).getContent_attribute());
+	}
+
+	@Override
+	public ImageDTO getContentById(long image_id) {
+		return contentDAO.getContentById(image_id);
 	}
 }
