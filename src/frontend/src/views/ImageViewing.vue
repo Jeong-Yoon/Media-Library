@@ -210,15 +210,7 @@ body, p, h1, h2, h3, h4, h5, h6, menu, ul, ol, li, dl, dt, dd, table, th, td, fo
     z-index: 5;
     font-size: 11px;
 }
-.v_paginate a .ic_toggle {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    width: 11px;
-    height: 11px;
-    background-position: -27px -22px;
-    content: '';
-}
+
 .v_photo_list ul {
     padding: 13px 10px 24px;
     font-size: 0;
