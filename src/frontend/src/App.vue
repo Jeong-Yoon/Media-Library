@@ -8,6 +8,8 @@
     >
       <Navigation />
       <own-document-box />
+      <image-viewing />
+      <Video-viewing />
     </div>
   </div>
 </template>
@@ -18,11 +20,16 @@ import Navigation from "@/components/common/Navigation.vue";
 import OwnDocumentBox from "@/components/OwnDocumentBox.vue";
 import { mapState } from 'vuex';
 
+import ImageViewing from "@/components/ImageViewing.vue";
+import VideoViewing from "@/components/VideoViewing.vue";
+
 export default {
   components: {
     AppHeader,
     Navigation,
     OwnDocumentBox,
+    ImageViewing,
+    VideoViewing,
   },
   data() {
     return {};
@@ -42,4 +49,7 @@ export default {
 template {
   background-color: white;
 }
+
+
+
 </style>
