@@ -60,7 +60,7 @@
           <li class="li" title="june.jpg">
             <label for>
               <div class="thumb">
-                <span class="file">
+                <span class="file" onclick="openModal()">
                   <img
                     src="@/assets/image/june.jpg"
                     alt="june.jpg"
@@ -71,7 +71,7 @@
                 </span>
               </div>
               <div class="info">
-                <span class="title">쭈니.jpg</span>
+                <span class="title"  onclick="openModal()" >쭈니.jpg</span>
               </div>
             </label>
           </li>
