@@ -3,21 +3,41 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="user">
-	<select id="getuserbyemail" parameterType="string" resultType="uservo">
+	<select id="getuserbyemail" parameterType="string" resultType="loginuserdto">
 		<![CDATA[
-			select *
-			from users
-			where user_email = #{email};
+			select u.*, f.folder_id as root_folder
+			from users u, folders f
+			where u.user_id = f.folder_reg_user
+			and u.user_email = #{email}
+			and f.folder_parent is null
 		]]>
 	</select>
 	
-	<insert id="signup" parameterType="signupdto">
+	<insert id="signup2" parameterType="signupdto">
 		<![CDATA[
 			insert into 
 			users (user_id, user_email, user_pw, user_name, user_phone, user_company, user_department, user_job)
 			values (NEXTVAL('seq_user'), #{email}, #{password}, #{name}, #{phone}, #{company}, #{department}, #{job});
 			RETURNING user_id
 		]]>
+	</insert>
+	
+	<insert id="signup" parameterType="signupdto">
+		with ins1 as(
+			insert into 
+			users (user_id, user_email, user_pw, user_name, user_phone, user_company, user_department, user_job)
+			values (NEXTVAL('seq_user'), #{email}, #{password}, #{name}, #{phone}, #{company}, #{department}, #{job})
+			RETURNING user_id),
+		ins2 as(
+			insert into folders 
+			(folder_id, folder_name, folder_path, folder_parent, folder_reg_user, folder_update_user) 
+			values
+			(NEXTVAL('seq_folder'), '개인 문서함' , '/' , null, (select user_id from ins1), (select user_id from ins1))
+			)
+		insert into capacities
+		(user_id)
+		values
+		((select user_id from ins1))
 	</insert>
 	
 	<select id="emailchk" parameterType="string" resultType="int">

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inzent.medialibrary.dto.EmailDTO;
 import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.LoginDTO;
+import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
 import com.inzent.medialibrary.dto.UserVO;
 import com.inzent.medialibrary.security.JwtService;
@@ -34,22 +35,21 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private JwtService jwtService;
-	@Autowired
-	private FolderService folderService;
+//	@Autowired
+//	private FolderService folderService;
 	
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
-		UserVO user = new UserVO();
-		user = userService.login(loginDTO);
+		LoginUserDTO user = userService.login(loginDTO);
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		Long folder_id = folderService.getfolderIdByUserId(user.getUser_id());
+//		Long folder_id = folderService.getfolderIdByUserId(user.getUser_id());
 		Map<String, Object> map = new HashMap<String, Object>();
 		String token = jwtService.getToken(user);
 		map.put("accessToken", token);
-		map.put("root_folder", folder_id);
+		map.put("root_folder", user.getRoot_folder());
 		return token != null ? new ResponseEntity<Object>(map, HttpStatus.OK)
 				: new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
@@ -68,12 +68,7 @@ public class UserController {
 		if (userService.emailChk(signUpDTO.getEmail()) == 1) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		Long user_id = userService.signup(signUpDTO);
-		Long folder_id = folderService.createRootFolder(user_id);
-		FolderUserDTO folderUserDTO = new FolderUserDTO();
-		folderUserDTO.setFolder_id(folder_id);
-		folderUserDTO.setUser_id(user_id);
-		int result = folderService.addFolderUser(folderUserDTO);
+		int result = userService.signup(signUpDTO);
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 

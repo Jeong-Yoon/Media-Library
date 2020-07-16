@@ -1,5 +1,6 @@
 package com.inzent.medialibrary.security;
 
+import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.UserVO;
 
 import io.jsonwebtoken.Claims;
@@ -24,7 +25,7 @@ public class JwtServiceImpl implements JwtService{
 	private static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); 
 //	JwtProperties.SECRET;
 	
-	public String getToken(UserVO user) {
+	public String getToken(LoginUserDTO user) {
 //		System.out.println(KEY.getAlgorithm());
 //		System.out.println(KEY.getFormat());
 //		System.out.println(KEY.getEncoded());

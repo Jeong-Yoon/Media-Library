@@ -67,7 +67,7 @@ public class FolderController {
 		for(String s : list) {
 			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
 			if(map.get("id").toString().startsWith("3")) {
-				map.put("content",contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+				map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
 			}
 			folderlist.add(map);
 		}
