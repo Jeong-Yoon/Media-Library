@@ -112,33 +112,46 @@
           <ul class="table">
             <li
               v-for="folder in this.folderList"
-              :key="folder.folder_id"
+              :key="folder.id"
               class="li"
-              @change="checkbox(folder.folder_id)"
+              @change="checkbox(folder.id)"
             >
               <div class="agree2">
                 <input
                   id="a2"
                   v-model="ids"
                   type="checkbox"
-                  :value="folder.folder_id"
-                  @click="select(folder.folder_id)"
+                  :value="folder.id"
+                  @click="select(folder.id)"
                 >
                 <label for="a2" />
               </div>
-              <img
-                src="@/assets/image/folder.png"
-                width="130"
-                height="130"
-                style="opacity: 1; transition: opacity 0.2s ease 0s;"
-              >
-              <div class="info">
-                <span class="title">{{ folder.folder_name }}</span>
+              <div v-if="checkType(folder.id)=='2'">
+                <img
+                  src="@/assets/image/folder.png"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                >
+                <div class="info">
+                  <span class="title">{{ folder.folder_name }}</span>
+                </div>
+              </div>
+
+              <div v-else>
+                <img
+                  :src="roadImg(folder.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                >
+                <div class="info">
+                  <span class="title">{{ folder.content_name }}</span>
+                </div>
               </div>
             </li>
           </ul>
         </div>
-        <p>selected ids : {{ ids }}</p>
         <!-- 이미지 뷰잉 용 이미지 -->
         <ul class="list_thumb">
           <li
@@ -186,6 +199,7 @@
           <ImageViewingModal v-if="imageModal" />
           <VideoViewingModal v-if="videoModal" />
         </ul>
+        <p>selected ids : {{ ids }}</p>
       </div>
     </div>
 
@@ -244,6 +258,13 @@ export default {
   methods: {
     ...mapActions(["NEW_FOLDER", "GET_FOLDERS"]),
     async download() {},
+    checkType(id) {
+      // var temp = id.subStr(0, 1);
+      var temp = String(id);
+      temp = temp.substring(0, 1);
+      console.log("ddddddd: " + temp);
+      return temp;
+    },
     getFolders() {
       this.GET_FOLDERS({ parent: this.parent }).then(list => {
         console.log("ownpage list : " + list[0]);
@@ -307,6 +328,11 @@ export default {
             this.getFolders();
           });
       }
+    },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      console.log("result : " + result);
+      return result;
     }
   }
 };

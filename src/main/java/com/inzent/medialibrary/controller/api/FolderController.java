@@ -71,7 +71,6 @@ public class FolderController {
 			}
 			folderlist.add(map);
 		}
-//		System.out.println(folderlist.get(0).put(key, value));
 		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
 	}
 	
