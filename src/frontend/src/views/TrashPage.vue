@@ -8,7 +8,7 @@
             <label for="a1"></label>
           </div>
         </div>
-        <button class="b1">새폴더</button>
+        <button class="b1">휴지통 비우기</button>
         <button class="b2">폴더</button>
         <button class="b3">사진</button>
         <button class="b4">동영상</button>
@@ -18,7 +18,12 @@
             <option value="contents_atribute">확장자</option>
             <option value="contents_reg_date">등록일</option>
           </select>
-          <input type="text" name="search" placeholder="Search.." class="value" />
+          <input
+            type="text"
+            name="search"
+            placeholder="Search.."
+            class="value"
+          />
           <button type="submit" class="submit">
             <img
               src="@/assets/image/search.png"
@@ -73,23 +78,12 @@
         </ul>
       </div>
     </div>
-    <quick-menu
-      :menu-count="count"
-      :icon-class="icons"
-      :menu-url-list="list"
-      :position="position"
-      :background-color="backgroundColor"
-    />
   </content>
 </template>
 
 <script>
-import quickMenu from "vue-quick-menu";
-
 export default {
-  components: {
-    quickMenu
-  },
+  components: {},
   data() {
     return {
       count: 2,
@@ -97,12 +91,12 @@ export default {
       list: [
         { isLink: true, url: "/" },
         { isLink: true, url: "/" },
-        { isLink: true, url: "/" }
+        { isLink: true, url: "/" },
       ],
       position: "bottom-right",
-      backgroundColor: "#474346"
+      backgroundColor: "#474346",
     };
-  }
+  },
 };
 </script>
 

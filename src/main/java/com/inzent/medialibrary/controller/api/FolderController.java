@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.AbstractDocument.Content;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
+import com.inzent.medialibrary.service.ContentService;
 import com.inzent.medialibrary.service.FolderService;
 import com.inzent.medialibrary.utils.MakeDir;
 
@@ -40,6 +42,8 @@ public class FolderController {
 	
 	@Autowired
 	private FolderService folderService;
+	@Autowired
+	private ContentService contentService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Integer> addFolder(@RequestBody @Valid AddFolderDTO addFolderDTO, BindingResult bindingResult){
@@ -62,8 +66,12 @@ public class FolderController {
 		List<Map<String, Object>> folderlist = new ArrayList<Map<String,Object>>();
 		for(String s : list) {
 			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
+			if(map.get("id").toString().startsWith("3")) {
+				map.put("content",contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+			}
 			folderlist.add(map);
 		}
+//		System.out.println(folderlist.get(0).put(key, value));
 		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
 	}
 	

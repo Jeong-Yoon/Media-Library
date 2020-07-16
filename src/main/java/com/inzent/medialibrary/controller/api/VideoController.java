@@ -8,5 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin("*")
 @RequestMapping("/api/videos")
 public class VideoController {
-
+	
+	
 }

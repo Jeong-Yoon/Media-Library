@@ -35,7 +35,7 @@ public class ImageController {
 	ContentService contentService;
 	
 	@PostMapping("/getimages")
-	public ResponseEntity<byte[]> getImage(@RequestBody ImageIdDTO imageIdDTO) throws IOException{
+	public ResponseEntity<ImageDTO> getImage(@RequestBody ImageIdDTO imageIdDTO) throws IOException{
 		System.out.println(imageIdDTO.getImage_id());
 		ImageDTO image = contentService.getContentById(imageIdDTO.getImage_id());
 		System.out.println("image"+image.getContent_storage());
@@ -43,14 +43,14 @@ public class ImageController {
 //		Path localPath = Paths.get(path);
 //		Files.read
 //		byte[] imageBytes = Files.readAllBytes(localPath);
-		InputStream in = new FileInputStream(image.getContent_storage());
-		image.setContent(IOUtils.toByteArray(in));
-		image.setContent_type("image/jpeg");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.IMAGE_PNG);
-		headers.add("Content-Disposition", "attachment; filename=\"" + new String(image.getContent_origin_name().getBytes("UTF-8"), "ISO-8859-1")+"\""); 
-		return new ResponseEntity<byte[]>(image.getContent(),headers, HttpStatus.OK);
-//		return new ResponseEntity<ImageDTO>(image, HttpStatus.OK);
+//		InputStream in = new FileInputStream(image.getContent_storage());
+//		image.setContent(IOUtils.toByteArray(in));
+//		image.setContent_type("image/jpeg");
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.IMAGE_PNG);
+//		headers.add("Content-Disposition", "attachment; filename=\"" + new String(image.getContent_origin_name().getBytes("UTF-8"), "ISO-8859-1")+"\""); 
+//		return new ResponseEntity<byte[]>(image.getContent(),headers, HttpStatus.OK);
+		return new ResponseEntity<ImageDTO>(image, HttpStatus.OK);
 	}
 	
 //    @GetMapping("/downloadFile/{fileName:.+}")

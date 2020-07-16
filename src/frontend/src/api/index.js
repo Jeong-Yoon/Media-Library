@@ -62,6 +62,32 @@ export const signup = {
   },
 };
 
+export const newFolder = {
+  newFolder(data) {
+    // console.log(parent);
+    // console.log(newFolderName);
+    // console.log(userEmail);
+    console.log(data.userEmail + ": api");
+    console.log(data.parent + ": api");
+    console.log(data.newFolderName + ": api");
+    const parent = data.parent;
+    const newFolderName = data.newFolderName;
+    const userEmail = data.userEmail;
+    return request("post", "/api/folders/add", {
+      parent,
+      newFolderName,
+      userEmail,
+    });
+  },
+};
+
+export const getFolders = {
+  getFolders({ parent }) {
+    console.log(parent + ": api / getfolders");
+    return request("post", "/api/folders/getfolders", { parent });
+  },
+};
+
 function createInstance() {
   return axios.create({
     baseURL: DOMAIN,

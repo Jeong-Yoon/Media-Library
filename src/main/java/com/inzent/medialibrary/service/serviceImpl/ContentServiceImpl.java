@@ -2,6 +2,8 @@ package com.inzent.medialibrary.service.serviceImpl;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,6 +93,15 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public ImageDTO getContentById(long image_id) {
-		return contentDAO.getContentById(image_id);
+		ImageDTO image = contentDAO.getContentById(image_id);
+		InputStream in;
+		try {
+			in = new FileInputStream(image.getContent_storage());
+			image.setContent(IOUtils.toByteArray(in));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return image;
 	}
 }
