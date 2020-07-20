@@ -1,74 +1,136 @@
 <template>
   <div>
-    <span @click="openImageNav" style="cursor: pointer;">이미지</span>
+    <span
+      style="cursor: pointer;"
+      @click="openImageNav"
+    >이미지</span>
 
     <!-- 이미지 모달 -->
-    <div class="overlay" id="image_nav" tabindex="1" role="dialog">
+    <div
+      id="image_nav"
+      class="overlay"
+      tabindex="1"
+      role="dialog"
+    >
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-        <a class="v_btn_close" @click="closeImageNav()" style="color:#fff;  font-size: 14px;">나가기</a>
+        <a
+          class="v_btn_close"
+          style="color:#fff;  font-size: 14px;"
+          @click="closeImageNav()"
+        >나가기</a>
 
         <div class="v_task">
           <!-- 확대/축소 -->
           <!-- <div class="zoom_wrap">       -->
-          <a class="zoom-in" id="in" title="확대" @click="zoomIn()" style="margin-right:3px">
-            <img src="@/assets/image/icon_pl.png" height="15.5px" />
+          <a
+            id="in"
+            class="zoom-in"
+            title="확대"
+            style="margin-right:3px"
+            @click="zoomIn()"
+          >
+            <img
+              src="@/assets/image/icon_pl.png"
+              height="15.5px"
+            >
           </a>
-          <a class="zoom-out" id="out" title="축소" @click="zoomOut()" style="margin-right:3px">
-            <img src="@/assets/image/icon_mi.png" height="15.5px" />
+          <a
+            id="out"
+            class="zoom-out"
+            title="축소"
+            style="margin-right:3px"
+            @click="zoomOut()"
+          >
+            <img
+              src="@/assets/image/icon_mi.png"
+              height="15.5px"
+            >
           </a>
           <!-- </div> -->
 
           <!-- 회전 -->
           <a
             class="v_ta_rotate"
-            @click="rotate()"
             title="회전"
             style="margin-right:3px; top : 0.5px;"
+            @click="rotate()"
           >
-            <img src="@/assets/image/icon2.png" height="16.7px" />
+            <img
+              src="@/assets/image/icon2.png"
+              height="16.7px"
+            >
           </a>
 
           <!-- 돋보기 -->
-          <a class="v_ta_magnifying" title="돋보기" style="top : 1.5px">
-            <img src="@/assets/image/icon3.png" height="15px" />
+          <a
+            class="v_ta_magnifying"
+            title="돋보기"
+            style="top : 1.5px"
+          >
+            <img
+              src="@/assets/image/icon3.png"
+              height="15px"
+            >
           </a>
 
           <!-- 공유 -->
           <a
-            class="share_modal"
             id="shareBtn"
-            @click="openShareModal()"
+            class="share_modal"
             title="공유"
             style="margin-right:3px"
+            @click="openShareModal()"
           >
-            <img src="@/assets/image/icon4.png" height="15px" />
+            <img
+              src="@/assets/image/icon4.png"
+              height="15px"
+            >
           </a>
 
           <!-- 정보 -->
           <a
-            class="info_modal"
             id="infoBtn"
-            @click="openInfoModal()"
+            class="info_modal"
             title="정보"
             style="margin-right:3px; top : 0.5px"
+            @click="openInfoModal()"
           >
-            <img src="@/assets/image/icon5.png" height="15.5px" />
+            <img
+              src="@/assets/image/icon5.png"
+              height="15.5px"
+            >
           </a>
 
           <!-- 삭제 -->
-          <a class="v_ta_trash" title="휴지통">
-            <img src="@/assets/image/icon6.png" height="15px" />
+          <a
+            class="v_ta_trash"
+            title="휴지통"
+          >
+            <img
+              src="@/assets/image/icon6.png"
+              height="15px"
+            >
           </a>
 
           <!-- 더보기 -->
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
-            <a class="dropbtn" title="더보기" style="left:-3px">
-              <img src="@/assets/image/icon7.png" height="15px" />
+            <a
+              class="dropbtn"
+              title="더보기"
+              style="left:-3px"
+            >
+              <img
+                src="@/assets/image/icon7.png"
+                height="15px"
+              >
             </a>
-            <div class="dropdown-content" style="float : right;">
+            <div
+              class="dropdown-content"
+              style="float : right;"
+            >
               <a
                 class="slider_option"
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();"
@@ -86,16 +148,37 @@
       <!-- content -->
       <div class="content">
         <!-- <div class ="image-container">  -->
-        <div class="image-container" id="imgContainer">
-          <img class="image" id="img" src="@/assets/image/zo.png" />
+        <div
+          id="imgContainer"
+          class="image-container"
+        >
+          <img
+            id="img"
+            class="image"
+            src="@/assets/image/zo.png"
+          >
         </div>
 
         <div class="slideshow">
-          <a class="v_btn_prev" @click="plusDivs(-1)" title="이전사진">
-            <img src="@/assets/image/btn_prev.png" height="30px" />
+          <a
+            class="v_btn_prev"
+            title="이전사진"
+            @click="plusDivs(-1)"
+          >
+            <img
+              src="@/assets/image/btn_prev.png"
+              height="30px"
+            >
           </a>
-          <a class="v_btn_next" @click="plusDivs(1)" title="다음사진">
-            <img src="@/assets/image/btn_next.png" height="30px" />
+          <a
+            class="v_btn_next"
+            title="다음사진"
+            @click="plusDivs(1)"
+          >
+            <img
+              src="@/assets/image/btn_next.png"
+              height="30px"
+            >
           </a>
         </div>
       </div>
@@ -103,8 +186,12 @@
 
       <!-- footer -->
       <div class="footer">
-        <input type="checkbox" name="toggle" id="toggle" />
-        <label for="toggle"></label>
+        <input
+          id="toggle"
+          type="checkbox"
+          name="toggle"
+        >
+        <label for="toggle" />
 
         <div class="toggle-container">
           <!-- thumb list -->
@@ -112,21 +199,21 @@
             <ul class="image_list">
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img src="https://www.w3schools.com/images/w3schools_green.jpg">
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img src="https://www.w3schools.com/images/w3schools_green.jpg">
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img src="https://www.w3schools.com/images/w3schools_green.jpg">
                   <span class="mask_sel" />
                 </a>
               </li>
@@ -140,46 +227,74 @@
     <!-- 큰 모달 끝 -->
 
     <!-- 공유 모달 -->
-    <div id="shareModal" class="sharemodal">
+    <div
+      id="shareModal"
+      class="sharemodal"
+    >
       <div class="share-modal-content">
         <div class="share-modal-header">
           <a style="font-size : 16px">공유 URL 생성</a>
-          <span class="closesharemodal" @click="closeShareModal()">&times;</span>
+          <span
+            class="closesharemodal"
+            @click="closeShareModal()"
+          >&times;</span>
         </div>
 
         <div class="share-modal-body">
-          <button type="button" class="btn_copy" data-dismiss="modal">복사</button>
+          <button
+            type="button"
+            class="btn_copy"
+            data-dismiss="modal"
+          >
+            복사
+          </button>
           <p>URL 영역</p>
         </div>
 
-        <div class="share-modal-footer"></div>
+        <div class="share-modal-footer" />
       </div>
     </div>
     <!-- 공유 모달 끝 -->
 
     <!-- 정보 모달 -->
-    <div id="infoModal" class="infomodal">
+    <div
+      id="infoModal"
+      class="infomodal"
+    >
       <div class="info-modal-content">
         <div class="info-modal-header">
           <a style="font-size : 16px">정보</a>
-          <span class="closeinfomodal" @click="closeInfoModal()">&times;</span>
+          <span
+            class="closeinfomodal"
+            @click="closeInfoModal()"
+          >&times;</span>
         </div>
 
         <div class="info-modal-body">
-          <p style="margin-bottom : 5px;  color : #353535;">파일 정보</p>
-          <div class="info" style="font-size:13px; margin-left : 5px">
+          <p style="margin-bottom : 5px;  color : #353535;">
+            파일 정보
+          </p>
+          <div
+            class="info"
+            style="font-size:13px; margin-left : 5px"
+          >
             <span>해상도</span>
             <a style="font-color : #000">3024 X 3024</a>
-            <br />
+            <br>
             <span>파일크기</span>
-            <br />
+            <br>
             <span style="margin-bottom : 5px">업로드일시</span>
           </div>
         </div>
 
         <div class="info-modal-footer">
-          <p style="margin-bottom : 5px;  color : #353535;">폴더 경로</p>
-          <div class="info" style="font-size:13px; margin-left : 5px">
+          <p style="margin-bottom : 5px;  color : #353535;">
+            폴더 경로
+          </p>
+          <div
+            class="info"
+            style="font-size:13px; margin-left : 5px"
+          >
             <a>개인문서함/.../...</a>
           </div>
         </div>
@@ -188,31 +303,81 @@
     <!-- 정보 모달 끝 -->
 
     <!-- f11 -->
-    <div class="container" style="overflow: hidden;">
-      <div class="element" id="element" style="overflow: hidden;">
-        <div id="wrapper" style="overflow: hidden;">
-          <div id="container" style="overflow: hidden;">
-            <div class="image-container" id="imgContainer" style="overflow : hidden">
-              <img class="image" id="img" src="@/assets/image/zozo.png" />
+    <div
+      class="container"
+      style="overflow: hidden;"
+    >
+      <div
+        id="element"
+        class="element"
+        style="overflow: hidden;"
+      >
+        <div
+          id="wrapper"
+          style="overflow: hidden;"
+        >
+          <div
+            id="container"
+            style="overflow: hidden;"
+          >
+            <div
+              id="imgContainer"
+              class="image-container"
+              style="overflow : hidden"
+            >
+              <img
+                id="img"
+                class="image"
+                src="@/assets/image/zozo.png"
+              >
             </div>
 
             <!-- -->
             <div class="slide_in">
-              <a class="slide_next" @click="plusDivsSlide(-1)" title="이전" style="margin-left : 7px">
-                <img src="@/assets/image/icon_1_1.png" height="15px" />
+              <a
+                class="slide_next"
+                title="이전"
+                style="margin-left : 7px"
+                @click="plusDivsSlide(-1)"
+              >
+                <img
+                  src="@/assets/image/icon_1_1.png"
+                  height="15px"
+                >
               </a>
 
               <!-- <a class="slide_play_stop" @click="aaa" title="재생"><img src="@/assets/image/icon_1_2.png" height="15px"></a> -->
-              <a class="slide_play_stop" @click="aaa" title="일시정지">
-                <img src="@/assets/image/icon_1_2_1.png" height="15px" />
+              <a
+                class="slide_play_stop"
+                title="일시정지"
+                @click="aaa"
+              >
+                <img
+                  src="@/assets/image/icon_1_2_1.png"
+                  height="15px"
+                >
               </a>
 
-              <a class="slide_next" @click="plusDivsSlide(1)" title="다음">
-                <img src="@/assets/image/icon_1_3.png" height="15px" />
+              <a
+                class="slide_next"
+                title="다음"
+                @click="plusDivsSlide(1)"
+              >
+                <img
+                  src="@/assets/image/icon_1_3.png"
+                  height="15px"
+                >
               </a>
 
-              <a class="slide_play_stop" @click="closeFullscreen()" title="슬라이드쇼 마침">
-                <img src="@/assets/image/icon_1_4.png" height="15px" />
+              <a
+                class="slide_play_stop"
+                title="슬라이드쇼 마침"
+                @click="closeFullscreen()"
+              >
+                <img
+                  src="@/assets/image/icon_1_4.png"
+                  height="15px"
+                >
               </a>
             </div>
             <!-- -->
@@ -229,9 +394,12 @@
 <script>
 // import Cropper from '../utils/cropper.js'
 export default {
+  props : []
+  ,
   data() {
     return {
-      slideIndex: 1
+      slideIndex: 1,
+      image:"",
       // zoomIn:undefined,
       // zoomOut:undefined
     };
@@ -253,6 +421,15 @@ export default {
   },
 
   methods: {
+    // 이미지 불러오기
+    getImages(data){
+      this.GET_IMAGE({image_id : this.image_id}).then(()=> 
+      this.image = "data:image;base64," + data.content)
+      const result = "data:image;base64," + data;
+      console.log("result : " + result);
+      return result;
+    },
+
     //모달
     openImageNav() {
       console.log("이미지모달열어!");

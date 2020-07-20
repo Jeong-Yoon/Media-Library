@@ -14,11 +14,19 @@
 	
 	<insert id="uploadcontent" parameterType="uploadcontentdto">
 		<![CDATA[
-			insert into contents
-			(content_id, content_type, content_origin_name, content_save_name, content_storage, content_size, content_reg_user, folder_id)
+			with ins1 as (
+				insert into contents
+				(content_id, content_type, content_origin_name, content_save_name, content_storage, content_size, content_reg_user, folder_id)
+				values
+				(NEXTVAL('seq_contents'),#{content_type}, #{content_origin_name}, #{content_save_name}, #{content_storage}, #{content_size}, #{user_id}, #{folder_id})
+				RETURNING content_id),
+			ins2 as (insert into contents_details 
+			(content_id, content_attribute)
 			values
-			(NEXTVAL('seq_contents'),#{content_type}, #{content_origin_name}, #{content_save_name}, #{content_storage}, #{content_size}, #{content_reg_user}, #{folder_id})
-			RETURNING content_id
+			((select content_id from ins1), #{content_attribute, typeHandler=com.inzent.medialibrary.utils.JSONTypeHandler}))
+			update capacities 
+			set use_capacity = use_capacity + #{content_size}
+			where user_id = #{user_id}
 		]]>
 	</insert>
 	
@@ -54,5 +62,12 @@
 		select * 
 		from contents
 		where content_id = #{imageId}
+	</select>
+	
+	<select id="selecttarget" parameterType="selecttargetdto" resultType="imagedto">
+		select *
+		from contents
+		where folder_id = #{parent}
+		and content_type = #{target}
 	</select>
 </mapper>

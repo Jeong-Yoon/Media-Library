@@ -3,20 +3,14 @@ package com.inzent.medialibrary.controller.api;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.dto.ImageIdDTO;
-import com.inzent.medialibrary.repository.ContentDAO;
 import com.inzent.medialibrary.service.ContentService;
 
 @RestController
@@ -43,12 +36,12 @@ public class ImageController {
 //		Path localPath = Paths.get(path);
 //		Files.read
 //		byte[] imageBytes = Files.readAllBytes(localPath);
-//		InputStream in = new FileInputStream(image.getContent_storage());
-//		image.setContent(IOUtils.toByteArray(in));
+		InputStream in = new FileInputStream(image.getContent_storage());
+		image.setContent(IOUtils.toByteArray(in));
 //		image.setContent_type("image/jpeg");
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.IMAGE_PNG);
-//		headers.add("Content-Disposition", "attachment; filename=\"" + new String(image.getContent_origin_name().getBytes("UTF-8"), "ISO-8859-1")+"\""); 
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.add("Content-Disposition", "attachment; filename=\"" + new String(image.getContent_origin_name().getBytes("UTF-8"), "ISO-8859-1")+"\""); 
 //		return new ResponseEntity<byte[]>(image.getContent(),headers, HttpStatus.OK);
 		return new ResponseEntity<ImageDTO>(image, HttpStatus.OK);
 	}

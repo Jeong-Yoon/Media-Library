@@ -8,13 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
-import com.inzent.medialibrary.dto.UserVO;
-import com.inzent.medialibrary.repository.FolderDAO;
 import com.inzent.medialibrary.repository.UserDAO;
-import com.inzent.medialibrary.security.JwtService;
 import com.inzent.medialibrary.service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 public class UserServiceImpl implements UserService {

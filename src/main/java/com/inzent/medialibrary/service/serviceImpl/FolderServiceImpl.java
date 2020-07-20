@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
-import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.repository.FolderDAO;
 import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.service.FolderService;
@@ -22,7 +22,7 @@ public class FolderServiceImpl implements FolderService{
 	private UserDAO userDAO;
 	
 	@Override
-	public Long addFolder(AddFolderDTO addFolderDTO) {
+	public int addFolder(AddFolderDTO addFolderDTO) {
 		if(addFolderDTO.getNewFolderName().length() == 0) {
 			addFolderDTO.setNewFolderName("새폴더");
 		}
@@ -32,11 +32,6 @@ public class FolderServiceImpl implements FolderService{
 		addFolderDTO.setUpdate_user(user_id);
 		addFolderDTO.setPath(path + "/" + addFolderDTO.getNewFolderName());
 		return folderDAO.addFolder(addFolderDTO);
-	}
-
-	@Override
-	public int addFolderUser(FolderUserDTO folderUserDTO) {
-		return folderDAO.addFolderUser(folderUserDTO);
 	}
 
 	@Override
@@ -57,5 +52,10 @@ public class FolderServiceImpl implements FolderService{
 	@Override
 	public Long createRootFolder(Long user_id) {
 		return folderDAO.createRootFolder(user_id);
+	}
+
+	@Override
+	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO) {
+		return folderDAO.selectTarget(selectTargetDTO.getParent());
 	}
 }

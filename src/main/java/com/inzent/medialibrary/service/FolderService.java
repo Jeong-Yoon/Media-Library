@@ -4,13 +4,11 @@ import java.util.List;
 
 import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
-import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.SelectTargetDTO;
 
 public interface FolderService {
-	public Long addFolder(AddFolderDTO addFolderDTO);
-
-	public int addFolderUser(FolderUserDTO folderUserDTO);
+	public int addFolder(AddFolderDTO addFolderDTO);
 
 	public List<String> getFolderList(Long id);
 
@@ -19,4 +17,6 @@ public interface FolderService {
 	public Long getfolderIdByUserId(Long user_id);
 
 	public Long createRootFolder(Long user_id);
+
+	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO);
 }

@@ -15,6 +15,7 @@ import com.inzent.medialibrary.security.JwtProperties;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	private String secret = JwtProperties.SECRET;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
         http

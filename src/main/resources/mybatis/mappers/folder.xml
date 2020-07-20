@@ -22,18 +22,9 @@
 
 	<insert id="addfolder" parameterType="addfolderdto">
 		insert into folders
-		(folder_id,
-		folder_name,
-		folder_path, folder_parent,
-		folder_reg_user,
-		folder_update_user)
+		(folder_id, folder_name, folder_path, folder_parent, folder_reg_user, folder_update_user)
 		values
-		(NEXTVAL('seq_folder'),
-		#{newFolderName},
-		#{path}, #{parent}, #{reg_user}, #{update_user})
-		<selectKey keyProperty="folder_id" resultType="long" order="AFTER">
-			select currval('seq_folder')
-		</selectKey>
+		(NEXTVAL('seq_folder'),	#{newFolderName}, #{path}, #{parent}, #{reg_user}, #{update_user})
 	</insert>
 	
 <!-- 	<insert id="addfolder" parameterType="addfolderdto">
@@ -123,6 +114,7 @@
 		reg_date
 		from ml_schema.folders f, ml_schema.users u
 		where f.folder_reg_user = u.user_id and folder_parent = #{id}
+		and f.folder_delete = 'N'
 		order by id, folder_reg_date ) info
 		union all
 		select row_to_json(info)as info
@@ -133,6 +125,7 @@
 		content_attribute
 		from ml_schema.contents c, ml_schema.users u, ml_schema.contents_details cd
 		where c.content_reg_user = u.user_id and c.content_id = cd.content_id
+		and c.content_delete = 'N'
 		and folder_id = #{id}) info;
 	</select>
 </mapper>

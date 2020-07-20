@@ -2,31 +2,14 @@ package com.inzent.medialibrary.utils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-import javax.servlet.ServletContext;
 
 public class MakeDir {
 	public String makeDir() {
-//		String folderPath = "/home/media_library";
 		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyyMMdd");
-		String folderPath = "C:/Users/bit-user/Desktop/test/";
+		String folderPath = "C:/Users/bit-user/Desktop/media_storage/";
 //		Date date = new Date();
-//		folderPath += format1.format(date);
-        Calendar calendar = Calendar.getInstance();
-//        folderPath += calendar.get(Calendar.YEAR);
-//        folderPath += "/";
-//        folderPath += (calendar.get(Calendar.MONTH) + 1); // MONTH는 0부터 시작.
-//        folderPath += "/";
-//        folderPath += calendar.get(Calendar.DAY_OF_MONTH);
-//        folderPath = folderPath + calendar.get(Calendar.YEAR);
-//        folderPath = folderPath + "/";
-//        folderPath = folderPath + (calendar.get(Calendar.MONTH) + 1); // MONTH는 0부터 시작.
-//        folderPath = folderPath + "/";
-//        folderPath = folderPath + calendar.get(Calendar.DAY_OF_MONTH);
 //        File makeFolder = new File(folderPath);
-
         
 //        ServletContext context = HttpRequest.getServletContext();
 //        String uploadPath = context.getRealPath("/upload");

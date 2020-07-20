@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inzent.medialibrary.dto.EmailDTO;
-import com.inzent.medialibrary.dto.FolderUserDTO;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
-import com.inzent.medialibrary.dto.UserVO;
 import com.inzent.medialibrary.security.JwtService;
-import com.inzent.medialibrary.service.FolderService;
 import com.inzent.medialibrary.service.UserService;
 
 @RestController

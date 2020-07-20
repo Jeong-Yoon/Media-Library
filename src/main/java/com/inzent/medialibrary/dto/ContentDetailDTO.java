@@ -2,8 +2,6 @@ package com.inzent.medialibrary.dto;
 
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;

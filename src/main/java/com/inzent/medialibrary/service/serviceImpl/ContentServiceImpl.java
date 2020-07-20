@@ -1,19 +1,13 @@
 package com.inzent.medialibrary.service.serviceImpl;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -25,8 +19,10 @@ import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
 import com.inzent.medialibrary.repository.ContentDAO;
+import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.service.ContentService;
 import com.inzent.medialibrary.utils.MakeDir;
 
@@ -35,7 +31,9 @@ public class ContentServiceImpl implements ContentService {
 
 	@Autowired
 	private ContentDAO contentDAO;
-
+	@Autowired
+	private UserDAO userDAO;
+	
 	@Override
 	public List<ContentVO> getContentList(Long folderId) {
 		return contentDAO.getContentList(folderId);
@@ -43,21 +41,21 @@ public class ContentServiceImpl implements ContentService {
 
 	@Override
 	public int uploadContent(ContentDTO contentDTO) {
+		UploadContentDTO ucDTO = new UploadContentDTO();
 		try {
 			MakeDir dir = new MakeDir();
 			String baseDir = dir.makeDir();
-			MultipartFile uploadContent = contentDTO.getContent();
+			MultipartFile uploadContent = contentDTO.getAttachFiles()[0];
 			String ext = FilenameUtils.getExtension(uploadContent.getOriginalFilename()); 
-	        baseDir = baseDir + "/" + UUID.randomUUID().toString() + "." + ext;
+			String saveName = UUID.randomUUID().toString() + "." + ext;
+	        baseDir = baseDir + "/" + saveName;
 			uploadContent.transferTo(new File(baseDir));
-
-			UploadContentDTO ucDTO = new UploadContentDTO();
-			ucDTO.setContent_reg_user(contentDTO.getRegUser());
+			ucDTO.setUser_id(userDAO.getUserIdByEmail(contentDTO.getRegUser()));
 			ucDTO.setFolder_id(contentDTO.getFolder());
 			ucDTO.setContent_origin_name(uploadContent.getOriginalFilename());
 			ucDTO.setContent_size(uploadContent.getSize());
 			ucDTO.setContent_storage(baseDir);
-			ucDTO.setContent_save_name(baseDir);
+			ucDTO.setContent_save_name(saveName);
 			if (uploadContent.getContentType().startsWith("video")) {
 				ucDTO.setContent_type("V");
 			} else if (uploadContent.getContentType().startsWith("image")) {
@@ -66,6 +64,9 @@ public class ContentServiceImpl implements ContentService {
 				return 0;
 			}
 			System.out.println(ucDTO.toString());
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("extension", ext);
+			ucDTO.setContent_attribute(map);
 //			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
 //			Map<String, Object> map = new HashMap<String, Object>();
 //			int height = image.getHeight();
@@ -74,7 +75,7 @@ public class ContentServiceImpl implements ContentService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return contentDAO.uploadContent(ucDTO);
 	}
 
 	@Override
@@ -103,5 +104,35 @@ public class ContentServiceImpl implements ContentService {
 			e.printStackTrace();
 		}
 		return image;
+	}
+
+	@Override
+	public void deleteContent(Long content_id) {
+		contentDAO.deleteContent(content_id);
+	}
+
+	@Override
+	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO) {
+		if(selectTargetDTO.getTarget().equals("image")) {
+			selectTargetDTO.setTarget("I");
+		} else if(selectTargetDTO.getTarget().equals("video")) {
+			selectTargetDTO.setTarget("V");
+		}
+		List<ImageDTO> list = contentDAO.selectTarget(selectTargetDTO);
+		for(ImageDTO i : list) {
+			if (i.getContent_type().equals("V")) {
+				return list;
+			} else {
+				InputStream in;
+				try {
+					in = new FileInputStream(i.getContent_storage());
+					i.setContent(IOUtils.toByteArray(in));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
 	}
 }

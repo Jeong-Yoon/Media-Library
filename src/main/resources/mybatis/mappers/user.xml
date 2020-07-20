@@ -13,15 +13,6 @@
 		]]>
 	</select>
 	
-	<insert id="signup2" parameterType="signupdto">
-		<![CDATA[
-			insert into 
-			users (user_id, user_email, user_pw, user_name, user_phone, user_company, user_department, user_job)
-			values (NEXTVAL('seq_user'), #{email}, #{password}, #{name}, #{phone}, #{company}, #{department}, #{job});
-			RETURNING user_id
-		]]>
-	</insert>
-	
 	<insert id="signup" parameterType="signupdto">
 		with ins1 as(
 			insert into 

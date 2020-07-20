@@ -1,7 +1,6 @@
 package com.inzent.medialibrary.security;
 
 import com.inzent.medialibrary.dto.LoginUserDTO;
-import com.inzent.medialibrary.dto.UserVO;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
