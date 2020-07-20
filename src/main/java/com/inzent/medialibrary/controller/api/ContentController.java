@@ -1,6 +1,5 @@
 package com.inzent.medialibrary.controller.api;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,18 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
+import com.inzent.medialibrary.dto.ContentIdDTO;
 import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.service.ContentService;
 
@@ -40,9 +38,25 @@ public class ContentController {
 	
 	@PostMapping("/upload")
 //	public FileUploadResponse uploadContent(@RequestParam("file") MultipartFile file){
-	public ResponseEntity<?> uploadContent(@RequestBody ContentDTO contentDTO){
+	public ResponseEntity<?> uploadContent(ContentDTO contentDTO){
 //		ContentDTO cone = new ContentDTO();
 //		cone.setContent(file);
+//		contentService.uploadContent(cone);
+		System.out.println("upload test=============================");
+		System.out.println(contentDTO.toString());
+		System.out.println(contentDTO.getAttachFiles()[0].getContentType());
+		System.out.println(contentDTO.getAttachFiles()[0].getOriginalFilename());
+		System.out.println(contentDTO.getAttachFiles()[0].getName());
+		System.out.println(contentDTO.getAttachFiles()[0].getSize());
+		System.out.println(contentDTO.getAttachFiles()[0].getResource());
+		System.out.println(contentDTO.getAttachFiles()[0].getClass());
+		contentService.uploadContent(contentDTO);
+//		System.out.println(contentDTO.getClass());
+//		System.out.println(contentDTO.getRegUser());
+//		System.out.println(contentDTO.getAttachFiles().getContentType());
+//		System.out.println(contentDTO.getAttachFiles().getOriginalFilename());
+//		System.out.println(contentDTO.getFolder());
+//		System.out.println(contentDTO.getRegUser());
 		
 		//TODO
 //		Map<String, Object> json = detailDTO.getContent_attribute();
@@ -53,7 +67,6 @@ public class ContentController {
 //		System.out.println(contentDTO.getContent().getContentType());
 //		System.out.println(contentDTO.getContentType());
 //        return new FileUploadResponse(file.getName(), file.getContentType(), file.getSize());
-
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
@@ -70,40 +83,12 @@ public class ContentController {
 	public void getContentDetail(@PathVariable("content_id")Long contentId) {
 		contentService.getContentDetail(contentId);
 	}
-}
-class FileUploadResponse {
-    private String fileName;
-    private String fileType;
-    private long size;
-    
-    public FileUploadResponse(String fileName, String fileType, long size) {
-        this.fileName = fileName;
-        this.fileType = fileType;
-        this.size = size;
-    }
- 
-    public String getFileName() {
-        return fileName;
-    }
- 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
- 
-    public String getFileType() {
-        return fileType;
-    }
- 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
- 
-    public long getSize() {
-        return size;
-    }
- 
-    public void setSize(long size) {
-        this.size = size;
-    }
+	
+	@DeleteMapping()
+	public void deleteContent(@RequestBody ContentIdDTO contentIdDTO) {
+		System.out.println("content delete");
+		contentService.deleteContent(contentIdDTO.getContent_id());
+	}
+	
 }
 

@@ -7,6 +7,7 @@
 	<typeAliases>
 			<typeAlias type="com.inzent.medialibrary.dto.LoginDTO" alias="logindto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.UserVO" alias="uservo"/>
+			<typeAlias type="com.inzent.medialibrary.dto.LoginUserDTO" alias="loginuserdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.SignUpDTO" alias="signupdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.FolderVO" alias="foldervo"/>
 			<typeAlias type="com.inzent.medialibrary.dto.AddFolderDTO" alias="addfolderdto"/>
@@ -14,6 +15,8 @@
 			<typeAlias type="com.inzent.medialibrary.dto.ContentVO" alias="contentvo"/>
 			<typeAlias type="com.inzent.medialibrary.dto.UploadContentDTO" alias="uploadcontentdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.ContentDetailDTO" alias="contentdetaildto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.ImageDTO" alias="imagedto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.SelectTargetDTO" alias="selecttargetdto"/>
 	</typeAliases>
 
 	<mappers>

@@ -5,20 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.inzent.medialibrary.dto.LoginDTO;
+import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
-import com.inzent.medialibrary.dto.UserVO;
 
 @Repository
 public class UserDAO {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public UserVO login(LoginDTO loginDto) {
-		UserVO userVo = sqlSession.selectOne("getuserbyemail", loginDto.getEmail());
-		return userVo;
+	public LoginUserDTO login(LoginDTO loginDto) {
+		LoginUserDTO user = sqlSession.selectOne("getuserbyemail", loginDto.getEmail());
+		return user;
 	}
 
-	public long signup(SignUpDTO signUpDTO) {
+	public int signup(SignUpDTO signUpDTO) {
 		return sqlSession.insert("signup",signUpDTO);
 	}
 
