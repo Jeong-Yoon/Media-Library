@@ -328,10 +328,10 @@ export default {
 }
 
 .by-author {
-	font-style: italic;
+   font-style: italic;
   font-size: 14px;
-	line-height: 1.3;
-	color: #aab6aa;
+   line-height: 1.3;
+   color: #aab6aa;
 }
 
 .media-body {
@@ -341,8 +341,8 @@ export default {
 }
 
  .media {
-	padding-bottom: 1em;
-	/* border-bottom: 1px solid #e8e8e8; */
+   padding-bottom: 1em;
+   /* border-bottom: 1px solid #e8e8e8; */
 }
 
 /*****************/

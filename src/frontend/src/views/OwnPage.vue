@@ -81,6 +81,7 @@
                 />
                 <label :for="'a2' + folder.id"></label>
               </div>
+
               <div v-if="checkType(folder.id) == '2'">
                 <img
                   src="@/assets/image/folder.png"
@@ -93,7 +94,7 @@
                 </div>
               </div>
 
-              <div v-else>
+              <div v-else-if="folder.contents_type == 'I'">
                 <img
                   :src="roadImg(folder.content)"
                   width="130"

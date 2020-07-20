@@ -520,9 +520,8 @@ export default {
     // }
 
   // base 64
-   roadImg(data) {
+    roadImg(data) {
       const result = "data:image;base64," + data;
-      console.log("result : " + result);
       return result;
     },
     
