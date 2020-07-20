@@ -40,6 +40,26 @@ const actions = {
       parent,
     });
   },
+  GET_ONLY(_, { parent, target }) {
+    console.log("actions / GET_ONLY : parent", parent);
+    console.log("actions / GET_ONLY : target", target);
+    return api.getOnly.getOnly({
+      parent,
+      target,
+    });
+  },
+  GET_IMAGE(_, { image_id }) {
+    console.log(image_id + " : actions / getImages");
+    return api.getImage.getImage({
+      image_id,
+    });
+  },
+  UPLOAD_FILE(_, formData) {
+    return api.uploadFile.uploadFile(formData);
+  },
+  DOWNLOAD_FILE(_, id) {
+    return api.uploadFile.uploadFile(id);
+  },
 };
 
 export default actions;

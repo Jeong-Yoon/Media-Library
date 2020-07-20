@@ -88,6 +88,35 @@ export const getFolders = {
   },
 };
 
+export const getOnly = {
+  getOnly(parent, target) {
+    console.log(parent + ": api / getOnly : parent");
+    console.log(target + ": api / getOnly : target");
+    return request("post", "/api/folders/bytarget", parent, target);
+  },
+};
+
+export const getImage = {
+  getImage({ image_id }) {
+    console.log(image_id + " : api / getimages");
+    return request("post", "/api/images/getimages", { image_id });
+  },
+};
+
+export const uploadFile = {
+  uploadFile(formData) {
+    console.log(formData);
+    return request("post", "/api/contents/upload", formData);
+  },
+};
+
+export const download = {
+  download(id) {
+    console.log(id);
+    return request("post", "/api/contents/download", id);
+  },
+};
+
 function createInstance() {
   return axios.create({
     baseURL: DOMAIN,

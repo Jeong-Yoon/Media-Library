@@ -20,13 +20,15 @@
         </div>
         <div v-else>
           <button class="b1" @click="openModal">새폴더</button>
-          <button class="b2">폴더</button>
-          <button class="b3">사진</button>
-          <button class="b4">동영상</button>
+          <button class="b2" @click="getOnly('folder')">폴더</button>
+          <button class="b3" @click="getOnly('image')">사진</button>
+          <button class="b4" @click="getOnly('video')">동영상</button>
           <NewFolderModal @close="closeModal" v-if="modal">
             <!-- default 슬롯 콘텐츠 -->
             <p>폴더 이름을 입력해주세요.</p>
-            <div><input class="input" v-model="newFolderName" /></div>
+            <div>
+              <input class="input" v-model="newFolderName" />
+            </div>
             <!-- /default -->
             <!-- footer 슬롯 콘텐츠 -->
             <template slot="footer">
@@ -64,90 +66,165 @@
           <ul class="table">
             <li
               v-for="folder in this.folderList"
-              v-bind:key="folder.folder_id"
-              @change="checkbox(folder.folder_id)"
+              v-bind:key="folder.id"
+              @change="checkbox(folder.id)"
               class="li"
             >
               <div class="agree2">
                 <input
-                  id="a2"
+                  class="a2"
+                  :id="'a2' + folder.id"
                   type="checkbox"
                   v-model="ids"
-                  @click="select(folder.folder_id)"
-                  :value="folder.folder_id"
+                  @click="select(folder.id)"
+                  :value="folder.id"
                 />
-                <label for="a2"></label>
+                <label :for="'a2' + folder.id"></label>
               </div>
-              <img
-                src="@/assets/image/folder.png"
-                width="130"
-                height="130"
-                style="opacity: 1; transition: opacity 0.2s ease 0s;"
-              />
-              <div class="info">
-                <span class="title">{{ folder.folder_name }}</span>
+              <div v-if="checkType(folder.id) == '2'">
+                <img
+                  src="@/assets/image/folder.png"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                />
+                <div class="info">
+                  <span class="title">{{ folder.folder_name }}</span>
+                </div>
+              </div>
+
+              <div v-else>
+                <img
+                  :src="roadImg(folder.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getImg(folder.id)"
+                />
+                <div class="info">
+                  <span class="title">{{ folder.content_name }}</span>
+                </div>
               </div>
             </li>
           </ul>
         </div>
-        <p>selected ids : {{ ids }}</p>
-        <!-- <ul class="list_thumb">
-          <li class="li" title="2020">
+        <!-- 이미지 뷰잉 용 이미지 -->
+        <ul class="list_thumb">
+          <li class="li" title="image" @click="openImageModal">
             <label for>
               <div class="thumb">
-                <span class="folder">
+                <span class="image">
                   <img
-                    src="@/assets/image/folder.png"
-                    width="150"
-                    height="150"
+                    src="@/assets/image/june.jpg"
+                    width="130"
+                    height="130"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   />
                 </span>
               </div>
               <div class="info">
-                <span class="title">2020</span>
+                <span class="title">image</span>
               </div>
             </label>
           </li>
-        </ul> -->
+          <li class="li" title="video" @click="openVideoModal">
+            <label for>
+              <div class="thumb">
+                <span class="video">
+                  <img
+                    src="@/assets/image/video.jpg"
+                    width="130"
+                    height="130"
+                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  />
+                </span>
+              </div>
+              <div class="info">
+                <span class="title">video</span>
+              </div>
+            </label>
+          </li>
+          <ImageViewingModal :idOfImage="idOfImage" v-if="imageModal" />
+          <VideoViewingModal v-if="videoModal" />
+        </ul>
+        <p>selected ids : {{ ids }}</p>
       </div>
     </div>
-
+    <fab
+      :position="position"
+      :bg-color="bgColor"
+      :actions="fabActions"
+      :z-index="zIndex"
+      @uploadFile="openFileModal"
+      @uploadFolder="openFolderModal"
+    />
+    <UploadFileModal @close="closeFileModal" v-if="fileModal" />
+    <UploadFolderModal @close="closeFolderModal" v-if="folderModal" />
+    <!--
     <quick-menu
       :menu-count="count"
       :icon-class="icons"
       :menu-url-list="list"
       :position="position"
       :background-color="backgroundColor"
-    />
+    />-->
   </content>
 </template>
 
 <script>
-import quickMenu from "vue-quick-menu";
+//import quickMenu from "vue-quick-menu";
+import fab from "vue-fab";
 import NewFolderModal from "./NewFolderModal";
+import ImageViewingModal from "./ImageViewingModal";
+import VideoViewingModal from "./VideoViewingModal";
+import UploadFileModal from "./UploadFileModal";
+import UploadFolderModal from "./UploadFolderModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
   components: {
-    quickMenu,
+    //quickMenu,
+    fab,
     NewFolderModal,
+    ImageViewingModal,
+    VideoViewingModal,
+    UploadFileModal,
+    UploadFolderModal,
   },
   data() {
     return {
-      count: 2,
-      icons: ["fa fa-file", "fa fa-folder"],
-      list: [
-        { isLink: true, url: "/uploadFile" },
-        { isLink: true, url: "/uploadFolder" },
-      ],
+      // count: 2,
+      // icons: ["fa fa-file", "fa fa-folder"],
+      // list: [
+      //   { isLink: true, url: "/uploadFile" },
+      //   { isLink: true, url: "/uploadFolder" },
+      // ],
+      // position: "bottom-right",
+      // backgroundColor: "#474346",
+      bgColor: "#494346",
       position: "bottom-right",
-      backgroundColor: "#474346",
+      fabActions: [
+        {
+          name: "uploadFile",
+          icon: "insert_drive_file",
+        },
+        {
+          name: "uploadFolder",
+          icon: "folder",
+        },
+      ],
+      zIndex: 50,
       modal: false,
+      imageModal: false,
+      videoModal: false,
+      fileModal: false,
+      folderModal: false,
       newFolderName: "",
       folderList: [],
+      targetList: [],
       allSelected: true,
       ids: [],
+      idOfImage: [],
     };
   },
   created() {
@@ -160,8 +237,51 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(["NEW_FOLDER", "GET_FOLDERS"]),
-    async download() {},
+    ...mapActions([
+      "NEW_FOLDER",
+      "GET_FOLDERS",
+      "DOWNLOAD_FILE",
+      "GET_ONLY",
+      "GET_IMAGE",
+    ]),
+    getImg(imageId) {
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        console.log(data);
+        this.idOfImage.push(data);
+        this.openImageModal();
+      });
+    },
+    download(id) {
+      console.log(id);
+      this.DOWNLOAD_FILE(id)
+        .then(() => {
+          const url = null; // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download");
+          document.body.appendChild(link);
+          link.click();
+          this.ids = [];
+          alert("다운로드가 완료되었습니다.");
+        })
+        .catch((error) => {
+          alert("다운로드에 실패하였습니다.");
+          this.error = error.data.error;
+          this.ids = [];
+        });
+    },
+    checkType(id) {
+      // var temp = id.subStr(0, 1);
+      var temp = String(id);
+      temp = temp.substring(0, 1);
+      return temp;
+    },
+    getOnly(target) {
+      this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
+        this.targetList = list;
+        console.log("targetList : ", this.targetList);
+      });
+    },
     getFolders() {
       this.GET_FOLDERS({ parent: this.parent }).then((list) => {
         console.log("ownpage list : " + list[0]);
@@ -173,7 +293,7 @@ export default {
       this.ids = [];
       if (!this.allSelected) {
         for (this.folder in this.folderList) {
-          this.ids.push(this.folderList[this.folder].folder_id);
+          this.ids.push(this.folderList[this.folder].id);
         }
       }
     },
@@ -184,15 +304,33 @@ export default {
         this.ids.splice(this.ids.indexOf(folder_id), 1);
       }
     },
-    select: function(folder_id) {
+    select: function() {
       this.allSelected = false;
-      this.ids.push(folder_id);
+      this.ids.push(this.folderList[this.folder].id);
+    },
+    openImageModal() {
+      this.imageModal = true;
+    },
+    openVideoModal() {
+      this.videoModal = true;
+    },
+    openFileModal() {
+      this.fileModal = true;
+    },
+    openFolderModal() {
+      this.folderModal = true;
     },
     openModal() {
       this.modal = true;
     },
     closeModal() {
       this.modal = false;
+    },
+    closeFileModal() {
+      this.fileModal = false;
+    },
+    closeFolderModal() {
+      this.folderModal = false;
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {
@@ -218,6 +356,10 @@ export default {
             this.getFolders();
           });
       }
+    },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      return result;
     },
   },
 };
@@ -518,11 +660,27 @@ img {
   width: 150px;
 }
 .title {
+  /*
   display: block;
   font-size: 12px;
   line-height: 15px;
   background-color: white;
   width: 150px;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #222;
+  cursor: default;
+  text-decoration: none;
 }
 </style>
