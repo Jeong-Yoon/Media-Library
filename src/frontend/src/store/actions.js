@@ -60,6 +60,13 @@ const actions = {
       videoId,
     });
   },
+  GET_IMAGELIST(_, { folderId }) {
+    console.log();
+    return api.getImageList.getImageList({
+      folderId,
+    });
+  },
+
   UPLOAD_FILE(_, formData) {
     return api.uploadFile.uploadFile(formData);
   },

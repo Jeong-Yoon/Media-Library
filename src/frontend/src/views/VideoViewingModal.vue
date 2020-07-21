@@ -216,7 +216,6 @@ export default {
     },
     openInfoModal() {
       console.log("정보 모달");
-      console.log(this.idOfVideo);
       document.getElementById("infoModal").style.display = "block";
     },
     closeInfoModal() {

@@ -1,7 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="vodeo-container"></div>
-=======
   <div class="vodeo-container">
     <video
       id="player"
@@ -42,7 +39,6 @@
       <!-- <track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt"> -->
     </video>
   </div>
->>>>>>> 4f8d572aed4cc3ec2aa2ba50c82abda41bec75e9
 </template>
 
 <script>

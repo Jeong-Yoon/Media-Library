@@ -44,3 +44,19 @@ button {
 	box-sizing: border-box;
 	font-family: 'Spoqa Han Sans', 'Sans-serif';
 }
+
+image {
+	width: auto;
+	--current-rotate-cycle: 0;
+	--current-rotate: rotate(0deg);
+	--current-scale: scale(1);
+	transform: var(--current-rotate) var(--current-scale) translate(-50%, -50%);
+	transform-origin: 0 0;
+	position: absolute;
+	/* align: center; */
+	left: 50%;
+	/* width: 400px; */
+	/* transform: translate(0, 0); */
+	top: 50%;
+
+}

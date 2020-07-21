@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span @click="openImageNav" style="cursor: pointer;">이미지</span>
+    <!-- <span @click="openImageNav" style="cursor: pointer;">이미지</span> -->
 
     <!-- 이미지 모달 -->
     <div class="overlay" id="image_nav" tabindex="1" role="dialog">
@@ -9,10 +9,12 @@
         <!-- 나가기 -->
         <a
           class="v_btn_close"
+          id="reset"
           @click="closeImageNav()"
-          style="color:#fff;  font-size: 14px;"
-          >나가기</a
+          style="color:#fff; font-size: 15px; z-index :10; "
         >
+          나가기
+        </a>
 
         <div class="v_task">
           <!-- 확대/축소 -->
@@ -22,18 +24,18 @@
             id="in"
             title="확대"
             @click="zoomIn()"
-            style="margin-right:3px"
+            style="margin-right:3px; cursor: zoom-in"
           >
-            <img src="@/assets/image/icon_pl.png" height="15.5px" />
+            <img src="@/assets/image/v_task_zoomin.png" height="15.5px" />
           </a>
           <a
             class="zoom-out"
             id="out"
             title="축소"
             @click="zoomOut()"
-            style="margin-right:3px"
+            style="margin-right:3px; cursor: zoom-out"
           >
-            <img src="@/assets/image/icon_mi.png" height="15.5px" />
+            <img src="@/assets/image/v_task_zoomout.png" height="15.5px" />
           </a>
           <!-- </div> -->
 
@@ -44,12 +46,21 @@
             title="회전"
             style="margin-right:3px; top : 0.5px;"
           >
-            <img src="@/assets/image/icon2.png" height="16.7px" />
+            <img
+              src="@/assets/image/v_task_rotate.png"
+              height="16.7px"
+              style="top : 1px;"
+            />
           </a>
 
           <!-- 돋보기 -->
-          <a class="v_ta_magnifying" title="돋보기" style="top : 1.5px">
-            <img src="@/assets/image/icon3.png" height="15px" />
+          <a
+            class="v_ta_magnifying"
+            @clisk="magnify()"
+            title="돋보기"
+            style="top : 1.5px"
+          >
+            <img src="@/assets/image/v_task_magnify.png" height="15px" />
           </a>
 
           <!-- 공유 -->
@@ -60,7 +71,11 @@
             title="공유"
             style="margin-right:3px"
           >
-            <img src="@/assets/image/icon4.png" height="15px" />
+            <img
+              src="@/assets/image/v_task_share.png"
+              height="15px"
+              style="top : 1px;"
+            />
           </a>
 
           <!-- 정보 -->
@@ -71,26 +86,27 @@
             title="정보"
             style="margin-right:3px; top : 0.5px"
           >
-            <img src="@/assets/image/icon5.png" height="15.5px" />
+            <img src="@/assets/image/v_task_info.png" height="15.5px" />
           </a>
 
           <!-- 삭제 -->
           <a class="v_ta_trash" title="휴지통">
-            <img src="@/assets/image/icon6.png" height="15px" />
+            <img src="@/assets/image/v_task_delete.png" height="15px" />
           </a>
 
           <!-- 더보기 -->
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
-            <a class="dropbtn" title="더보기" style="left:-3px">
-              <img src="@/assets/image/icon7.png" height="15px" />
+            <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
+              <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
-            <div class="dropdown-content" style="float : right;">
+            <div class="dropdown-content" style="float:right;">
               <a
                 class="slider_option"
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();"
-                >슬라이드쇼</a
               >
+                슬라이드쇼
+              </a>
               <a class="publicfolder">공유 문서함 추가</a>
               <a class="publicalbum">공유 앨범 추가</a>
             </div>
@@ -102,57 +118,63 @@
       <!-- header 끝 -->
 
       <!-- content -->
-      <div class="content">
-        <!-- <div class ="image-container">  -->
+      <div class="content" id="page">
         <div class="image-container" id="imgContainer">
-          <img class="image" id="img" src="@/assets/image/zo.png" />
+          <div v-ifelse>
+            <img
+              :src="roadImg(this.idOfImage.content)"
+              class="image"
+              id="img"
+            />
+          </div>
         </div>
 
         <div class="slideshow">
-          <a class="v_btn_prev" @click="plusDivs(-1)" title="이전사진">
-            <img src="@/assets/image/btn_prev.png" height="30px" />
+          <a class="v_btn_prev" @click="plusDivs()" title="이전사진">
+            <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs(1)" title="다음사진">
-            <img src="@/assets/image/btn_next.png" height="30px" />
+          <a class="v_btn_next" @click="plusDivs()" title="다음사진">
+            <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>
+        <!-- slideshow 끝-->
       </div>
       <!-- contrent 끝 -->
 
       <!-- footer -->
       <div class="footer">
         <input type="checkbox" name="toggle" id="toggle" />
-        <label for="toggle"></label>
+        <label for="toggle">
+          <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{bannerList.length}}</strong></span> -->
+        </label>
 
         <div class="toggle-container">
           <!-- thumb list -->
           <div class="v_photo_list">
             <ul class="image_list">
-              <li class="image_item">
+              <!-- <li class="image_item">
                 <a>
                   <img
                     src="https://www.w3schools.com/images/w3schools_green.jpg"
                   />
                   <span class="mask_sel" />
                 </a>
-              </li>
-
-              <li class="image_item">
-                <a>
-                  <img
-                    src="https://www.w3schools.com/images/w3schools_green.jpg"
-                  />
-                  <span class="mask_sel" />
-                </a>
-              </li>
-
-              <li class="image_item">
-                <a>
-                  <img
-                    src="https://www.w3schools.com/images/w3schools_green.jpg"
-                  />
-                  <span class="mask_sel" />
-                </a>
+              </li> -->
+              <!-- <li class="image_item">
+               <img
+                  :src="roadImg(this.idOfImage.content)"
+                  class="image" 
+                  id="img"
+                  height="80px"
+                > -->
+              <li
+                style="display : inline-block; padding :5px"
+                v-for="list in this.imageList"
+                v-bind:key="list.content_id"
+                class="li"
+                @click="imaginate(list.content_id)"
+              >
+                <img :src="roadImg(list.content)" height="80px" />
               </li>
             </ul>
           </div>
@@ -161,7 +183,7 @@
       </div>
       <!--footer 끝-->
     </div>
-    <!-- 큰 모달 끝 -->
+    <!-- 이미지 모달 끝 -->
 
     <!-- 공유 모달 -->
     <div id="shareModal" class="sharemodal">
@@ -208,72 +230,136 @@
         <div class="info-modal-footer">
           <p style="margin-bottom : 5px;  color : #353535;">폴더 경로</p>
           <div class="info" style="font-size:13px; margin-left : 5px">
-            <a>개인문서함/.../...</a>
+            <a>개인문서함 /.../...</a>
           </div>
         </div>
       </div>
     </div>
     <!-- 정보 모달 끝 -->
 
-    <!-- f11 -->
-    <div class="container" style="overflow: hidden;">
-      <div class="element" id="element" style="overflow: hidden;">
-        <div id="wrapper" style="overflow: hidden;">
-          <div id="container" style="overflow: hidden;">
-            <div
-              class="image-container"
-              id="imgContainer"
-              style="overflow : hidden"
+    <!-- 더보기 slide -->
+    <div class="slide_container" style="overflow:hidden">
+      <div class="element" id="element">
+        <div class="slidein" id="wrap">
+          <!-- <div id="wrapp" > -->
+
+          <!-- <ul style="  list-style-type: none;" z-index:10>
+                    <li v-for="(banner, index) in bannerList" :key="index" :class="{ on: index === currentIndex }">
+                      <h2>test</h2>
+                    </li>
+                  </ul> -->
+
+          <a @click="roll('prev')" title="이전" style="margin-right : 15px">
+            <img src="@/assets/image/view_slideshow_prev.png" height="15px" />
+          </a>
+
+          <a
+            v-if="!playing"
+            @click="play"
+            title="재생"
+            style="margin-right : 15px"
+          >
+            <img src="@/assets/image/view_slideshow_play.png" height="16px" />
+          </a>
+
+          <a
+            v-if="playing"
+            @click="pause"
+            title="일시정지"
+            style="margin-right : 15px"
+          >
+            <img src="@/assets/image/view_slideshow_pause.png" height="17px" />
+          </a>
+
+          <a @click="roll('next')" title="다음" style="margin-right : 15px">
+            <img src="@/assets/image/view_slideshow_next.png" height="15px" />
+          </a>
+
+          <a
+            class="slide_playstop"
+            @click="closeFullscreen()"
+            title="슬라이드쇼 마침"
+          >
+            <img src="@/assets/image/view_slideshow_back.png" height="15px" />
+          </a>
+        </div>
+
+        <!-- 테스트 후 삭제할 코드 -->
+        <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{bannerList.length}}</strong></span> -->
+
+        <!-- 이미지 -->
+        <div class="slideContentImage">
+          <ul style="  list-style-type: none;" z-index:10>
+            <li
+              v-for="(list, index) in imageList"
+              :key="index"
+              :class="{ on: index === currentIndex }"
             >
-              <img class="image" id="img" src="@/assets/image/zozo.png" />
-            </div>
-
-            <!-- -->
-            <div class="slide_in">
-              <a
-                class="slide_next"
-                @click="plusDivsSlide(-1)"
-                title="이전"
-                style="margin-left : 7px"
-              >
-                <img src="@/assets/image/icon_1_1.png" height="15px" />
-              </a>
-
-              <!-- <a class="slide_play_stop" @click="aaa" title="재생"><img src="@/assets/image/icon_1_2.png" height="15px"></a> -->
-              <a class="slide_play_stop" @click="aaa" title="일시정지">
-                <img src="@/assets/image/icon_1_2_1.png" height="15px" />
-              </a>
-
-              <a class="slide_next" @click="plusDivsSlide(1)" title="다음">
-                <img src="@/assets/image/icon_1_3.png" height="15px" />
-              </a>
-
-              <a
-                class="slide_play_stop"
-                @click="closeFullscreen()"
-                title="슬라이드쇼 마침"
-              >
-                <img src="@/assets/image/icon_1_4.png" height="15px" />
-              </a>
-            </div>
-            <!-- -->
-          </div>
+              <img :src="roadImg(list.content)" :alt="index" />
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-    <!-- f11 끝 -->
+    <!-- 더보기 slide 끝 -->
   </div>
 </template>
 
 <script>
+// import VueMagnifier from './test.vue'
 // import Cropper from '../utils/cropper.js'
+import { mapActions } from "vuex";
+
 export default {
-  props: ["idOfImage"],
+  el: "#wrap",
+
+  components: {
+    // VueMagnifier
+  },
+  props: ["idOfImage", "imageList"],
   data() {
     return {
       slideIndex: 1,
+      // rotate : false,
+      // zoomIn:undefined,
       // zoomOut:undefined
+
+      src: "../assets/image/sample.jpg",
+      srcLarge: "../assets/image/sample.jpg",
+
+      // 더보기 슬라이드 이미지
+      playing: false,
+      bannerList: [
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+        { imgsrc: this.roadImg(this.idOfImage.content) },
+      ],
+
+      currentIndex: 0,
+      timer: null,
+      imageData: "",
+      imgList: [],
     };
+  },
+  computed: {
+    computedImageData: {
+      get() {
+        console.log(this.idOfImage + " : computed");
+        return this.idOfImage;
+      },
+      set(imageId) {
+        console.log("imageId", imageId);
+        this.$emit("getImg", imageId);
+      },
+    },
+    computedImagelist: {
+      get() {
+        return this.imageList;
+      },
+    },
   },
   created() {
     // let options = {
@@ -283,7 +369,7 @@ export default {
     //   spinner: '.js-cropper-image-spinner',
     //   zoomIn: '.js-cropper-image-zoom-in',
     //   zoomOut: '.js-cropper-image-zoom-out',
-    // imgSrc: 'https://camo.mybb.com/e01de90be6012adc1b1701dba899491a9348ae79/687474703a2f2f7777772e6a71756572797363726970742e6e65742f696d616765732f53696d706c6573742d526573706f6e736976652d6a51756572792d496d6167652d4c69676874626f782d506c7567696e2d73696d706c652d6c69676874626f782e6a7067'
+    //   imgSrc: 'https://camo.mybb.com/e01de90be6012adc1b1701dba899491a9348ae79/687474703a2f2f7777772e6a71756572797363726970742e6e65742f696d616765732f53696d706c6573742d526573706f6e736976652d6a51756572792d496d6167652d4c69676874626f782d506c7567696e2d73696d706c652d6c69676874626f782e6a7067'
     //  }
     //   const cropper = new Cropper(options);
     //   cropper.show();
@@ -292,34 +378,44 @@ export default {
   },
 
   methods: {
+    ...mapActions(["GET_IMAGE"]),
+    imaginate(imaginate) {
+      console.log("imaginate-----------");
+      console.log(imaginate);
+      this.computedImageData = this.computedImageData.content_id = imaginate;
+    },
     //모달
     openImageNav() {
-      console.log("이미지모달열어!");
+      console.log("이미지모달");
+      console.log(this.idOfImage);
       document.getElementById("image_nav").style.display = "block";
       // this.openshareModal = [];
       // event.target.reset();
     },
     closeImageNav() {
-      console.log("이미지모달닫아!");
+      console.log("이미지모달 닫아");
       document.getElementById("image_nav").style.display = "none";
       document.getElementById("video_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
+      document.webkitExitFullscreen().style.display = "none";
     },
     openShareModal() {
-      console.log("공유 모달");
+      console.log("공유모달");
       document.getElementById("shareModal").style.display = "block";
     },
     closeShareModal() {
-      console.log("공유 모달 닫아");
+      console.log("공유모달 닫아");
       document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
     },
     openInfoModal() {
-      console.log("정보 모달");
+      console.log("정보모달");
       document.getElementById("infoModal").style.display = "block";
     },
     closeInfoModal() {
       console.log("정보모달 닫아");
       document.getElementById("infoModal").style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
     },
 
     // 회전
@@ -357,62 +453,10 @@ export default {
           "rotate(" + newRotateCycle * 90 + "deg)"
         );
       }
+      return false;
     },
 
-    // 슬라이드쇼
-    plusDivs(n) {
-      console.log("slide_next");
-      this.showDivs((this.slideIndex += n));
-    },
-    showDivs(n) {
-      console.log("slide_prev");
-      var i;
-      var x = document.getElementsByClassName("image");
-      if (n > x.length) {
-        this.slideIndex = 1;
-      }
-      if (n < 1) {
-        this.slideIndex = x.length;
-      }
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      x[this.slideIndex - 1].style.display = "block";
-    },
-
-    //  f11 슬라이드쇼
-
-    // autoSlide() {
-    //   console("f11");
-    //    document.getElementById("image_nav").style.display = "block";
-    //   document.documentElement.webkitRequestFullscreen();
-
-    // },
-
-    // zoom
-    //   zoomin(elm){
-    //     console.log("확대")
-    //     console.dir(elm);
-    //   if(elm.parentElement.parentElement.firstElementChild.style.transform === "" || elm.parentElement.firstElementChild.style.transform === 'translate("-50%, -50%")'){
-    //     elm.parentElement.parentElement.firstElementChild.style.transform = 'translate(-50%, -50%) scale(1.1)';
-    //   }else{
-    //     var cur = elm.parentElement.parentElement.firstElementChild.style.transform.split('scale(')[1].split(')')[0];
-    //     if(cur*1 >= 2) return;
-    //     elm.parentElement.parentElement.firstElementChild.style.transform = 'translate(-50%, -50%) scale('+(eval(cur*1)+0.1)+')';
-    //   }
-    // },
-
-    // zoomout(elm){
-    //   console.log("축소")
-    //   if(elm.parentElement.parentElement.firstElementChild.style.transform === "" || elm.parentElement.firstElementChild.style.transform === 'translate("-50%, -50%")'){
-    //     elm.parentElement.parentElement.firstElementChild.style.transform = 'translate(-50%, -50%) scale(0.9)';
-    //   }else{
-    //     var cur = elm.parentElement.parentElement.firstElementChild.style.transform.split('scale(')[1].split(')')[0];
-    //     if(cur*1 <= 0.1) return;
-    //     elm.parentElement.parentElement.firstElementChild.style.transform = 'translate(-50%, -50%) scale('+(eval(cur*1)-0.1)+')';
-    //   }
-    // },
-
+    // 확대/ 축소
     zoomIn() {
       console.log("zoomIn");
       let myImg = document.getElementById("img");
@@ -436,41 +480,129 @@ export default {
       }
     },
 
-    // f11
+    // 돋보기
+    // magnify() {
+    //   console.log("magnifying...")
 
+    // },
+
+    // view main 슬라이드쇼
+    plusDivs() {
+      console.log(this.computedImageData.content_id + " : plus");
+      // console.log("slide_next");
+      // this.showDivs((this.slideIndex += n));
+      this.computedImageData = this.computedImageData.content_id + 1;
+      // this.GET_IMAGE({ image_id: this.idOfImage.content_id + 1 }).then((data) => {
+      //   console.log(data);
+      //   this.idOfImage = data;
+      // });
+    },
+    showDivs() {
+      console.log(this.computedImageData.content_id - " : minus");
+      this.computedImageData = this.computedImageData.content_id - 1;
+      // var i;
+      // var x = document.getElementsByClassName("image");
+      // if (n > x.length) {
+      //   this.slideIndex = 1;
+      // }
+      // if (n < 1) {
+      //   this.slideIndex = x.length;
+      // }
+      // for (i = 0; i < x.length; i++) {
+      //   x[i].style.display = "none";
+      // }
+      // x[this.slideIndex - 1].style.display = "block";
+    },
+
+    //  더보기 슬라이드쇼
     closeFullscreen() {
       if (document.exitFullscreen) {
         document.exitFullscreen();
       } else if (document.webkitExitFullscreen) {
-        /* Chrome, Safari and Opera */
         document.webkitExitFullscreen();
       }
     },
 
-    plusDivsSlide(n) {
-      console.log("슬라이드 1");
-      this.showDivs((this.slideIndex += n));
+    setAutoRoll() {
+      let vueSelf = this;
+      this.timer = setInterval(function() {
+        vueSelf.addIndex();
+      }, 2000);
     },
-    showDivsSlide(n) {
-      console.log("슬라이드 2");
-      var i;
-      var x = document.getElementsByClassName("image");
-      if (n > x.length) {
-        this.slideIndex = 1;
+    addIndex() {
+      let newIndex = this.currentIndex + 1;
+      this.currentIndex = newIndex === this.bannerList.length ? 0 : newIndex;
+    },
+    roll(direction) {
+      let diff = direction === "prev" ? -1 : 1;
+      this.currentIndex = this.getTargetIndex(diff);
+      if (this.playing) {
+        clearInterval(this.timer);
+        this.setAutoRoll();
       }
-      if (n < 1) {
-        this.slideIndex = x.length;
+    },
+    play() {
+      this.setAutoRoll();
+      this.playing = true;
+    },
+    pause() {
+      clearInterval(this.timer);
+      this.playing = false;
+    },
+    getTargetIndex(diff) {
+      let length = this.bannerList.length;
+      let index = this.currentIndex + diff;
+      if (index === -1) {
+        return length - 1;
       }
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
+      if (index === length) {
+        return 0;
       }
-      x[this.slideIndex - 1].style.display = "block";
+      return index;
+    },
+
+    // closeFullscreen() {
+    //   if (document.exitFullscreen) {
+    //     document.exitFullscreen();
+    //   } else if (document.webkitExitFullscreen) {
+    //     /* Chrome, Safari and Opera */
+    //     document.webkitExitFullscreen();
+    //   }
+    // },
+
+    // plusDivsSlide(n) {
+    //   console.log("더보기 슬라이드 ");
+    //   this.showDivs((this.slideIndex += n));
+    // },
+    // showDivsSlide(n) {
+    //   console.log("더보기 슬라이드 ");
+    //   var i;
+    //   var x = document.getElementsByClassName("image");
+    //   if (n > x.length) {
+    //     this.slideIndex = 1;
+    //   }
+    //   if (n < 1) {
+    //     this.slideIndex = x.length;
+    //   }
+    //   for (i = 0; i < x.length; i++) {
+    //     x[i].style.display = "none";
+    //   }
+    //   x[this.slideIndex - 1].style.display = "block";
+    // }
+
+    // base 64
+    roadImg(data) {
+      console.log("idOfImage", this.idOfImage.content);
+      const result = "data:image;base64," + data;
+      return result;
     },
   },
 };
 </script>
 
 <style scoped>
+/* @import "./assets/css/reset.css"; */
+
 /* 큰 모달 */
 .overlay {
   height: 100%;
@@ -544,23 +676,25 @@ export default {
 
 /* footer */
 .toggle-container {
-  background: #000; /*  */
+  background: rgba(0, 0, 0, 0.8); /*  */
   color: #fff;
   position: fixed;
   bottom: -200px; /* 접어두기 동작 수행*/
   left: 0;
   width: 100%;
-  height: 150px;
+  height: 100px;
   /* padding: 20px; */
   /* transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94); */
   overflow: hidden;
-  box-sizing: border-box;
+  display: inline-block;
+  /* box-sizing: border-box; */
 }
 
 #toggle {
   position: absolute;
   cursor: pointer;
   left: -100%;
+  color: white;
 }
 
 #toggle + label {
@@ -577,7 +711,7 @@ export default {
   padding: 8px 10px;
   color: #fff;
   /*   line-height:20px; */
-  font-size: 16px;
+  font-size: 18px;
   text-align: center;
   /*   -webkit-font-smoothing: antialiased; */
   cursor: pointer;
@@ -585,20 +719,21 @@ export default {
 }
 
 #toggle + label:after {
-  content: "펼쳐보기";
+  content: "on";
+  background: url("../assets/image/view_next.png");
 }
 
 .container {
   transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
-  padding: 5em 3em;
+  padding: 3em 3em;
 }
 
 #toggle:checked ~ .toggle-container {
-  bottom: 0;
+  bottom: 0px;
 }
 
 #toggle:checked ~ .container {
-  margin-bottom: 200px;
+  margin-bottom: 150px;
 }
 
 #toggle:checked + label {
@@ -606,8 +741,13 @@ export default {
 }
 
 #toggle:checked + label:after {
-  font-style: italic;
-  content: "접어두기";
+  /* font-style: italic; */
+  content: "off";
+  background-image: "@/assets/image/view_slideshow_back.png";
+}
+
+#toggle:checked ~ .imgContainer {
+  margin-top: 150px;
 }
 
 /* thumb */
@@ -616,20 +756,11 @@ export default {
   height: 100px;
   display: inline-block;
   /* padding: 5px;  */
-  display: inline-block;
   outline-color: green;
-}
-
-.ul,
-li {
-  list-style: none;
-  float: left;
-  margin-bottom: 10px;
 }
 
 /* 공유 모달 */
 .p {
-  font-size: 13px;
   margin-bottom: 20px;
 }
 
@@ -637,11 +768,12 @@ li {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 500; /* Sit on top */
-  left: 0;
-  top: 0;
+  left: 50%;
+  /* width: 400px; */
+  /* transform: translate(0, 0); */
+  top: 50%;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 .sharemodal:target:before {
@@ -652,17 +784,13 @@ li {
   display: block;
   background: rgba(0, 0, 0, 0.6);
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   z-index: 10;
 }
 
 .share-modal-content {
   background: #fefefe;
-  border: #333333 solid 1px;
-  border-radius: 5px;
+  /* border: #333333 solid 1px; */
+  /* border-radius: 5px; */
   margin-left: -200px;
   position: fixed;
   left: 50%;
@@ -686,11 +814,11 @@ li {
 }
 
 .closesharemodal {
-  color: #aaaaaa;
-  font-size: 30px;
+  color: #353535;
+  font-size: 25px;
   text-decoration: none;
   position: absolute;
-  right: 5px;
+  right: 10px;
   top: 0;
   cursor: pointer;
 }
@@ -698,7 +826,7 @@ li {
 .btn_copy {
   background: #474346;
   border: solid 1px;
-  border-radius: 10px;
+  border-radius: 3px;
   color: #fff;
   display: inline-block;
   font-size: 14px;
@@ -707,7 +835,8 @@ li {
   text-align: center;
   min-width: 60px;
   position: relative;
-  /* transition: color .1s ease; */
+  transition: color 0.1s ease;
+  float: right;
 }
 
 .share-modal-header {
@@ -741,7 +870,6 @@ li {
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 .infomodal:target:before {
@@ -752,17 +880,16 @@ li {
   display: block;
   background: rgba(0, 0, 0, 0.6);
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  top: 50%;
   bottom: 0;
   z-index: 10;
 }
 
 .info-modal-content {
   background: #fefefe;
-  border: #333333 solid 1px;
-  border-radius: 5px;
+  /* border: #333333 solid 1px; */
+  /* border-radius: 5px; */
   margin-left: -200px;
   position: fixed;
   left: 50%;
@@ -786,11 +913,11 @@ li {
 }
 
 .closeinfomodal {
-  color: #aaaaaa;
-  font-size: 30px;
+  color: #353535;
+  font-size: 25px;
   text-decoration: none;
   position: absolute;
-  right: 5px;
+  right: 10px;
   top: 0;
   cursor: pointer;
 }
@@ -808,7 +935,6 @@ li {
   min-width: 60px;
   position: relative;
   transition: color 0.1s ease;
-  float: right;
   bottom: 5px;
 }
 
@@ -874,85 +1000,136 @@ li {
 }
 
 .dropdown-content a:hover {
+  overflow: hidden;
   background-color: #e9ecef;
   border-radius: 5px;
 }
 
 .dropdown:hover .dropdown-content {
+  overflow: hidden;
   display: block;
 }
 
 /* 슬라이드 */
 .v_btn_prev {
+  overflow: hidden;
   position: absolute;
-  top: 450px;
+  top: 50%;
   left: 45px;
   cursor: pointer;
 }
 
 .v_btn_next {
+  overflow: hidden;
   position: absolute;
-  top: 450px;
+  top: 50%;
   right: 45px;
   cursor: pointer;
 }
 
-/* f11 */
-.wrapper {
-  overflow: hidden;
+/* 더보기 슬라이드 */
+.slide_container {
+  /* left : 12400px; */
 }
 
-.container {
+.wrapper {
+  overflow: hidden;
+  background-color: #333333;
+  width: 120px;
+  height: 30px;
+  margin: 4px;
+  border: none;
+}
+
+.element li {
+  overflow: hidden;
+  display: none;
+}
+.element li.on {
+  overflow: hidden;
+  display: block;
+}
+
+#warpp {
+  overflow: hidden;
+  background-color: #333333;
+  width: 120px;
+  height: 30px;
+  margin: 4px;
+  border: none;
+}
+
+/* .slideContainer {
+  overflow: hidden;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+} */
+
+.slideContentImage {
+  /* overflow: hidden; */
+  position: fixed;
+  /* top: 25%; */
+  /* left : 25% */
+  float: center;
+  /* height : 400px; */
+}
+
+.slide_image {
+  overflow: hidden;
   overflow: hidden;
   margin: 40px auto;
   max-width: 700px;
   position: fixed;
-  bottom: -2400px; /* 접어두기 동작 수행*/
 }
 
 .element {
+  overflow: hidden;
   padding: 20px;
   height: 300px;
   width: 100%;
-  overflow: hidden;
   color: #fff;
+  width: 120px;
+  height: 30px;
+  margin: 4px;
+  border: none;
 }
 
 .element p {
-  visibility: hidden;
+  overflow: hidden;
   text-align: center;
   color: white;
   font-size: 3em;
+  width: 120px;
+  height: 30px;
+  margin: 4px;
+  border: none;
 }
 
 .element:-webkit-full-screen {
+  overflow: hidden;
   background-color: #000;
   width: 100vw;
   height: 100vh;
 }
 
 .element:-webkit-full-screen p {
+  overflow: hidden;
   visibility: visible;
   display: none;
 }
 
-.slide_in {
+.slidein {
+  overflow: hidden;
   background-color: #333;
   position: relative;
   color: white;
-  padding: 10px;
+  padding: 13px;
   top: 3px;
   bottom: 1px;
   border-radius: 3px;
   color: #fff;
   display: inline-block;
-  /* padding: 8px 15px; */
-  text-decoration: none;
-  text-align: center;
-  min-width: 150px;
-}
-
-.slide_in a {
-  margin-right: 15px;
+  /* min-width: 150px; */
 }
 </style>

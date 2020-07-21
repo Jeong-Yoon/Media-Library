@@ -211,7 +211,6 @@ body, p, h1, h2, h3, h4, h5, h6, menu, ul, ol, li, dl, dt, dd, table, th, td, fo
     font-size: 11px;
 }
 
-}
 .v_photo_list ul {
     padding: 13px 10px 24px;
     font-size: 0;

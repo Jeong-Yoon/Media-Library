@@ -102,11 +102,23 @@ export const getImage = {
     return request("post", "/api/images/getimages", { image_id });
   },
 };
-
 export const getVideo = {
   getVideo({ videoId }) {
     console.log(videoId + " : api / getVideo");
     return request("get", `/api/videos/video/${videoId}`);
+  },
+};
+
+// export const getImageList = {
+//   getImageList(parent, imagelist) {
+//     console.log(imagelist + " : api/getimagelist");
+//     return request("post", "/api/images/getimagelist", parent, imagelist);
+//   },
+// };
+export const getImageList = {
+  getImageList({ folderId }) {
+    console.log(parent + " : api/getimagelist");
+    return request("post", "/api/images/getimagelist", { folderId });
   },
 };
 

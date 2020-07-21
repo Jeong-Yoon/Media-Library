@@ -288,6 +288,7 @@ export default {
       images: true,
       videos: true,
       noShow: true,
+      imageList: [],
     };
   },
   created() {
@@ -307,18 +308,12 @@ export default {
       "GET_ONLY",
       "GET_IMAGE",
       "GET_VIDEO",
+      "GET_IMAGELIST",
     ]),
     goToStart() {
       if (document.getElementById("video1").currentTime == 15) {
         document.getElementById("video1").currentTime = 0;
       }
-    },
-    getImg(imageId) {
-      this.GET_IMAGE({ image_id: imageId }).then((data) => {
-        console.log(data);
-        this.idOfImage = data;
-        this.openImageModal();
-      });
     },
     getVideo(videoId) {
       this.GET_VIDEO({ videoId: videoId }).then((data) => {
@@ -329,23 +324,29 @@ export default {
     },
     download(ids) {
       console.log(ids);
-      this.DOWNLOAD_FILE(ids)
-        .then((res) => {
-          const url = window.URL.createObjectURL(new Blob([res.data]), {
-            type: "*",
-          }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", this.ids.content_name);
-          document.body.appendChild(link);
-          link.click();
-          alert("다운로드가 완료되었습니다.");
-        })
-        .catch((error) => {
-          alert("다운로드에 실패하였습니다.");
-          this.error = error.data.error;
-          this.ids = [];
-        });
+      this.DOWNLOAD_FILE(ids).then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]), {
+          type: "*",
+        }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", this.ids.content_name);
+        document.body.appendChild(link);
+        link.click();
+      });
+    },
+    getImg(imageId) {
+      console.log("getImg...", imageId);
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        console.log(data);
+        this.idOfImage = data;
+      });
+      this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
+        console.log(this.parent);
+        console.log(result[0].content_id + " : image list");
+        this.imageList = result;
+      });
+      this.openImageModal();
     },
     checkType(id) {
       // var temp = id.subStr(0, 1);
