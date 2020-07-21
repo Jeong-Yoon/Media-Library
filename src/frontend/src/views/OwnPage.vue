@@ -94,22 +94,7 @@
                 </div>
               </div>
 
-              <div
-                v-if="folder.content_type == 'I' && checkType(folder.id) == '3'"
-              >
-                <img
-                  :src="roadImg(folder.content)"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getImg(folder.id)"
-                />
-                <div class="info">
-                  <span class="title">{{ folder.content_name }}</span>
-                </div>
-              </div>
-
-              <div v-if="folder.content_type == 'V'">
+              <div v-else-if="folder.contents_type == 'I'">
                 <img
                   :src="roadImg(folder.content)"
                   width="130"

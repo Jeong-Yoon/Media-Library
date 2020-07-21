@@ -2,7 +2,10 @@
   <div id="app">
     <AppHeader />
     <router-view />
-    <div v-if="token !== null" class="app-contents">
+    <div
+      v-if="token !== null"
+      class="app-contents"
+    >
       <Navigation />
     </div>
   </div>

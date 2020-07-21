@@ -6,14 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.inzent.medialibrary.dto.LoginDTO;
+import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
-import com.inzent.medialibrary.dto.UserVO;
-import com.inzent.medialibrary.repository.FolderDAO;
 import com.inzent.medialibrary.repository.UserDAO;
-import com.inzent.medialibrary.security.JwtService;
 import com.inzent.medialibrary.service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,8 +19,8 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
-	public UserVO login(LoginDTO loginDto) {
-		UserVO user = userDao.login(loginDto);
+	public LoginUserDTO login(LoginDTO loginDto) {
+		LoginUserDTO user = userDao.login(loginDto);
 		if(!passwordEncoder.matches(loginDto.getPassword(), user.getUser_pw())) {
 			return null;
 		}
@@ -33,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public Long signup(SignUpDTO signUpDTO) {
+	public int signup(SignUpDTO signUpDTO) {
 		String encodePw = passwordEncoder.encode(signUpDTO.getPassword());
 		signUpDTO.setPassword(encodePw);
 		return userDao.signup(signUpDTO);

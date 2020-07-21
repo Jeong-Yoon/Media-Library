@@ -324,7 +324,7 @@ export default {
 }
 
 .by-author {
-	font-style: italic;
+   font-style: italic;
   font-size: 14px;
 	line-height: 1.5;
 	color: #aab6aa;
