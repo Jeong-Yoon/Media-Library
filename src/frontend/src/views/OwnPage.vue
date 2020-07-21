@@ -2,21 +2,28 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <div class="agree">
-          <input type="checkbox" id="a1" name="전체동의" @click="selectAll" v-model="allSelected" />
+        <div class="agree" v-show="noShow">
+          <input
+            type="checkbox"
+            id="a1"
+            name="전체동의"
+            @click="selectAll"
+            v-model="allSelected"
+          />
           <label for="a1"></label>
         </div>
         <div v-if="this.ids.length > 0">
-          <button class="download" @click="download">받기</button>
+          <button class="download" @click="download(this.ids)">받기</button>
           <button class="share">공유</button>
           <button class="album">앨범</button>
           <button class="delete">삭제</button>
         </div>
         <div v-else>
-          <button class="b1" @click="openModal">새폴더</button>
-          <button class="b2">폴더</button>
-          <button class="b3">사진</button>
-          <button class="b4">동영상</button>
+          <button class="b1" @click="openModal" v-show="noShow">새폴더</button>
+          <button class="b2" @click="all">전체</button>
+          <button class="b3" @click="onlyFolder">폴더</button>
+          <button class="b4" @click="onlyImage">사진</button>
+          <button class="b5" @click="onlyVideo">동영상</button>
           <NewFolderModal @close="closeModal" v-if="modal">
             <!-- default 슬롯 콘텐츠 -->
             <p>폴더 이름을 입력해주세요.</p>
@@ -37,7 +44,12 @@
             <option value="contents_atribute">확장자</option>
             <option value="contents_reg_date">등록일</option>
           </select>
-          <input type="text" name="search" placeholder="Search.." class="value" />
+          <input
+            type="text"
+            name="search"
+            placeholder="Search.."
+            class="value"
+          />
           <button type="submit" class="submit">
             <img
               src="@/assets/image/search.png"
@@ -59,17 +71,19 @@
               @change="checkbox(folder.id)"
               class="li"
             >
-              <div class="agree2">
-                <input
-                  id="a2"
-                  type="checkbox"
-                  v-model="ids"
-                  @click="select(folder.id)"
-                  :value="folder.id"
-                />
-                <label for="a2"></label>
-              </div>
-              <div v-if="checkType(folder.id)=='2'">
+              <!-- 폴더 -->
+              <div v-if="checkType(folder.id) == '2'" v-show="folders">
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
                 <img
                   src="@/assets/image/folder.png"
                   width="130"
@@ -81,12 +95,59 @@
                 </div>
               </div>
 
-              <div v-else>
+              <!-- 사진 -->
+              <div
+                v-if="folder.content_type == 'I' && checkType(folder.id) == '3'"
+                v-show="images"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
                 <img
                   :src="roadImg(folder.content)"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getImg(folder.id)"
+                />
+                <div class="info">
+                  <span class="title">{{ folder.content_name }}</span>
+                </div>
+              </div>
+
+              <!-- 동영상 -->
+              <div
+                v-if="folder.content_type == 'V' && checkType(folder.id) == '3'"
+                v-show="videos"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
+                <video
+                  :src="folder.content"
+                  width="130"
+                  height="130"
+                  preload="metadata"
+                  onplay="goToStart()"
+                  id="video1"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(folder.id)"
                 />
                 <div class="info">
                   <span class="title">{{ folder.content_name }}</span>
@@ -95,7 +156,8 @@
             </li>
           </ul>
         </div>
-        <!-- 이미지 뷰잉 용 이미지 -->
+        <!--
+        이미지 뷰잉 용 이미지 
         <ul class="list_thumb">
           <li class="li" title="image" @click="openImageModal">
             <label for>
@@ -131,54 +193,101 @@
               </div>
             </label>
           </li>
-          <ImageViewingModal v-if="imageModal" />
-          <VideoViewingModal v-if="videoModal" />
         </ul>
+          -->
+        <ImageViewingModal
+          :idOfImage="idOfImage"
+          v-if="imageModal"
+          @close="closeImageModal"
+        />
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          v-if="videoModal"
+          @close="closeVideoModal"
+        />
         <p>selected ids : {{ ids }}</p>
       </div>
     </div>
-
+    <fab
+      :position="position"
+      :bg-color="bgColor"
+      :actions="fabActions"
+      :z-index="zIndex"
+      @uploadFile="openFileModal"
+      @uploadFolder="openFolderModal"
+    />
+    <UploadFileModal @close="closeFileModal" v-if="fileModal" />
+    <UploadFolderModal @close="closeFolderModal" v-if="folderModal" />
+    <!--
     <quick-menu
       :menu-count="count"
       :icon-class="icons"
       :menu-url-list="list"
       :position="position"
       :background-color="backgroundColor"
-    />
+    />-->
   </content>
 </template>
 
 <script>
-import quickMenu from "vue-quick-menu";
+//import quickMenu from "vue-quick-menu";
+import fab from "vue-fab";
 import NewFolderModal from "./NewFolderModal";
 import ImageViewingModal from "./ImageViewingModal";
 import VideoViewingModal from "./VideoViewingModal";
+import UploadFileModal from "./UploadFileModal";
+import UploadFolderModal from "./UploadFolderModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
   components: {
-    quickMenu,
+    //quickMenu,
+    fab,
     NewFolderModal,
     ImageViewingModal,
-    VideoViewingModal
+    VideoViewingModal,
+    UploadFileModal,
+    UploadFolderModal,
   },
   data() {
     return {
-      count: 2,
-      icons: ["fa fa-file", "fa fa-folder"],
-      list: [
-        { isLink: true, url: "/uploadFile" },
-        { isLink: true, url: "/uploadFolder" }
-      ],
+      // count: 2,
+      // icons: ["fa fa-file", "fa fa-folder"],
+      // list: [
+      //   { isLink: true, url: "/uploadFile" },
+      //   { isLink: true, url: "/uploadFolder" },
+      // ],
+      // position: "bottom-right",
+      // backgroundColor: "#474346",
+      bgColor: "#494346",
       position: "bottom-right",
-      backgroundColor: "#474346",
+      fabActions: [
+        {
+          name: "uploadFile",
+          icon: "insert_drive_file",
+        },
+        {
+          name: "uploadFolder",
+          icon: "folder",
+        },
+      ],
+      zIndex: 50,
       modal: false,
       imageModal: false,
       videoModal: false,
+      fileModal: false,
+      folderModal: false,
       newFolderName: "",
       folderList: [],
+      targetList: [],
       allSelected: true,
-      ids: []
+      ids: [],
+      idOfImage: "",
+      idOfVideo: "",
+      folders: true,
+      images: true,
+      videos: true,
+      noShow: true,
     };
   },
   created() {
@@ -187,21 +296,97 @@ export default {
   computed: {
     ...mapState({
       userInfo: "userInfo",
-      parent: "root_folder"
-    })
+      parent: "root_folder",
+    }),
   },
   methods: {
-    ...mapActions(["NEW_FOLDER", "GET_FOLDERS"]),
-    async download() {},
+    ...mapActions([
+      "NEW_FOLDER",
+      "GET_FOLDERS",
+      "DOWNLOAD_FILE",
+      "GET_ONLY",
+      "GET_IMAGE",
+      "GET_VIDEO",
+    ]),
+    goToStart() {
+      if (document.getElementById("video1").currentTime == 15) {
+        document.getElementById("video1").currentTime = 0;
+      }
+    },
+    getImg(imageId) {
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        console.log(data);
+        this.idOfImage = data;
+        this.openImageModal();
+      });
+    },
+    getVideo(videoId) {
+      this.GET_VIDEO({ videoId: videoId }).then((data) => {
+        console.log(data);
+        this.idOfVideo = data;
+        this.openVideoModal();
+      });
+    },
+    download(ids) {
+      console.log(ids);
+      this.DOWNLOAD_FILE(ids)
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]), {
+            type: "*",
+          }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", this.ids.content_name);
+          document.body.appendChild(link);
+          link.click();
+          alert("다운로드가 완료되었습니다.");
+        })
+        .catch((error) => {
+          alert("다운로드에 실패하였습니다.");
+          this.error = error.data.error;
+          this.ids = [];
+        });
+    },
     checkType(id) {
       // var temp = id.subStr(0, 1);
       var temp = String(id);
       temp = temp.substring(0, 1);
-      console.log("ddddddd: " + temp);
       return temp;
     },
+    all() {
+      this.folders = true;
+      this.images = true;
+      this.videos = true;
+      this.noShow = true;
+    },
+    onlyFolder() {
+      this.folders = true;
+      this.images = false;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyImage() {
+      this.folders = false;
+      this.images = true;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyVideo() {
+      this.folders = false;
+      this.images = false;
+      this.videos = true;
+      this.noShow = false;
+    },
+    getOnly(target) {
+      this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
+        // this.targetList = list;
+        // console.log("targetList : ", this.targetList);
+        console.log("list", list);
+        this.folderList = list;
+      });
+    },
     getFolders() {
-      this.GET_FOLDERS({ parent: this.parent }).then(list => {
+      this.GET_FOLDERS({ parent: this.parent }).then((list) => {
         console.log("ownpage list : " + list[0]);
         this.folderList = list;
         console.log("ownpage folderlist : " + this.folderList);
@@ -211,7 +396,7 @@ export default {
       this.ids = [];
       if (!this.allSelected) {
         for (this.folder in this.folderList) {
-          this.ids.push(this.folderList[this.folder].folder_id);
+          this.ids.push(this.folderList[this.folder].id);
         }
       }
     },
@@ -222,10 +407,9 @@ export default {
         this.ids.splice(this.ids.indexOf(folder_id), 1);
       }
     },
-    select: function(folder_id) {
-      this.ids = [];
+    select: function() {
       this.allSelected = false;
-      this.ids.push(folder_id);
+      this.ids.push(this.folderList[this.folder].id);
     },
     openImageModal() {
       this.imageModal = true;
@@ -233,11 +417,29 @@ export default {
     openVideoModal() {
       this.videoModal = true;
     },
+    openFileModal() {
+      this.fileModal = true;
+    },
+    openFolderModal() {
+      this.folderModal = true;
+    },
     openModal() {
       this.modal = true;
     },
     closeModal() {
       this.modal = false;
+    },
+    closeFileModal() {
+      this.fileModal = false;
+    },
+    closeFolderModal() {
+      this.folderModal = false;
+    },
+    closeImageModal() {
+      this.imageModal = false;
+    },
+    closeVideoModal() {
+      this.videoModal = false;
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {
@@ -247,7 +449,7 @@ export default {
         this.NEW_FOLDER({
           parent: this.parent,
           newFolderName: this.newFolderName,
-          userEmail: this.userInfo.useremail
+          userEmail: this.userInfo.useremail,
         })
           .then(() => {
             alert("폴더가 생성되었습니다.");
@@ -255,7 +457,7 @@ export default {
             this.closeModal();
             this.getFolders();
           })
-          .catch(error => {
+          .catch((error) => {
             alert("폴더 생성에 실패했습니다.");
             this.error = error.data.error;
             this.newFolderName = "";
@@ -266,10 +468,9 @@ export default {
     },
     roadImg(data) {
       const result = "data:image;base64," + data;
-      console.log("result : " + result);
       return result;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -436,7 +637,7 @@ user agent stylesheet div {
   outline: none;
 }
 .b2 {
-  background-color: #d2cdc5;
+  background-color: #dee8eb;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
@@ -448,7 +649,7 @@ user agent stylesheet div {
   border: none;
 }
 .b3 {
-  background-color: #a49988;
+  background-color: #d2cdc5;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
@@ -460,6 +661,19 @@ user agent stylesheet div {
   border: none;
 }
 .b4 {
+  background-color: #a49988;
+  color: white;
+  margin-right: 10px;
+  border-radius: 4px;
+  text-align: center;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  border: none;
+  outline: none;
+  border: none;
+}
+.b5 {
   background-color: #474346;
   color: white;
   margin-right: 10px;
@@ -553,6 +767,12 @@ input {
 img {
   border: 2px solid #e3e2e1;
 }
+video {
+  border: 2px solid #e3e2e1;
+}
+video:focus {
+  border: none;
+}
 .li {
   float: left;
   margin-bottom: 10px;
@@ -568,11 +788,27 @@ img {
   width: 150px;
 }
 .title {
+  /*
   display: block;
   font-size: 12px;
   line-height: 15px;
   background-color: white;
   width: 150px;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #222;
+  cursor: default;
+  text-decoration: none;
 }
 </style>

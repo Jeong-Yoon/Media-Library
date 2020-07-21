@@ -1,45 +1,49 @@
 <template>
-  <uploadPage>
-    <div id="app">
-      <h4>Upload Image File</h4>
-      <p>
-        Input Image URL and Click the button or Drag and Drop or Attach an Image
-        File
-      </p>
-      <div class="input-group">
-        <input
-          v-model="filename"
-          type="text"
-          placeholder="Input Image URL or  Drag & Drop or Select"
-          class="form-control"
-          @dragover.prevent
-          @dragenter.prevent
-          @drop.prevent="onDrop"
-        />
-        <div class="input-group-append">
-          <div>
-            <span class="attach-file" @click="onClickFileS">
-              <!--<input v-model="attachFiles" type="file"/>-->
-              <i class="fa fa-paperclip"></i>
-            </span>
+  <transition name="modal" appear>
+    <div id="upload" @click.self="$emit('close')">
+      <div class="uploadFile">
+        <h4>Upload Image File</h4>
+        <p>
+          Input Image URL and Click the button or Drag and Drop or Attach an
+          Image File
+        </p>
+        <div class="input-group">
+          <input
+            v-model="filename"
+            type="text"
+            placeholder="Input Image URL or  Drag & Drop or Select"
+            class="form-control"
+            @dragover.prevent
+            @dragenter.prevent
+            @drop.prevent="onDrop"
+          />
+          <div class="input-group-append">
+            <div>
+              <span class="attach-file" @click="onClickFileS">
+                <!--<input v-model="attachFiles" type="file"/>-->
+                <i class="fa fa-paperclip"></i>
+              </span>
+            </div>
+            <div>
+              <button class="upload-button" @click="onClickUpload">
+                Upload
+              </button>
+            </div>
           </div>
-          <div>
-            <button class="upload-button" @click="onClickUpload">Upload</button>
-          </div>
+          <input
+            type="file"
+            class="file-input"
+            accept="image/*"
+            ref="fileInput"
+            @change="onFileChange"
+          />
         </div>
-        <input
-          type="file"
-          class="file-input"
-          accept="image/*"
-          ref="fileInput"
-          @change="onFileChange"
-        />
-      </div>
-      <div v-show="imageSrc" class="upload-image">
-        <img :src="imageSrc" />
+        <div v-show="imageSrc" class="upload-image">
+          <img :src="imageSrc" />
+        </div>
       </div>
     </div>
-  </uploadPage>
+  </transition>
 </template>
 
 <script>
@@ -49,7 +53,7 @@ export default {
     return {
       filename: "",
       imageSrc: "",
-      attachFiles: []
+      attachFiles: [],
     };
   },
   methods: {
@@ -87,18 +91,28 @@ export default {
         };
         reader.readAsDataURL(file);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-#app {
-  font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+#upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 15;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-color: white;
-  padding-left: 240px;
+  background: rgba(0, 0, 0, 0.5);
+}
+.uploadFile {
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
 }
 .form-control {
   width: 600px;
@@ -118,7 +132,7 @@ export default {
 }
 .upload-button {
   width: 600px;
-  height: 100px;
+  height: 35px;
   margin-top: 5px;
   border: none;
   background-color: #474346;
@@ -135,6 +149,13 @@ export default {
   height: 200px;
 }
 h4 {
+  padding-left: 225px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+p {
+  padding-bottom: 15px;
+  padding-left: 4px;
 }
 img {
   width: 100%;

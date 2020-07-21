@@ -7,7 +7,12 @@
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-        <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a>
+        <a
+          class="v_btn_close"
+          @click="closeVideoNav()"
+          style="color:#fff;  font-size: 14px;"
+          >나가기</a
+        >
 
         <div class="v_task">
           <!-- 공유 -->
@@ -58,13 +63,21 @@
       <div class="content">
         <div class="video-container">
           <video id="video" controls muted loop autoplay preload="none">
-            <source id="mp4" src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4" />
+            <source
+              id="mp4"
+              src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+              type="video/mp4"
+            />
             <source
               id="webm"
               src="https://media.w3.org/2010/05/sintel/trailer.webm"
               type="video/webm"
             />
-            <source id="ogv" src="https://media.w3.org/2010/05/sintel/trailer.ogv" type="video/ogg" />
+            <source
+              id="ogv"
+              src="https://media.w3.org/2010/05/sintel/trailer.ogv"
+              type="video/ogg"
+            />
           </video>
         </div>
 
@@ -90,21 +103,27 @@
             <ul class="image_list">
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
@@ -122,11 +141,15 @@
       <div class="share-modal-content">
         <div class="share-modal-header">
           <a style="font-size : 16px">공유 URL 생성</a>
-          <span class="closesharemodal" @click="closeShareModal()">&times;</span>
+          <span class="closesharemodal" @click="closeShareModal()"
+            >&times;</span
+          >
         </div>
 
         <div class="share-modal-body">
-          <button type="button" class="btn_copy" data-dismiss="modal">복사</button>
+          <button type="button" class="btn_copy" data-dismiss="modal">
+            복사
+          </button>
           <p>URL 영역</p>
         </div>
 
@@ -160,9 +183,9 @@
   </div>
 </template>
 
-
 <script>
 export default {
+  props: ["idOfVideo"],
   data() {
     return {};
   },
@@ -193,16 +216,16 @@ export default {
     },
     openInfoModal() {
       console.log("정보 모달");
+      console.log(this.idOfVideo);
       document.getElementById("infoModal").style.display = "block";
     },
     closeInfoModal() {
       console.log("정보모달 닫아");
       document.getElementById("infoModal").style.display = "none";
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 /* 큰 모달 */

@@ -54,16 +54,6 @@ const routes = [
     name: "trashDocumentBox",
     component: () => import("@/views/TrashPage.vue"),
   },
-  {
-    path: "/uploadFile",
-    name: "uploadFile",
-    component: () => import("@/views/UploadFilePage.vue"),
-  },
-  {
-    path: "/uploadFolder",
-    name: "uploadFolder",
-    component: () => import("@/views/UploadFolderPage.vue"),
-  },
 ];
 
 const router = new VueRouter({

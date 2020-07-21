@@ -5,10 +5,7 @@
       <h1 class="login">
         <a>로그인</a>
       </h1>
-      <form
-        class="form"
-        @submit.prevent="submitForm"
-      >
+      <form class="form" @submit.prevent="submitForm">
         <div class="insert-area">
           <label for="email">
             <input
@@ -16,25 +13,21 @@
               v-model="email"
               type="text"
               placeholder="이메일"
-            >
+            />
             <p class="validation-text">
-              <span
-                v-if="!isUseremailValid && email"
-                class="warning"
-              >Please enter an email address</span>
+              <span v-if="!isUseremailValid && email" class="warning"
+                >Please enter an email address</span
+              >
             </p>
           </label>
-          <label
-            for="password"
-            class="password"
-          >
+          <label for="password" class="password">
             <input
               id="password"
               v-model="password"
               type="password"
               autocomplete="off"
               placeholder="비밀번호"
-            >
+            />
           </label>
         </div>
         <div class="login-option">
@@ -45,7 +38,7 @@
                 v-model="saveId"
                 type="checkbox"
                 class="checkbox"
-              >
+              />
               <!-- <input type="checkbox" class="checkbox" id="save_email"> -->
               <span class="check-mark" />
               <span>이메일 저장</span>
@@ -61,7 +54,7 @@
         </button>
       </form>
 
-      <hr class="hr1">
+      <hr class="hr1" />
 
       <h5 class="signup">
         <!-- <a href="/views/SignupPage.vue"> -->
@@ -77,7 +70,6 @@
   </div>
 </template>
 
-
 <script>
 import { validateEmail } from "@/utils/validation";
 import { mapActions } from "vuex";
@@ -89,46 +81,46 @@ export default {
   // },
   data() {
     return {
-      email : '',
-      password : '',
-      saveId:'',
-      returnPath: ''
+      email: "",
+      password: "",
+      saveId: "",
+      returnPath: "",
     };
   },
   computed: {
     isUseremailValid() {
       return validateEmail(this.email);
-    }
+    },
   },
   created() {
     this.returnPath = this.$route.query.rPath || "/";
-    if(this.$cookie.get('email') && this.$cookie.get('saveId')){
-      this.email = this.$cookie.get('email');
-      this.saveId = this.$cookie.get('saveId');
+    if (this.$cookie.get("email") && this.$cookie.get("saveId")) {
+      this.email = this.$cookie.get("email");
+      this.saveId = this.$cookie.get("saveId");
     }
   },
   methods: {
-    ...mapActions(['LOGIN']),
-    submitForm(){
+    ...mapActions(["LOGIN"]),
+    submitForm() {
       console.log(this.saveId);
       this.LOGIN({ email: this.email, password: this.password })
-      .then(() => {
-        this.parseJwt(this.$store.state.token);
-        console.log(this.saveId)
-        if(this.saveId){
-          this.$cookie.set('email', this.email)
-          this.$cookie.set('saveId', this.saveId)
-        } else if(this.saveId === false){
-          this.$cookie.delete('email');
-          this.$cookie.delete('saveId')
-        }
-        this.$router.push(this.returnPath);
-      })
-      .catch(error => {
-        this.error = error.data.error;
-        alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
-        this.initForm();
-      });
+        .then(() => {
+          this.parseJwt(this.$store.state.token);
+          console.log(this.saveId);
+          if (this.saveId) {
+            this.$cookie.set("email", this.email);
+            this.$cookie.set("saveId", this.saveId);
+          } else if (this.saveId === false) {
+            this.$cookie.delete("email");
+            this.$cookie.delete("saveId");
+          }
+          this.$router.push(this.returnPath);
+        })
+        .catch((error) => {
+          this.error = error.data.error;
+          alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+          this.initForm();
+        });
     },
     parseJwt(token) {
       try {
@@ -152,14 +144,11 @@ export default {
       }
     },
     initForm() {
-      this.email = "", 
-      this.password = "";
-    }
-  }
+      (this.email = ""), (this.password = "");
+    },
+  },
 };
 </script>
-
-
 
 <style lang="scss" scoped>
 // Media queries
@@ -183,7 +172,9 @@ export default {
     @content;
   }
 }
-
+button:focus {
+  border: none;
+}
 .input-checkbox {
   input[type="checkbox"] {
     visibility: hidden;
@@ -346,7 +337,9 @@ export default {
 .btn:hover {
   text-decoration: none;
 }
-
+.btn:focus {
+  border: none;
+}
 .hr1 {
   border: 0;
   height: 1px;

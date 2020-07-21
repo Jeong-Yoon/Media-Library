@@ -7,15 +7,32 @@
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-        <a class="v_btn_close" @click="closeImageNav()" style="color:#fff;  font-size: 14px;">나가기</a>
+        <a
+          class="v_btn_close"
+          @click="closeImageNav()"
+          style="color:#fff;  font-size: 14px;"
+          >나가기</a
+        >
 
         <div class="v_task">
           <!-- 확대/축소 -->
           <!-- <div class="zoom_wrap">       -->
-          <a class="zoom-in" id="in" title="확대" @click="zoomIn()" style="margin-right:3px">
+          <a
+            class="zoom-in"
+            id="in"
+            title="확대"
+            @click="zoomIn()"
+            style="margin-right:3px"
+          >
             <img src="@/assets/image/icon_pl.png" height="15.5px" />
           </a>
-          <a class="zoom-out" id="out" title="축소" @click="zoomOut()" style="margin-right:3px">
+          <a
+            class="zoom-out"
+            id="out"
+            title="축소"
+            @click="zoomOut()"
+            style="margin-right:3px"
+          >
             <img src="@/assets/image/icon_mi.png" height="15.5px" />
           </a>
           <!-- </div> -->
@@ -72,7 +89,8 @@
               <a
                 class="slider_option"
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();"
-              >슬라이드쇼</a>
+                >슬라이드쇼</a
+              >
               <a class="publicfolder">공유 문서함 추가</a>
               <a class="publicalbum">공유 앨범 추가</a>
             </div>
@@ -112,21 +130,27 @@
             <ul class="image_list">
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
 
               <li class="image_item">
                 <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
+                  <img
+                    src="https://www.w3schools.com/images/w3schools_green.jpg"
+                  />
                   <span class="mask_sel" />
                 </a>
               </li>
@@ -144,11 +168,15 @@
       <div class="share-modal-content">
         <div class="share-modal-header">
           <a style="font-size : 16px">공유 URL 생성</a>
-          <span class="closesharemodal" @click="closeShareModal()">&times;</span>
+          <span class="closesharemodal" @click="closeShareModal()"
+            >&times;</span
+          >
         </div>
 
         <div class="share-modal-body">
-          <button type="button" class="btn_copy" data-dismiss="modal">복사</button>
+          <button type="button" class="btn_copy" data-dismiss="modal">
+            복사
+          </button>
           <p>URL 영역</p>
         </div>
 
@@ -192,13 +220,22 @@
       <div class="element" id="element" style="overflow: hidden;">
         <div id="wrapper" style="overflow: hidden;">
           <div id="container" style="overflow: hidden;">
-            <div class="image-container" id="imgContainer" style="overflow : hidden">
+            <div
+              class="image-container"
+              id="imgContainer"
+              style="overflow : hidden"
+            >
               <img class="image" id="img" src="@/assets/image/zozo.png" />
             </div>
 
             <!-- -->
             <div class="slide_in">
-              <a class="slide_next" @click="plusDivsSlide(-1)" title="이전" style="margin-left : 7px">
+              <a
+                class="slide_next"
+                @click="plusDivsSlide(-1)"
+                title="이전"
+                style="margin-left : 7px"
+              >
                 <img src="@/assets/image/icon_1_1.png" height="15px" />
               </a>
 
@@ -211,7 +248,11 @@
                 <img src="@/assets/image/icon_1_3.png" height="15px" />
               </a>
 
-              <a class="slide_play_stop" @click="closeFullscreen()" title="슬라이드쇼 마침">
+              <a
+                class="slide_play_stop"
+                @click="closeFullscreen()"
+                title="슬라이드쇼 마침"
+              >
                 <img src="@/assets/image/icon_1_4.png" height="15px" />
               </a>
             </div>
@@ -224,15 +265,13 @@
   </div>
 </template>
 
-
-
 <script>
 // import Cropper from '../utils/cropper.js'
 export default {
+  props: ["idOfImage"],
   data() {
     return {
-      slideIndex: 1
-      // zoomIn:undefined,
+      slideIndex: 1,
       // zoomOut:undefined
     };
   },
@@ -426,11 +465,10 @@ export default {
         x[i].style.display = "none";
       }
       x[this.slideIndex - 1].style.display = "block";
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 /* 큰 모달 */
