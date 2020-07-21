@@ -6,7 +6,7 @@
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-        <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a>
+        <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 15px;">나가기</a>
 
         <div class="v_task">
           <!-- 공유 -->
@@ -39,7 +39,7 @@
           <!-- 더보기 -->
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
-            <a class="dropbtn" title="더보기" style="left:-3px">
+            <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
               <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
             <div class="dropdown-content" style="float : right;">
@@ -79,6 +79,7 @@
                       <img src="@/assets/image/sample.jpg" height="100px" />
                     </a>
                     <div class="media-body">
+                      <!-- 파일명, 업로드일시, 올린사람 -->
                       <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
                       <p class="by-author">2020.05.01 20:17:56</p>
                       <p class="by-author">By 최지은</p>
@@ -128,16 +129,9 @@
                       <p class="by-author">By 최지은</p>
                     </div>
                   </li>
-
-                  
-
                 </ul>
-
               </div>
 
-              
-
-           
               <!-- thumb-list 끝 -->
           </div>
           <!-- side-content 끝 -->
@@ -266,6 +260,7 @@ export default {
     closeShareModal() {
       console.log("공유 모달 닫아");
       document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
     },
     openInfoModal() {
       console.log("정보 모달");
@@ -273,6 +268,7 @@ export default {
     },
     closeInfoModal() {
       console.log("정보모달 닫아");
+      document.getElementById("shareModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
     }
   }
@@ -323,14 +319,14 @@ export default {
   font-style: bold;
   justify-content: center;
   align-items: center;
-  top: 175px;
+  top: 185px;
   left : 1300px;
 }
 
 .by-author {
 	font-style: italic;
   font-size: 14px;
-	line-height: 1.3;
+	line-height: 1.5;
 	color: #aab6aa;
 }
 
@@ -341,11 +337,10 @@ export default {
 }
 
  .media {
-	padding-bottom: 1em;
+	padding-bottom: 0.7em;
 	/* border-bottom: 1px solid #e8e8e8; */
 }
 
-/*****************/
 
 .overlay a {
   padding: 8px;
@@ -372,84 +367,6 @@ export default {
   cursor: pointer;
 }
 
-/* footer */
-.toggle-container {
-  background: #000; /*  */
-  color: #fff;
-  position: fixed;
-  bottom: -200px; /* 접어두기 동작 수행*/
-  left: 0;
-  width: 100%;
-  height: 150px;
-  /* padding: 20px; */
-  /* transition: top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94); */
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-#toggle {
-  position: absolute;
-  cursor: pointer;
-  left: -100%;
-}
-
-#toggle + label {
-  font-style: italic;
-  z-index: 600;
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  padding: 10px;
-  /* background: rgba(0, 0, 0, 0.6); */
-  background: rgba(0, 0, 0, 0.6);
-  width: 100px;
-  /*   border-radius: 3px; */
-  padding: 8px 10px;
-  color: #fff;
-  /*   line-height:20px; */
-  font-size: 16px;
-  text-align: center;
-  /*   -webkit-font-smoothing: antialiased; */
-  cursor: pointer;
-  /* transition:all 500ms ease; */
-}
-
-#toggle + label:after {
-  content: "펼쳐보기";
-}
-
-.container {
-  transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
-  padding: 5em 3em;
-}
-
-#toggle:checked ~ .toggle-container {
-  bottom: 0;
-}
-
-#toggle:checked ~ .container {
-  margin-bottom: 200px;
-}
-
-#toggle:checked + label {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-#toggle:checked + label:after {
-  font-style: italic;
-  content: "접어두기";
-}
-
-/* thumb */
-.v_photo_list .thumb_list {
-  /* position: fixed;? */
-  height: 100px;
-  display: inline-block;
-  /* padding: 5px;  */
-  display: inline-block;
-  outline-color: green;
-}
-
 .ul, li {
   list-style: none;
   float: left;
@@ -469,7 +386,7 @@ export default {
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  /* background-color: rgba(0, 0, 0, 0.4);  */
 }
 
 .sharemodal:target:before {
@@ -514,11 +431,11 @@ export default {
 }
 
 .closesharemodal {
-  color: #aaaaaa;
-  font-size: 30px;
+  color: #353535;
+  font-size: 25px;
   text-decoration: none;
   position: absolute;
-  right: 5px;
+  right: 10px;
   top: 0;
   cursor: pointer;
 }
@@ -569,7 +486,6 @@ export default {
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 .infomodal:target:before {
@@ -588,22 +504,13 @@ export default {
 }
 
 .info-modal-content {
-  background: #fefefe;
-  border: #333333 solid 1px;
-  border-radius: 5px;
-  margin-left: -200px;
-  position: fixed;
-  left: 50%;
-  z-index: 11;
-  width: 360px;
-  -webkit-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
-  -webkit-transition: -webkit-transform 0.3s ease-out;
-  -moz-transition: -moz-transform 0.3s ease-out;
-  -o-transition: -o-transform 0.3s ease-out;
-  transition: transform 0.3s ease-out;
-  top: 20%;
+  color: #353535;
+  font-size: 25px;
+  text-decoration: none;
+  position: absolute;
+  right: 10px;
+  top: 0;
+  cursor: pointer;
 }
 
 .infomodal:target .info-modal-content {
@@ -710,19 +617,5 @@ export default {
   display: block;
 }
 
-/* 슬라이드 */
 
-.v_btn_prev {
-  position: absolute;
-  top: 450px;
-  left: 45px;
-  cursor: pointer;
-}
-
-.v_btn_next {
-  position: absolute;
-  top: 450px;
-  right: 45px;
-  cursor: pointer;
-}
 </style>

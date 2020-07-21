@@ -103,6 +103,18 @@ export const getImage = {
   },
 };
 
+// export const getImageList = {
+//   getImageList(parent, imagelist) {
+//     console.log(imagelist + " : api/getimagelist");
+//     return request("post", "/api/images/getimagelist", parent, imagelist);
+//   },
+// };
+export const getImageList = {
+  getImageList({ folderId }) {
+    console.log(parent + " : api/getimagelist");
+    return request("post", "/api/images/getimagelist", { folderId });
+  },
+};
 export const uploadFile = {
   uploadFile(formData) {
     console.log(formData);

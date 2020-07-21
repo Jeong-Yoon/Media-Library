@@ -81,6 +81,7 @@
                 />
                 <label :for="'a2' + folder.id"></label>
               </div>
+
               <div v-if="checkType(folder.id) == '2'">
                 <img
                   src="@/assets/image/folder.png"
@@ -93,7 +94,22 @@
                 </div>
               </div>
 
-              <div v-else>
+              <div
+                v-if="folder.content_type == 'I' && checkType(folder.id) == '3'"
+              >
+                <img
+                  :src="roadImg(folder.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getImg(folder.id)"
+                />
+                <div class="info">
+                  <span class="title">{{ folder.content_name }}</span>
+                </div>
+              </div>
+
+              <div v-if="folder.content_type == 'V'">
                 <img
                   :src="roadImg(folder.content)"
                   width="130"
@@ -144,7 +160,7 @@
               </div>
             </label>
           </li>
-          <ImageViewingModal :idOfImage="idOfImage" v-if="imageModal" />
+          <ImageViewingModal :idOfImage="idOfImage" :imageList="imageList" v-if="imageModal" @getImg="getImg" />
           <VideoViewingModal v-if="videoModal" />
         </ul>
         <p>selected ids : {{ ids }}</p>
@@ -224,7 +240,8 @@ export default {
       targetList: [],
       allSelected: true,
       ids: [],
-      idOfImage: [],
+      idOfImage: "",
+      imageList : [],
     };
   },
   created() {
@@ -243,13 +260,20 @@ export default {
       "DOWNLOAD_FILE",
       "GET_ONLY",
       "GET_IMAGE",
+      "GET_IMAGELIST"
     ]),
     getImg(imageId) {
+      console.log("getImg...",imageId)
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
         console.log(data);
-        this.idOfImage.push(data);
-        this.openImageModal();
+        this.idOfImage = data;
       });
+      this.GET_IMAGELIST({ folderId : this.parent }).then((result) => {
+        console.log(this.parent)
+        console.log(result[0].content_id + " : image list");
+        this.imageList = result;
+      });
+      this.openImageModal();
     },
     download(id) {
       console.log(id);
