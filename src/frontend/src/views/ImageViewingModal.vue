@@ -375,7 +375,7 @@ export default {
       document.getElementById("image_nav").style.display = "none";
       document.getElementById("video_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
-       document.getElementById("infoModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
       document.webkitExitFullscreen().style.display = "none";
     },
     openShareModal() {
@@ -766,8 +766,10 @@ export default {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 500; /* Sit on top */
-  left: 0;
-  top: 0;
+  left: 50%;
+  /* width: 400px; */
+  /* transform: translate(0, 0); */
+  top: 50%;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   background-color: rgba(0, 0, 0, 0.4); 

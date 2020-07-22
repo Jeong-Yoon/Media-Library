@@ -193,6 +193,11 @@
               </div>
             </label>
           </li>
+<<<<<<< HEAD
+=======
+          <ImageViewingModal :idOfImage="idOfImage" :imageList="imageList" v-if="imageModal" @getImg="getImg" />
+          <VideoViewingModal v-if="videoModal" />
+>>>>>>> fff0dbb546a1287c13518c6eb184404740b1b407
         </ul>
         -->
         <ImageViewingModal
