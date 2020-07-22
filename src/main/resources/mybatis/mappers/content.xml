@@ -4,11 +4,13 @@
 
 <mapper namespace="content">
 	
-	<select id="getcontentlistbyfolderid" parameterType="long">
+	<select id="getcontentlistbyfolderid" parameterType="long" resultType="imagedto">
 		<![CDATA[
 			select * 
 			from contents
 			where folder_id = #{folderId}
+			and content_type = 'I'
+			order by content_id
 		]]>
 	</select>
 	
@@ -70,4 +72,5 @@
 		where folder_id = #{parent}
 		and content_type = #{target}
 	</select>
+	
 </mapper>

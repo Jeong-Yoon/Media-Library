@@ -6,7 +6,10 @@
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-        <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a>
+        <!-- <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a> -->
+          <a class="v_btn_close" id="reset" @click="closeVideoNav()" style="color:#fff; font-size: 15px; z-index :10; ">
+            나가기
+          </a>
 
         <div class="v_task">
           <!-- 공유 -->
@@ -56,15 +59,21 @@
       <!-- content -->
       <div class="content">
         <div class="video-container">
-          <video id="video" controls muted loop autoplay preload="none" style ="height: 640px">
-            <source id="mp4" src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4" />
+          <!-- <video controls autoplay muted loop :src="this.idOfVideo" type="video/mp4"></video> -->
+          <video width="320" height="240" autoplay="autoplay" controls>
+            <source :src="this.idOfVideo" type="video/mp4">
+          </video>
+
+          <!-- <video id="video" controls muted loop autoplay preload="none" style ="height: 640px"> -->
+            <!-- <source :src="this.idOfVideo" type="video/mp4"/> -->
+            <!-- <source id="mp4" :src="this.idOfVideo" type="video/mp4" />
             <source
               id="webm"
-              src="https://media.w3.org/2010/05/sintel/trailer.webm"
+              :src="this.idOfVideo"
               type="video/webm"
             />
-            <source id="ogv" src="https://media.w3.org/2010/05/sintel/trailer.ogv" type="video/ogg" />
-          </video>
+            <source id="ogv" :src="this.idOfVideo" type="video/ogg" /> -->
+          <!-- </video> -->
         </div>
 
           <div class ="side-contanier">
@@ -235,6 +244,9 @@
 
 <script>
 export default {
+  props : [
+    "idOfVideo",
+  ],
   data() {
     return {
 
@@ -242,7 +254,7 @@ export default {
   },
 
   created() {
-
+      console.log(this.idOfVideo)
   },
 
   methods: {
@@ -255,26 +267,29 @@ export default {
     },
     closeVideoNav() {
       console.log("동영상모달닫아!");
-      document.getElementById("image_nav").style.display = "none";
       document.getElementById("video_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.webkitExitFullscreen().style.display = "none";
     },
     openShareModal() {
-      console.log("공유 모달");
+      console.log("공유모달");
       document.getElementById("shareModal").style.display = "block";
     },
     closeShareModal() {
-      console.log("공유 모달 닫아");
+      console.log("공유모달 닫아");
       document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
     },
     openInfoModal() {
-      console.log("정보 모달");
+      console.log("정보모달");
       document.getElementById("infoModal").style.display = "block";
     },
     closeInfoModal() {
       console.log("정보모달 닫아");
       document.getElementById("infoModal").style.display = "none";
-    }
+      document.getElementById("shareModal").style.display = "none";
+    },
   }
 };
 </script>

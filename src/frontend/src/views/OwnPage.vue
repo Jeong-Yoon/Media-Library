@@ -2,7 +2,7 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <div class="agree">
+        <div class="agree" v-show="noShow">
           <input
             type="checkbox"
             id="a1"
@@ -13,16 +13,19 @@
           <label for="a1"></label>
         </div>
         <div v-if="this.ids.length > 0">
-          <button class="download" @click="download">받기</button>
+          <button class="download" @click="download" v-show="noShow">
+            받기
+          </button>
           <button class="share">공유</button>
           <button class="album">앨범</button>
           <button class="delete">삭제</button>
         </div>
         <div v-else>
-          <button class="b1" @click="openModal">새폴더</button>
-          <button class="b2" @click="getOnly('folder')">폴더</button>
-          <button class="b3" @click="getOnly('image')">사진</button>
-          <button class="b4" @click="getOnly('video')">동영상</button>
+          <button class="b1" @click="openModal" v-show="noShow">새폴더</button>
+          <button class="b2" @click="all">전체</button>
+          <button class="b3" @click="onlyFolder">폴더</button>
+          <button class="b4" @click="onlyImage">사진</button>
+          <button class="b5" @click="onlyVideo">동영상</button>
           <NewFolderModal @close="closeModal" v-if="modal">
             <!-- default 슬롯 콘텐츠 -->
             <p>폴더 이름을 입력해주세요.</p>
@@ -70,19 +73,19 @@
               @change="checkbox(folder.id)"
               class="li"
             >
-              <div class="agree2">
-                <input
-                  class="a2"
-                  :id="'a2' + folder.id"
-                  type="checkbox"
-                  v-model="ids"
-                  @click="select(folder.id)"
-                  :value="folder.id"
-                />
-                <label :for="'a2' + folder.id"></label>
-              </div>
-
-              <div v-if="checkType(folder.id) == '2'">
+              <!-- 폴더 -->
+              <div v-if="checkType(folder.id) == '2'" v-show="folders">
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
                 <img
                   src="@/assets/image/folder.png"
                   width="130"
@@ -94,7 +97,22 @@
                 </div>
               </div>
 
-              <div v-else-if="folder.contents_type == 'I'">
+              <!-- 사진 -->
+              <div
+                v-if="folder.content_type == 'I' && checkType(folder.id) == '3'"
+                v-show="images"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
                 <img
                   :src="roadImg(folder.content)"
                   width="130"
@@ -106,10 +124,40 @@
                   <span class="title">{{ folder.content_name }}</span>
                 </div>
               </div>
+              <!-- 동영상 -->
+              <div
+                v-if="folder.content_type == 'V' && checkType(folder.id) == '3'"
+                v-show="videos"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + folder.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(folder.id)"
+                    :value="folder.id"
+                  />
+                  <label :for="'a2' + folder.id"></label>
+                </div>
+                <video
+                  :src="folder.content"
+                  width="130"
+                  height="130"
+                  preload="metadata"
+                  onplay="goToStart()"
+                  id="video1"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(folder.id)"
+                />
+                <div class="info">
+                  <span class="title" >{{ folder.content_name }}</span>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
-        <!-- 이미지 뷰잉 용 이미지 -->
+        <!--  
         <ul class="list_thumb">
           <li class="li" title="image" @click="openImageModal">
             <label for>
@@ -145,10 +193,21 @@
               </div>
             </label>
           </li>
-          <ImageViewingModal :idOfImage="idOfImage" v-if="imageModal" />
-          <VideoViewingModal v-if="videoModal" />
         </ul>
-        <p>selected ids : {{ ids }}</p>
+        -->
+        <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @close="closeImageModal"
+        />
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          v-if="videoModal"
+          @close="closeVideoModal"
+        />
+        <!-- <p>selected ids : {{ ids }}</p> -->
       </div>
     </div>
     <fab
@@ -225,7 +284,13 @@ export default {
       targetList: [],
       allSelected: true,
       ids: [],
-      idOfImage: [],
+      idOfImage: "",
+      idOfVideo: "",
+      folders: true,
+      images: true,
+      videos: true,
+      noShow: true,
+      imageList: [],
     };
   },
   created() {
@@ -244,32 +309,47 @@ export default {
       "DOWNLOAD_FILE",
       "GET_ONLY",
       "GET_IMAGE",
+      "GET_VIDEO",
+      "GET_IMAGELIST",
     ]),
-    getImg(imageId) {
-      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+    goToStart() {
+      if (document.getElementById("video1").currentTime == 15) {
+        document.getElementById("video1").currentTime = 0;
+      }
+    },
+    getVideo(videoId) {
+      console.log("getVideo : " + videoId)
+      this.GET_VIDEO({ videoId : videoId }).then((data) => {
         console.log(data);
-        this.idOfImage.push(data);
-        this.openImageModal();
+        this.idOfVideo = data;
+        this.openVideoModal();
       });
     },
-    download(id) {
-      console.log(id);
-      this.DOWNLOAD_FILE(id)
-        .then(() => {
-          const url = null; // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download");
-          document.body.appendChild(link);
-          link.click();
-          this.ids = [];
-          alert("다운로드가 완료되었습니다.");
-        })
-        .catch((error) => {
-          alert("다운로드에 실패하였습니다.");
-          this.error = error.data.error;
-          this.ids = [];
-        });
+    download(ids) {
+      console.log(ids);
+      this.DOWNLOAD_FILE(ids).then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]), {
+          type: "*",
+        }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", this.ids.content_name);
+        document.body.appendChild(link);
+        link.click();
+      });
+    },
+    getImg(imageId) {
+      console.log("getImg...", imageId);
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        console.log(data);
+        this.idOfImage = data;
+      });
+      this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
+        console.log(this.parent);
+        console.log(result[0].content_id + " : image list");
+        this.imageList = result;
+      });
+      this.openImageModal();
     },
     checkType(id) {
       // var temp = id.subStr(0, 1);
@@ -277,10 +357,36 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
+    all() {
+      this.folders = true;
+      this.images = true;
+      this.videos = true;
+      this.noShow = true;
+    },
+    onlyFolder() {
+      this.folders = true;
+      this.images = false;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyImage() {
+      this.folders = false;
+      this.images = true;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyVideo() {
+      this.folders = false;
+      this.images = false;
+      this.videos = true;
+      this.noShow = false;
+    },
     getOnly(target) {
       this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
-        this.targetList = list;
-        console.log("targetList : ", this.targetList);
+        // this.targetList = list;
+        // console.log("targetList : ", this.targetList);
+        console.log("list", list);
+        this.folderList = list;
       });
     },
     getFolders() {
@@ -332,6 +438,12 @@ export default {
     },
     closeFolderModal() {
       this.folderModal = false;
+    },
+    closeImageModal() {
+      this.imageModal = false;
+    },
+    closeVideoModal() {
+      this.videoModal = false;
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {
@@ -529,7 +641,7 @@ user agent stylesheet div {
   outline: none;
 }
 .b2 {
-  background-color: #d2cdc5;
+  background-color: #dee8eb;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
@@ -541,7 +653,7 @@ user agent stylesheet div {
   border: none;
 }
 .b3 {
-  background-color: #a49988;
+  background-color: #d2cdc5;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
@@ -553,6 +665,19 @@ user agent stylesheet div {
   border: none;
 }
 .b4 {
+  background-color: #a49988;
+  color: white;
+  margin-right: 10px;
+  border-radius: 4px;
+  text-align: center;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  border: none;
+  outline: none;
+  border: none;
+}
+.b5 {
   background-color: #474346;
   color: white;
   margin-right: 10px;
@@ -646,6 +771,12 @@ input {
 img {
   border: 2px solid #e3e2e1;
 }
+video {
+  border: 2px solid #e3e2e1;
+}
+video:focus {
+  border: none;
+}
 .li {
   float: left;
   margin-bottom: 10px;
@@ -683,5 +814,6 @@ img {
   color: #222;
   cursor: default;
   text-decoration: none;
+  text-align: center;
 }
 </style>

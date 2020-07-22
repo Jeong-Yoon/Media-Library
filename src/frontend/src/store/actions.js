@@ -4,8 +4,8 @@ const actions = {
   LOGIN({ commit }, { email, password }) {
     return api.auth
       .login(email, password)
-      .then(({ root_folder, accessToken }) =>
-        commit("LOGIN", { root_folder, accessToken })
+      .then(({ root_folder, accessToken, total_capacity, use_capacity }) =>
+        commit("LOGIN", { root_folder, accessToken , total_capacity, use_capacity })
       );
   },
   CHECK_EMAIL(_, { email }) {
@@ -25,6 +25,9 @@ const actions = {
       department,
       job,
     });
+  },
+  GET_CAPACITY(_,{ email }){
+    return api.getCapacity.getCapacity({ email });
   },
   NEW_FOLDER(_, { parent, newFolderName, userEmail }) {
     console.log(newFolderName + " : actions");
@@ -52,6 +55,18 @@ const actions = {
     console.log(image_id + " : actions / getImages");
     return api.getImage.getImage({
       image_id,
+    });
+  },
+  GET_IMAGELIST(_, { folderId }) {
+    console.log();
+    return api.getImageList.getImageList({
+      folderId,
+    });
+  },
+  GET_VIDEO(_, { videoId }) {
+    console.log("actions : " + videoId);
+    return api.getVideo.getVideo({
+      videoId,
     });
   },
   UPLOAD_FILE(_, formData) {

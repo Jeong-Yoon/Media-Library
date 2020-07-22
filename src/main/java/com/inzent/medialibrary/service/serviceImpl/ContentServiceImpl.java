@@ -18,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.ImageListDTO;
+import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
 import com.inzent.medialibrary.repository.ContentDAO;
@@ -95,6 +98,7 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageDTO getContentById(long image_id) {
 		ImageDTO image = contentDAO.getContentById(image_id);
+		System.out.println(image.getContent_storage() + " contentService");
 		InputStream in;
 		try {
 			in = new FileInputStream(image.getContent_storage());
@@ -121,7 +125,7 @@ public class ContentServiceImpl implements ContentService {
 		List<ImageDTO> list = contentDAO.selectTarget(selectTargetDTO);
 		for(ImageDTO i : list) {
 			if (i.getContent_type().equals("V")) {
-				return list;
+				break;
 			} else {
 				InputStream in;
 				try {
@@ -135,4 +139,25 @@ public class ContentServiceImpl implements ContentService {
 		}
 		return list;
 	}
+
+	@Override
+	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) {
+		List<ImageDTO> list = contentDAO.getImageList(folderIdDTO);
+		for(ImageDTO i : list) {
+			if (i.getContent_type().equals("V")) {
+				break;
+			} else if(i.getContent_type().equals("I")){
+				InputStream in;
+				try {
+					in = new FileInputStream(i.getContent_storage());
+					i.setContent(IOUtils.toByteArray(in));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+	
 }

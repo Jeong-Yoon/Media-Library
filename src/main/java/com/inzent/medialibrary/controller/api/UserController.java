@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.inzent.medialibrary.dto.CapacityDTO;
 import com.inzent.medialibrary.dto.EmailDTO;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.LoginUserDTO;
@@ -46,6 +47,8 @@ public class UserController {
 		String token = jwtService.getToken(user);
 		map.put("accessToken", token);
 		map.put("root_folder", user.getRoot_folder());
+		map.put("total_capacity",user.getTotal_capacity());
+		map.put("use_capacity", user.getUse_capacity());
 		return token != null ? new ResponseEntity<Object>(map, HttpStatus.OK)
 				: new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
@@ -74,4 +77,11 @@ public class UserController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	@PostMapping("/capacity")
+	public ResponseEntity<CapacityDTO> getCapacity(@RequestBody EmailDTO emailDTO){
+		System.out.println("capacity" + emailDTO.getEmail());
+		CapacityDTO capacity = userService.getCapacity(emailDTO);
+		System.out.println(capacity.getTotal_capacity());
+		return new ResponseEntity<CapacityDTO>(capacity, HttpStatus.OK);
+	}
 }

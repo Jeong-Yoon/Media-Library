@@ -10,7 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.ImageListDTO;
+import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
 
@@ -42,7 +45,12 @@ public class ContentDAO {
 	}
 
 	public ImageDTO getContentById(long imageId) {
-		return sqlSession.selectOne("getcontentbyid",imageId);
+		ImageDTO image = new ImageDTO();
+		do {
+			image = sqlSession.selectOne("getcontentbyid",imageId);
+			imageId++;
+		}while(image.getContent_type().equals("V"));
+		return image;
 	}
 
 	public void deleteContent(Long contentId) {
@@ -51,5 +59,10 @@ public class ContentDAO {
 
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO) {
 		return sqlSession.selectList("selecttarget", selectTargetDTO);
+	}
+
+	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) {
+		Long folderId = folderIdDTO.getFolderId();
+		return sqlSession.selectList("getcontentlistbyfolderid", folderId);
 	}
 }

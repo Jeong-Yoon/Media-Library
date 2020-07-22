@@ -4,11 +4,11 @@
       <div class="list">
         <ul class="menu-root">
           <li id="usage">
-            <p class="p1">{{ use_capacity }}GB /</p>
-            <p class="p2">{{ total_capacity }}GB</p>
+            <p class="p1">{{ use }}GB /</p>
+            <p class="p2">{{ total  }}GB</p>
             <div id="progress">
               <k-progress
-                :percent="80"
+                :percent="percentage"
                 active
                 :color="['#E3E2E1', '#DEE8EB', '#A6C4C7', '#A49988']"
                 :show-text="false"
@@ -59,15 +59,47 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   // el: "progress",
   data() {
     return {
-      use_capacity: "409",
-      total_capacity: "512",
-      percentage: 80,
-      spare_capacity: "102",
+      use: "0",
+      total: "0",
+      percentage: "0",
+      spare_capacity: "0",
     };
+  },
+  created(){
+    this.getcapacity();
+    // this.use_capacity;
+    // this.total_capacity;
+  },
+  computed: {
+    ...mapState({
+      userInfo : "userInfo",
+      total_capacity : "total_capacity",
+      use_capacity : "use_capacity"
+    })
+  },
+  methods : {
+    getcapacity(){
+      this.total = Math.floor(this.total_capacity / 1000000);
+      this.use = Math.floor(this.use_capacity / 1000000);
+      this.percentage = this.total / this.use;
+    }
+    // ...mapActions(['GET_CAPACITY']),
+    // getCapacity(){
+    //   this.GET_CAPACITY({ email : this.userInfo.useremail }).then((data) =>{
+    //     console.log(this.userInfo.useremail)
+    //     console.log("navigation : " + data);
+    //     this.total_capacity = Math.floor(data.total_capacity / 1000000);
+    //     this.use_capacity = Math.floor(data.use_capacity / 1000000);
+    //     this.percentage = this.total_capacity / this.use_capacity;
+    //     this.spare_capacity = this.total_capacity - this.use_capacity;
+    //   });
+    // }
   },
 };
 </script>

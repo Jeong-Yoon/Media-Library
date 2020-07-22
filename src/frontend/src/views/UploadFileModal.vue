@@ -18,8 +18,14 @@
             @drop.prevent="onDrop"
           />
           <div class="input-group-append">
-            <div>
-              <input type="file" @change="selectFile()" ref="fileTag" />
+            <div class="filebox">
+              <label for="ex_file">파일선택</label>
+              <input
+                type="file"
+                @change="selectFile()"
+                ref="fileTag"
+                id="ex_file"
+              />
               <!--
               <span class="attach-file" @click="onClickFileS">
                 <i class="fa fa-paperclip"></i>
@@ -201,6 +207,42 @@ export default {
   width: 200px;
   height: 200px;
 }
+
+.filebox label {
+  display: inline-block;
+  padding: 0.5em 0.75em;
+  color: #fff;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #a49988;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.25em;
+  transition: background-color 0.2s;
+  margin-top: -6px;
+  margin-bottom: -5px;
+  width: 600px;
+  text-align: center;
+  font-size: 15px;
+}
+.filebox label:hover {
+  background-color: #d2cdc5;
+}
+.filebox label:active {
+  background-color: #d2cdc5;
+}
+.filebox input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 h4 {
   padding-left: 225px;
   margin-top: 15px;

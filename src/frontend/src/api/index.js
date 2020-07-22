@@ -62,6 +62,13 @@ export const signup = {
   },
 };
 
+export const getCapacity = {
+  getCapacity({email}){
+    console.log({ email } + " : getcapacity api")
+    return request("post", "/api/users/capacity", { email });
+  }
+}
+
 export const newFolder = {
   newFolder(data) {
     // console.log(parent);
@@ -87,7 +94,6 @@ export const getFolders = {
     return request("post", "/api/folders/getfolders", { parent });
   },
 };
-
 export const getOnly = {
   getOnly(parent, target) {
     console.log(parent + ": api / getOnly : parent");
@@ -100,6 +106,20 @@ export const getImage = {
   getImage({ image_id }) {
     console.log(image_id + " : api / getimages");
     return request("post", "/api/images/getimages", { image_id });
+  },
+};
+
+// export const getImageList = {
+//   getImageList(parent, imagelist) {
+//     console.log(imagelist + " : api/getimagelist");
+//     return request("post", "/api/images/getimagelist", parent, imagelist);
+//   },
+// };
+
+export const getImageList = {
+  getImageList({ folderId }) {
+    console.log(folderId + " : api/getimagelist");
+    return request("post", "/api/images/getimagelist", { folderId });
   },
 };
 
@@ -116,6 +136,33 @@ export const download = {
     return request("post", "/api/contents/download", id);
   },
 };
+
+// export const getVideo = function() {
+//   axios.get('/api/videos/video', {
+//     params: {
+//       vide
+//     }
+//   });
+// }
+
+// export const getVideo = {
+//   getVideo({ videoId }) {
+//     return axios.get('/api/videos/video', {params : { videoId : videoId}})
+//   }
+// }
+
+export const getVideo = {
+  getVideo({ videoId }) {
+    console.log("api : " + videoId);
+    return request("get", `/api/videos/video/${videoId}`);
+  },
+};
+
+// export const getVideo = {
+//   getVideo({videoId}){
+//     return request("post", "/api/videos/full", {content_id : videoId});
+//   }
+// }
 
 function createInstance() {
   return axios.create({

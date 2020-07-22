@@ -4,6 +4,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.inzent.medialibrary.dto.CapacityDTO;
+import com.inzent.medialibrary.dto.EmailDTO;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
@@ -33,6 +35,9 @@ public class UserDAO {
 	public String getFolderPathById(Long parent) {
 		return sqlSession.selectOne("getfolderpathbyid", parent);
 	}
-	
+
+	public CapacityDTO getCapacity(EmailDTO emailDTO) {
+		return sqlSession.selectOne("getcapacity",emailDTO.getEmail());
+	}
 	
 }

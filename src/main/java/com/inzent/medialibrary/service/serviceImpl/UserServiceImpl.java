@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.inzent.medialibrary.dto.CapacityDTO;
+import com.inzent.medialibrary.dto.EmailDTO;
 import com.inzent.medialibrary.dto.LoginDTO;
 import com.inzent.medialibrary.dto.LoginUserDTO;
 import com.inzent.medialibrary.dto.SignUpDTO;
@@ -43,5 +45,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public long getUserIdByEmail(String email) {
 		return userDao.getUserIdByEmail(email);
+	}
+
+	@Override
+	public CapacityDTO getCapacity(EmailDTO emailDTO) {
+		return userDao.getCapacity(emailDTO);
 	}
 }

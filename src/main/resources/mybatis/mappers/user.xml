@@ -5,12 +5,20 @@
 <mapper namespace="user">
 	<select id="getuserbyemail" parameterType="string" resultType="loginuserdto">
 		<![CDATA[
-			select u.*, f.folder_id as root_folder
-			from users u, folders f
+			select u.*, f.folder_id as root_folder, c.total_capacity, c.use_capacity
+			from users u, folders f, capacities c
 			where u.user_id = f.folder_reg_user
 			and u.user_email = #{email}
+			and u.user_id = c.user_id
 			and f.folder_parent is null
 		]]>
+	</select>
+	
+	<select id="getcapacity" parameterType="string" resultType="capacitydto">
+		select c.total_capacity, c.use_capacity 
+		from capacities c , 
+		(select user_id as user_id from ml_schema.users u where user_email = #{userEmail}) as u 
+		where c.user_id = u.user_id;
 	</select>
 	
 	<insert id="signup" parameterType="signupdto">

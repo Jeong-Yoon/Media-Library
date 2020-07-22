@@ -18,4 +18,6 @@ public class LoginUserDTO {
 	private String user_reg_date;
 	private String user_update_date;
 	private Long root_folder;
+	private Long total_capacity;
+	private Long use_capacity;
 }

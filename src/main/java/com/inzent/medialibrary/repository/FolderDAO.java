@@ -23,7 +23,7 @@ public class FolderDAO {
 	public List<String> getFolderList(Long id) {
 		List<String> list = sqlSession.selectList("getchildren", id);
 		for(String s : list) {
-			System.out.println(s);
+//			System.out.println(s);
 		}
 		return list;
 //		return sqlSession.selectList("getfolderlistbyparentid", id);

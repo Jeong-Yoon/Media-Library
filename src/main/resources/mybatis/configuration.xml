@@ -17,6 +17,8 @@
 			<typeAlias type="com.inzent.medialibrary.dto.ContentDetailDTO" alias="contentdetaildto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.ImageDTO" alias="imagedto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.SelectTargetDTO" alias="selecttargetdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.ImageListDTO" alias="imagelistdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.CapacityDTO" alias="capacitydto"/>
 	</typeAliases>
 
 	<mappers>
