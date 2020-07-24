@@ -193,11 +193,8 @@
               </div>
             </label>
           </li>
-<<<<<<< HEAD
-=======
           <ImageViewingModal :idOfImage="idOfImage" :imageList="imageList" v-if="imageModal" @getImg="getImg" />
           <VideoViewingModal v-if="videoModal" />
->>>>>>> fff0dbb546a1287c13518c6eb184404740b1b407
         </ul>
         -->
         <ImageViewingModal
@@ -212,7 +209,7 @@
           v-if="videoModal"
           @close="closeVideoModal"
         />
-        <!-- <p>selected ids : {{ ids }}</p> -->
+        <p>selected ids : {{ ids }}</p>
       </div>
     </div>
     <fab
@@ -330,9 +327,9 @@ export default {
         this.openVideoModal();
       });
     },
-    download(ids) {
-      console.log(ids);
-      this.DOWNLOAD_FILE(ids).then((res) => {
+    download() {
+      console.log("download : " + this.ids);
+      this.DOWNLOAD_FILE(this.ids).then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]), {
           type: "*",
         }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
@@ -410,11 +407,14 @@ export default {
       }
     },
     checkbox(folder_id) {
-      if (this.ids.indexOf(folder_id) == -1) {
-        this.ids.push(folder_id);
-      } else {
-        this.ids.splice(this.ids.indexOf(folder_id), 1);
-      }
+      console.log(folder_id)
+      // this.ids.pudh(folder_id)
+      // if (this.ids.indexOf(folder_id) === -1) {
+      //   this.ids.push(folder_id);
+      //   // this.ids.push(folder_id)
+      // } else {
+      //   this.ids.splice(this.ids.indexOf(folder_id), 1);
+      // }
     },
     select: function() {
       this.allSelected = false;

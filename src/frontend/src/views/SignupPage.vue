@@ -20,7 +20,7 @@
           />
           <input
             id="submit"
-            type="submit"
+            type="button"
             class="button"
             value="중복확인"
             :disabled="!isUseremailValid && email"

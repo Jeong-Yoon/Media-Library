@@ -73,7 +73,7 @@ const actions = {
     return api.uploadFile.uploadFile(formData);
   },
   DOWNLOAD_FILE(_, id) {
-    return api.uploadFile.uploadFile(id);
+    return api.download.download(id);
   },
 };
 
