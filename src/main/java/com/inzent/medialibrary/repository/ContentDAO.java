@@ -53,8 +53,9 @@ public class ContentDAO {
 		return image;
 	}
 
-	public void deleteContent(Long contentId) {
-		sqlSession.update("deletecontent",contentId);
+	public int deleteContent(List<Long> contentIdList) {
+		System.out.println(contentIdList.size() + " : delete dao");
+		return sqlSession.update("deletecontentlist", contentIdList);
 	}
 
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO) {

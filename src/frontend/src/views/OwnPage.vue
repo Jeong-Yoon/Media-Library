@@ -331,7 +331,7 @@ export default {
     },
     deleteFile() {
       console.log(this.ids);
-      this.DELETE_FILE({ content_id: this.ids[0] }).then((data) => {
+      this.DELETE_FILE(this.ids).then((data) => {
         console.log(data);
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");

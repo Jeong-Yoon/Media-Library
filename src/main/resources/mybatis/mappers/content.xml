@@ -10,6 +10,7 @@
 			from contents
 			where folder_id = #{folderId}
 			and content_type = 'I'
+			and content_delete = 'N'
 			order by content_id
 		]]>
 	</select>
@@ -54,10 +55,17 @@
 		]]>
 	</select>
 	
-	<update id="deletecontent" parameterType="long">
+<!-- 	<update id="deletecontent" parameterType="long">
 		update contents
 		set content_delete = 'Y'
 		where content_id = #{contentId}
+	</update> -->
+
+	<update id="deletecontentlist" parameterType="java.util.List">
+		<foreach collection="list" item="content_id" index="index"
+			separator=";">
+			update contents set content_delete = 'Y' where content_id = #{content_id}
+		</foreach>
 	</update>
 	
 	<select id="getcontentbyid" parameterType="long" resultType="imagedto">
