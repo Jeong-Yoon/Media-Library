@@ -63,11 +63,11 @@ export const signup = {
 };
 
 export const getCapacity = {
-  getCapacity({email}){
-    console.log({ email } + " : getcapacity api")
+  getCapacity({ email }) {
+    console.log({ email } + " : getcapacity api");
     return request("post", "/api/users/capacity", { email });
-  }
-}
+  },
+};
 
 export const newFolder = {
   newFolder(data) {
@@ -133,7 +133,9 @@ export const uploadFile = {
 export const download = {
   download(id) {
     console.log(id);
-    return request("post", "/api/contents/download", id);
+    return axios.post(DOMAIN + "/api/contents/download", id, {
+      responseType: "blob",
+    });
   },
 };
 
@@ -155,6 +157,13 @@ export const getVideo = {
   getVideo({ videoId }) {
     console.log("api : " + videoId);
     return request("get", `/api/videos/video/${videoId}`);
+  },
+};
+
+export const deleteFile = {
+  deleteFile({ content_id }) {
+    console.log("api / deleteFile", content_id);
+    return request("delete", "/api/contents", { content_id });
   },
 };
 

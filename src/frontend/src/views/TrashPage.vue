@@ -12,27 +12,6 @@
         <button class="b2">폴더</button>
         <button class="b3">사진</button>
         <button class="b4">동영상</button>
-        <form class="search">
-          <select id="key" name="keyword" class="key">
-            <option value="file_origin_name">파일명</option>
-            <option value="contents_atribute">확장자</option>
-            <option value="contents_reg_date">등록일</option>
-          </select>
-          <input
-            type="text"
-            name="search"
-            placeholder="Search.."
-            class="value"
-          />
-          <button type="submit" class="submit">
-            <img
-              src="@/assets/image/search.png"
-              alt="search logo"
-              height="15px"
-              class="search-icon"
-            />
-          </button>
-        </form>
       </div>
       <hr class="top-hr" />
 

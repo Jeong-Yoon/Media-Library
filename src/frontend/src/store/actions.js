@@ -5,7 +5,12 @@ const actions = {
     return api.auth
       .login(email, password)
       .then(({ root_folder, accessToken, total_capacity, use_capacity }) =>
-        commit("LOGIN", { root_folder, accessToken , total_capacity, use_capacity })
+        commit("LOGIN", {
+          root_folder,
+          accessToken,
+          total_capacity,
+          use_capacity,
+        })
       );
   },
   CHECK_EMAIL(_, { email }) {
@@ -26,7 +31,7 @@ const actions = {
       job,
     });
   },
-  GET_CAPACITY(_,{ email }){
+  GET_CAPACITY(_, { email }) {
     return api.getCapacity.getCapacity({ email });
   },
   NEW_FOLDER(_, { parent, newFolderName, userEmail }) {
@@ -74,6 +79,10 @@ const actions = {
   },
   DOWNLOAD_FILE(_, id) {
     return api.download.download(id);
+  },
+  DELETE_FILE(_, content_id) {
+    console.log("DELETE_FILE / action : ", content_id);
+    return api.deleteFile.deleteFile(content_id);
   },
 };
 

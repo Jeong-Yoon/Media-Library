@@ -18,7 +18,7 @@
           </button>
           <button class="share">공유</button>
           <button class="album">앨범</button>
-          <button class="delete">삭제</button>
+          <button class="delete" @click="deleteFile">삭제</button>
         </div>
         <div v-else>
           <button class="b1" @click="openModal" v-show="noShow">새폴더</button>
@@ -40,6 +40,7 @@
             <!-- /footer -->
           </NewFolderModal>
         </div>
+        <!--
         <form class="search">
           <select id="key" name="keyword" class="key">
             <option value="file_origin_name">파일명</option>
@@ -61,6 +62,7 @@
             />
           </button>
         </form>
+        -->
       </div>
       <hr class="top-hr" />
 
@@ -145,13 +147,12 @@
                   width="130"
                   height="130"
                   preload="metadata"
-                  onplay="goToStart()"
                   id="video1"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
                 />
                 <div class="info">
-                  <span class="title" >{{ folder.content_name }}</span>
+                  <span class="title">{{ folder.content_name }}</span>
                 </div>
               </div>
             </li>
@@ -313,6 +314,7 @@ export default {
       "GET_IMAGE",
       "GET_VIDEO",
       "GET_IMAGELIST",
+      "DELETE_FILE",
     ]),
     goToStart() {
       if (document.getElementById("video1").currentTime == 15) {
@@ -320,13 +322,27 @@ export default {
       }
     },
     getVideo(videoId) {
-      console.log("getVideo : " + videoId)
-      this.GET_VIDEO({ videoId : videoId }).then((data) => {
+      console.log("getVideo : " + videoId);
+      this.GET_VIDEO({ videoId: videoId }).then((data) => {
         console.log(data);
         this.idOfVideo = data;
         this.openVideoModal();
       });
     },
+    deleteFile() {
+      console.log(this.ids);
+      this.DELETE_FILE({ content_id: this.ids[0] }).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("파일 삭제에 성공하였습니다.");
+          this.getFolders();
+        } else {
+          alert("파일 삭제에 실패했습니다.");
+          this.getFolders();
+        }
+      });
+    },
+    deleteFolder() {},
     download() {
       console.log("download : " + this.ids);
       this.DOWNLOAD_FILE(this.ids).then((res) => {
@@ -407,7 +423,7 @@ export default {
       }
     },
     checkbox(folder_id) {
-      console.log(folder_id)
+      console.log(folder_id);
       // this.ids.pudh(folder_id)
       // if (this.ids.indexOf(folder_id) === -1) {
       //   this.ids.push(folder_id);
@@ -532,7 +548,8 @@ img {
 .agree2 input[type="checkbox"]:checked + label {
   background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
   float: left;
-  opacity: 1;
+  opacity: initial;
+  background-color: #a6c4c7;
 }
 .agree2 input[type="checkbox"] + label span {
   position: absolute;
@@ -820,5 +837,8 @@ video:focus {
   cursor: default;
   text-decoration: none;
   text-align: center;
+  overflow: hidden;
+  width: 130px;
+  padding-bottom: 5px;
 }
 </style>
