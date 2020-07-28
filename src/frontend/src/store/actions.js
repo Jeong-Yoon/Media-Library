@@ -32,6 +32,7 @@ const actions = {
     });
   },
   GET_CAPACITY(_, { email }) {
+    console.log("----------------------email-------", email);
     return api.getCapacity.getCapacity({ email });
   },
   NEW_FOLDER(_, { parent, newFolderName, userEmail }) {
@@ -84,6 +85,18 @@ const actions = {
   DELETE_FILE(_, content_id) {
     console.log("DELETE_FILE / action : ", content_id);
     return api.deleteFile.deleteFile(content_id);
+  },
+  GET_ITEMS(_, { useremail }) {
+    console.log("action / getItems : ", useremail);
+    return api.getItems.getItems(useremail);
+  },
+  DELETE_ITEMS(_, ids) {
+    console.log("action / deleteItems : ", ids);
+    return api.deleteItems.deleteItems(ids);
+  },
+  RESTORE_ITEMS(_, ids) {
+    console.log("action / restoreItems : ", ids);
+    return api.restoreItems.restoreItems(ids);
   },
 };
 

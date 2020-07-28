@@ -6,9 +6,7 @@
           <slot />
         </div>
         <footer class="modal-footer">
-          <slot name="footer">
-            <!--<button @click="$emit('close')">Close</button>-->
-          </slot>
+          <slot name="footer"> </slot>
         </footer>
       </div>
     </div>
