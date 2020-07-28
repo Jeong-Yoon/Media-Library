@@ -131,10 +131,10 @@ export const uploadFile = {
 };
 
 export const download = {
-  download(id) {
+  download({ id }) {
     console.log("api " + id);
     // return request("post", "/api/contents/download", id , {responseType:"blob"})
-    return axios.post(DOMAIN + "/api/contents/download", id, {
+    return axios.post(DOMAIN + "/api/contents/download", { id } , {
       responseType: "blob",
     });
   },

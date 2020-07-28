@@ -294,7 +294,8 @@ export default {
       videos: true,
       noShow: true,
       imageList: [],
-      fileName:""
+      fileName:"",
+      downloadId:""
     };
   },
   created() {
@@ -347,7 +348,7 @@ export default {
       });
     },
     deleteFolder() {},
-    download() {
+    async download() {
       // console.log("download : " + this.ids);
       // this.DOWNLOAD_FILE(this.ids).then((res) => {
       //   console.log(res)
@@ -378,37 +379,32 @@ export default {
 
 
       console.log("downloadFile실행..");
-      console.log(this.ids);
-      this.DOWNLOAD_FILE(this.ids)
+      for(var j = 0; j < this.ids.length; j++){
+        this.downloadId = this.ids[j]
+        this.fileName=""
+        await this.DOWNLOAD_FILE({id : this.ids[j] })
         .then((res) => {
-          console.log(res);
-          console.log("downloadFile ㅎ액션~!");
-          console.log(res.headers)
-          console.log('content-type ' + res.headers['CONTENT_DISPOSITION'])
           const url = window.URL.createObjectURL(new Blob([res.data]),{type: '*'}); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-          for(var j = 0; j < this.ids.length; j++){
             for(var i = 0; i < this.folderList.length; i++){
-              console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
-              if(this.ids[j] === this.folderList[i].id){
+              // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
+              if(this.downloadId === this.folderList[i].id){
                 this.fileName =  this.folderList[i].content_name;
               }
             }
-          console.log(this.fileName);
           const link = document.createElement('a');
           link.href = url;
           link.setAttribute('download', this.fileName);
           document.body.appendChild(link);
           link.click();
-          }
           // this.ids = [];
-          alert("다운로드가 완료되었습니다.");
           // return res;
         })
         .catch((err) => {
           console.log("err~!");
           console.error(err);
         });
-
+          alert("다운로드가 완료되었습니다.");
+      }
 
     },
     getImg(imageId) {

@@ -206,8 +206,9 @@ public class ContentController {
 	 
 	 @ResponseStatus(HttpStatus.OK)
 	 @PostMapping("/download")
-	 public HttpEntity<byte[]> downloadExcelReport(HttpServletRequest request, HttpServletResponse response, @RequestBody List<Long> downloadIdDTO) throws IOException {
-		 ImageDTO f = contentService.getContentById(downloadIdDTO.get(0));
+	 public HttpEntity<byte[]> downloadExcelReport(HttpServletRequest request, HttpServletResponse response, @RequestBody DownloadIdDTO download) throws IOException {
+		 System.out.println(download.getId());
+		 ImageDTO f = contentService.getContentById(download.getId());
 		 File file = new File(f.getContent_storage());
          System.out.println(file.toPath());
          Files.copy(file.toPath(), response.getOutputStream());

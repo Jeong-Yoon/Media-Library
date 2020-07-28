@@ -78,9 +78,9 @@ const actions = {
   UPLOAD_FILE(_, formData) {
     return api.uploadFile.uploadFile(formData);
   },
-  DOWNLOAD_FILE(_, id) {
-    console.log("action " + id)
-    return api.download.download(id);
+  DOWNLOAD_FILE(_, { id }) {
+    console.log("action " +  id )
+    return api.download.download({ id });
   },
   DELETE_FILE(_, content_id) {
     console.log("DELETE_FILE / action : ", content_id);
