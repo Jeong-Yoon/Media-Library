@@ -164,7 +164,7 @@ export const getVideo = {
 export const deleteFile = {
   deleteFile(content_id) {
     console.log("api / deleteFile", content_id);
-    return request("delete", "/api/contents", content_id );
+    return request("delete", "/api/contents", content_id);
   },
 };
 

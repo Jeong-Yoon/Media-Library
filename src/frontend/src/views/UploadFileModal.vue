@@ -95,21 +95,18 @@ export default {
           }
         }
         this.UPLOAD_FILE(formData)
-          .then((res) => {
-            console.log(res.data);
+          .then(() => {
             alert("파일이 업로드 되었습니다.");
             this.$emit("close");
             this.$router.push("/").catch(() => {});
             //this.$router.replace("/");
             //this.$route.fullPath("/");
           })
-          .catch((error) => {
-            this.error = error.data.error;
+          .catch((res) => {
+            this.error = res.data;
             alert("파일 업로드에 실패하셨습니다.");
             this.$emit("close");
             this.$router.push("/").catch(() => {});
-            //this.$router.replace("/");
-            //this.$route.fullPath("/");
           });
       }
     },

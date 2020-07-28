@@ -44,6 +44,7 @@ const actions = {
     });
   },
   GET_FOLDERS(_, { parent }) {
+    console.log("parent", parent);
     console.log(parent + " : actions / getFolders");
     return api.getFolders.getFolders({
       parent,
@@ -77,9 +78,12 @@ const actions = {
   },
   UPLOAD_FILE(_, formData) {
     return api.uploadFile.uploadFile(formData);
+    // .then(() => {
+    //   const parent = state.root_folder;
+    //   dispatch("GET_FOLDERS", { parent });
+    // });
   },
   DOWNLOAD_FILE(_, id) {
-    console.log("action " + id)
     return api.download.download(id);
   },
   DELETE_FILE(_, content_id) {

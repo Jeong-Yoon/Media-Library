@@ -294,7 +294,7 @@ export default {
       videos: true,
       noShow: true,
       imageList: [],
-      fileName:""
+      fileName: "",
     };
   },
   created() {
@@ -317,8 +317,8 @@ export default {
       "GET_IMAGELIST",
       "DELETE_FILE",
     ]),
-    resetImg(){
-      this.idOfImage="";
+    resetImg() {
+      this.idOfImage = "";
     },
     goToStart() {
       if (document.getElementById("video1").currentTime == 15) {
@@ -376,29 +376,36 @@ export default {
       //           link.click()
       // });
 
-
       console.log("downloadFile실행..");
       console.log(this.ids);
       this.DOWNLOAD_FILE(this.ids)
         .then((res) => {
           console.log(res);
           console.log("downloadFile ㅎ액션~!");
-          console.log(res.headers)
-          console.log('content-type ' + res.headers['CONTENT_DISPOSITION'])
-          const url = window.URL.createObjectURL(new Blob([res.data]),{type: '*'}); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-          for(var j = 0; j < this.ids.length; j++){
-            for(var i = 0; i < this.folderList.length; i++){
-              console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
-              if(this.ids[j] === this.folderList[i].id){
-                this.fileName =  this.folderList[i].content_name;
+          console.log(res.headers);
+          console.log("content-type " + res.headers["CONTENT_DISPOSITION"]);
+          const url = window.URL.createObjectURL(new Blob([res.data]), {
+            type: "*",
+          }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          for (var j = 0; j < this.ids.length; j++) {
+            for (var i = 0; i < this.folderList.length; i++) {
+              console.log(
+                i +
+                  "," +
+                  this.folderList[i].id +
+                  "," +
+                  this.folderList[i].content_name
+              );
+              if (this.ids[j] === this.folderList[i].id) {
+                this.fileName = this.folderList[i].content_name;
               }
             }
-          console.log(this.fileName);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', this.fileName);
-          document.body.appendChild(link);
-          link.click();
+            console.log(this.fileName);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", this.fileName);
+            document.body.appendChild(link);
+            link.click();
           }
           // this.ids = [];
           alert("다운로드가 완료되었습니다.");
@@ -408,8 +415,6 @@ export default {
           console.log("err~!");
           console.error(err);
         });
-
-
     },
     getImg(imageId) {
       console.log("getImg...", imageId);
@@ -511,6 +516,7 @@ export default {
     },
     closeFileModal() {
       this.fileModal = false;
+      this.getFolders();
     },
     closeFolderModal() {
       this.folderModal = false;
