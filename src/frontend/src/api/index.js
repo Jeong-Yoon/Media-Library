@@ -132,7 +132,8 @@ export const uploadFile = {
 
 export const download = {
   download(id) {
-    console.log(id);
+    console.log("api " + id);
+    // return request("post", "/api/contents/download", id , {responseType:"blob"})
     return axios.post(DOMAIN + "/api/contents/download", id, {
       responseType: "blob",
     });
@@ -161,9 +162,9 @@ export const getVideo = {
 };
 
 export const deleteFile = {
-  deleteFile({ content_id }) {
+  deleteFile(content_id) {
     console.log("api / deleteFile", content_id);
-    return request("delete", "/api/contents", { content_id });
+    return request("delete", "/api/contents", content_id );
   },
 };
 

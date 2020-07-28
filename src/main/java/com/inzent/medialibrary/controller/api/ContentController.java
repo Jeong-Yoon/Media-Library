@@ -1,10 +1,30 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.DocFlavor.READER;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,12 +33,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inzent.medialibrary.dto.ContentDTO;
 import com.inzent.medialibrary.dto.ContentDetailDTO;
 import com.inzent.medialibrary.dto.ContentIdDTO;
 import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.DownloadIdDTO;
+import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.service.ContentService;
 
 @RestController
@@ -79,15 +103,140 @@ public class ContentController {
 		contentService.uploadContentDetail(detailDTO, json);
 	}
 	
+//	@PostMapping("/download")
+//	public ResponseEntity<Resource> downloadFile(@RequestBody DownloadIdDTO downloadIdDTO){
+//		System.out.println("contents download");
+//		System.out.println(downloadIdDTO.getId());
+//		ImageDTO content = contentService.getContentById(downloadIdDTO.getId());
+//		String filePath = content.getContent_storage();
+//		File target = new File(filePath);
+//		HttpHeaders header = new HttpHeaders();
+//		Resource rs = null;
+//		if (target.exists()) {
+//			try {
+//				String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+//				if (mimeType == null) {
+//					mimeType = "octet-stream";
+//				}
+//				rs = new UrlResource(target.toURI());
+//				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + rs.getFilename() + "\"");
+//				header.setCacheControl("no-cache");
+//				header.setContentType(MediaType.parseMediaType(mimeType));
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
+////		return new ResponseEntity<>(HttpStatus.OK);
+//	}
+	
+	
+//	 @PostMapping("/download")
+//	    public ResponseEntity<?> downloadFile(HttpServletRequest request, HttpServletResponse response, @RequestBody List<Long> downloadIdDTO) {
+////	         System.out.println("파일 다운");
+////	        // System.out.println(f.toString());
+//		 	ImageDTO f = contentService.getContentById(downloadIdDTO.get(0));
+////	        try {
+////	            File file = new File(f.getContent_storage());
+////	            Files.copy(file.toPath(), response.getOutputStream());
+////	            String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+////	            String contentDisposition = String.format("attachment; filename=%s", f.getContent_origin_name());
+////	            int fileSize = Long.valueOf(file.length()).intValue();
+////	            System.out.println(file.getName() + "==========================");
+////	            System.out.println(mimeType + " mimeType");
+////	            System.out.println(fileSize);
+////	            response.setContentType(mimeType);
+////	            response.setHeader("Content-Disposition", contentDisposition);
+////	            response.setHeader("filename", file.getName());
+////	            response.setContentLength(fileSize);
+//////				InputStream in = new FileInputStream(f.getContent_storage());
+////
+//////	            response.setContentType("application/octet-stream"); 
+//////	        	response.setContentLength(fileSize); 
+//////	        	response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(f.getContent_origin_name(), "UTF-8") + ";");
+//////	        	response.setHeader("Content-Transfer-Encoding", "binary"); 
+//////	        	response.setHeader("Content-Type", "application/octet-stream");
+//////	        	response.setContentType("application/octet-stream");
+//////	        	response.setHeader("filename", URLEncoder.encode(f.getContent_origin_name(), "UTF-8"));
+//////	        	response.getOutputStream().write(IOUtils.toByteArray(in)); 
+//////	        	System.out.println(response.toString());
+//////	        	System.out.println(response.getOutputStream());
+//////	        	response.getOutputStream().flush(); 
+//////	        	response.getOutputStream().close();
+////	            
+////	            
+////	        } catch (FileNotFoundException e) {
+////	            // System.out.println(e);
+////	        } catch (IOException e) {
+////	            e.printStackTrace();
+////	        }
+//	        try {
+//	            File file = new File(f.getContent_storage());
+//	            System.out.println(file.toPath());
+//	            Files.copy(file.toPath(), response.getOutputStream());
+//	            String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+//	            String contentDisposition = String.format("attachment; filename=\"" + file.getName() + "\"");
+//	            int fileSize = Long.valueOf(file.length()).intValue();
+////	            response.setContentType(mimeType);
+////	            response.setHeader("Content-Type", "application/octet-stream");
+//	            response.addHeader("Content-Type", mimeType);
+//	            response.setHeader("Content-Disposition", contentDisposition);
+//	            response.setContentLength(fileSize);
+//	            InputStream in = new FileInputStream(f.getContent_storage());
+//	            response.getOutputStream().write(IOUtils.toByteArray(in)); 
+//	            System.out.println(response.getContentType());
+//	            System.out.println(response.getHeader("Content-Type"));
+//	            
+////	            return new ResponseEntity<>(response, header, HttpStatus.OK);
+//	            
+////	            return ResponseEntity.ok()
+////	            		.contentType(MediaType.parseMediaType(mimeType))
+////	            		.header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+////	            		.body(file);
+//	            
+//	            HttpHeaders headers = new HttpHeaders();
+//	            headers.setContentType(new MediaType("application", "octet-stream", StandardCharsets.ISO_8859_1));
+//	        } catch (FileNotFoundException e) {
+//	            // System.out.println(e);
+//	        } catch (IOException e) {
+//	            e.printStackTrace();
+//	        }
+//	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//	    }
+	 
+	 @ResponseStatus(HttpStatus.OK)
+	 @PostMapping("/download")
+	 public HttpEntity<byte[]> downloadExcelReport(HttpServletRequest request, HttpServletResponse response, @RequestBody List<Long> downloadIdDTO) throws IOException {
+		 ImageDTO f = contentService.getContentById(downloadIdDTO.get(0));
+		 File file = new File(f.getContent_storage());
+         System.out.println(file.toPath());
+         Files.copy(file.toPath(), response.getOutputStream());
+         InputStream in = new FileInputStream(f.getContent_storage());
+         response.getOutputStream().write(IOUtils.toByteArray(in)); 
+	     byte[] content = IOUtils.toByteArray(in);
+	     // prepare response
+	     HttpHeaders header = new HttpHeaders();
+	     header.setContentType(new MediaType("application", "octet-stream"));
+	     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+file.getName());
+	     header.add("Content-Disposition", "attachment; filename="+file.getName());
+	     header.setContentLength(content.length);
+	  
+	     return new HttpEntity<byte[]>(content, header);
+	 }
+	
 	@GetMapping("/content/{content_id}")
 	public void getContentDetail(@PathVariable("content_id")Long contentId) {
 		contentService.getContentDetail(contentId);
 	}
 	
 	@DeleteMapping()
-	public void deleteContent(@RequestBody ContentIdDTO contentIdDTO) {
+	public ResponseEntity<Integer> deleteContent(@RequestBody List<Long> contentIdList) {
 		System.out.println("content delete");
-		contentService.deleteContent(contentIdDTO.getContent_id());
+		int result = contentService.deleteContent(contentIdList);
+		if(result == 0) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 }

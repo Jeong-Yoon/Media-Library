@@ -98,7 +98,6 @@ public class ContentServiceImpl implements ContentService {
 	@Override
 	public ImageDTO getContentById(long image_id) {
 		ImageDTO image = contentDAO.getContentById(image_id);
-		System.out.println(image.getContent_storage() + " contentService");
 		InputStream in;
 		try {
 			in = new FileInputStream(image.getContent_storage());
@@ -111,8 +110,9 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public void deleteContent(Long content_id) {
-		contentDAO.deleteContent(content_id);
+	public int deleteContent(List<Long> contentIdList) {
+		System.out.println(contentIdList.size() + " content delete service");
+		return contentDAO.deleteContent(contentIdList);
 	}
 
 	@Override
@@ -159,5 +159,4 @@ public class ContentServiceImpl implements ContentService {
 		}
 		return list;
 	}
-	
 }
