@@ -217,8 +217,8 @@ public class ContentController {
 	     // prepare response
 	     HttpHeaders header = new HttpHeaders();
 	     header.setContentType(new MediaType("application", "octet-stream"));
-	     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+file.getName());
-	     header.add("Content-Disposition", "attachment; filename="+file.getName());
+	     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(f.getContent_origin_name(), "UTF-8") + ";");
+//	     header.add("Content-Disposition", "attachment; filename="+file.getName());
 	     header.setContentLength(content.length);
 	  
 	     return new HttpEntity<byte[]>(content, header);

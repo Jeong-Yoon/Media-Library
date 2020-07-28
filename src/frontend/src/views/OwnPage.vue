@@ -294,6 +294,7 @@ export default {
       videos: true,
       noShow: true,
       imageList: [],
+      fileName:""
     };
   },
   created() {
@@ -385,11 +386,20 @@ export default {
           console.log(res.headers)
           console.log('content-type ' + res.headers['CONTENT_DISPOSITION'])
           const url = window.URL.createObjectURL(new Blob([res.data]),{type: '*'}); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          for(var j = 0; j < this.ids.length; j++){
+            for(var i = 0; i < this.folderList.length; i++){
+              console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
+              if(this.ids[j] === this.folderList[i].id){
+                this.fileName =  this.folderList[i].content_name;
+              }
+            }
+          console.log(this.fileName);
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', this.ids + '.png');
+          link.setAttribute('download', this.fileName);
           document.body.appendChild(link);
           link.click();
+          }
           // this.ids = [];
           alert("다운로드가 완료되었습니다.");
           // return res;
