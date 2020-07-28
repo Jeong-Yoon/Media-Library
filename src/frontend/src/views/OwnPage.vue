@@ -334,7 +334,7 @@ export default {
       this.DELETE_FILE({ content_id: this.ids[0] }).then((data) => {
         console.log(data);
         if (data == 1) {
-          alert("파일 삭제에 성공하였습니다.");
+          alert("삭제된 파일이 휴지통으로 이동하였습니다.");
           this.getFolders();
         } else {
           alert("파일 삭제에 실패했습니다.");

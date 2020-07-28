@@ -167,6 +167,26 @@ export const deleteFile = {
   },
 };
 
+export const getItems = {
+  getItems({ useremail }) {
+    console.log("api / getItems", useremail);
+    return request("post", "/api/", { useremail });
+  },
+};
+
+export const deleteItems = {
+  deleteItems(ids) {
+    console.log("api / delete : ", ids);
+    return;
+  },
+};
+
+export const restoreItems = {
+  restoreItems(ids) {
+    console.log("api / restore : ", ids);
+    return;
+  },
+};
 // export const getVideo = {
 //   getVideo({videoId}){
 //     return request("post", "/api/videos/full", {content_id : videoId});

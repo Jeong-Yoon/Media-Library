@@ -2,79 +2,272 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <div class="agree">
-          <div class="all_agree">
-            <input type="checkbox" id="a1" name="전체동의" />
-            <label for="a1"></label>
-          </div>
+        <div class="agree" v-show="noShow">
+          <input
+            type="checkbox"
+            id="a1"
+            name="전체동의"
+            @click="selectAll"
+            v-model="allSelected"
+          />
+          <label for="a1"></label>
         </div>
-        <button class="b1">휴지통 비우기</button>
-        <button class="b2">폴더</button>
-        <button class="b3">사진</button>
-        <button class="b4">동영상</button>
+        <div v-if="this.ids.length > 0">
+          <button class="b0" @click="openDeleteModal">삭제</button>
+          <button class="b1" @click="openRestoreModal">복원</button>
+        </div>
+        <div v-else>
+          <button class="b2" @click="all">전체</button>
+          <button class="b3" @click="onlyFolder">폴더</button>
+          <button class="b4" @click="onlyImage">사진</button>
+          <button class="b5" @click="onlyVideo">동영상</button>
+        </div>
       </div>
       <hr class="top-hr" />
 
       <div class="bottom-content">
-        <ul class="list_thumb">
-          <li class="li" title="2020">
-            <label for>
-              <div class="thumb">
-                <span class="folder">
-                  <img
-                    src="@/assets/image/folder.png"
-                    alt="folder.png"
-                    width="150"
-                    height="150"
-                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
+        <div>
+          <ul class="table">
+            <li
+              v-for="item in this.items"
+              v-bind:key="item.id"
+              @change="checkbox(item.id)"
+              class="li"
+            >
+              <!-- 폴더 -->
+              <div v-if="checkType(item.id) == '2'" v-show="folders">
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + item.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(item.id)"
+                    :value="item.id"
                   />
-                </span>
+                  <label :for="'a2' + item.id"></label>
+                </div>
+                <img
+                  src="@/assets/image/folder.png"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                />
+                <div class="info">
+                  <span class="title">{{ item.folder_name }}</span>
+                </div>
               </div>
-              <div class="info">
-                <span class="title">2020</span>
-              </div>
-            </label>
-          </li>
 
-          <li class="li" title="june.jpg">
-            <label for>
-              <div class="thumb">
-                <span class="file">
-                  <img
-                    src="@/assets/image/june.jpg"
-                    alt="june.jpg"
-                    width="150"
-                    height="150"
-                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
+              <!-- 사진 -->
+              <div
+                v-if="item.content_type == 'I' && checkType(item.id) == '3'"
+                v-show="images"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + item.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(item.id)"
+                    :value="item.id"
                   />
-                </span>
+                  <label :for="'a2' + item.id"></label>
+                </div>
+                <img
+                  :src="roadImg(item.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getImg(item.id)"
+                />
+                <div class="info">
+                  <span class="title">{{ item.content_name }}</span>
+                </div>
               </div>
-              <div class="info">
-                <span class="title">쭈니.jpg</span>
+              <!-- 동영상 -->
+              <div
+                v-if="item.content_type == 'V' && checkType(item.id) == '3'"
+                v-show="videos"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + item.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(item.id)"
+                    :value="item.id"
+                  />
+                  <label :for="'a2' + item.id"></label>
+                </div>
+                <video
+                  :src="item.content"
+                  width="130"
+                  height="130"
+                  preload="metadata"
+                  id="video1"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(item.id)"
+                />
+                <div class="info">
+                  <span class="title">{{ item.content_name }}</span>
+                </div>
               </div>
-            </label>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
+    <delete-modal @close="closeDeleteModal" v-if="deleteModal">
+      <p class="p1">{{ ids.length }}개의 항목을 삭제하시겠습니까?</p>
+      <p class="p2">휴지통에서 삭제하신 항목을 복구할 수 없습니다.</p>
+
+      <!-- footer 슬롯 콘텐츠 -->
+      <template slot="footer">
+        <button class="button1" @click="deleteItems">삭제</button>
+        <button class="button2" @click="closeDeleteModal">취소</button>
+      </template>
+    </delete-modal>
+    <restore-modal @close="closeRestoreModal" v-if="restoreModal">
+      <p class="p1">{{ ids.length }}개의 항목을 복구하시겠습니까?</p>
+      <p class="p2">복구된 항목은 기존 자리로 돌아갑니다.</p>
+
+      <!-- footer 슬롯 콘텐츠 -->
+      <template slot="footer">
+        <button class="button1" @click="restoreItems">복구</button>
+        <button class="button2" @click="closeRestoreModal">취소</button>
+      </template>
+    </restore-modal>
   </content>
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+import DeleteModal from "@/views/DeleteModal.vue";
+import RestoreModal from "@/views/RestoreModal.vue";
+
 export default {
-  components: {},
+  components: {
+    DeleteModal,
+    RestoreModal,
+  },
   data() {
     return {
-      count: 2,
-      icons: ["fa fa-folder", "fa fa-file"],
-      list: [
-        { isLink: true, url: "/" },
-        { isLink: true, url: "/" },
-        { isLink: true, url: "/" },
-      ],
-      position: "bottom-right",
-      backgroundColor: "#474346",
+      ids: [],
+      noShow: true,
+      folders: true,
+      images: true,
+      videos: true,
+      items: [],
+      deleteModal: false,
+      restoreModal: false,
     };
+  },
+  created() {},
+  computed: {
+    ...mapState({
+      userInfo: "userInfo",
+    }),
+  },
+  methods: {
+    ...mapActions(["GET_ITEMS", "DELETE_ITEMS", "RESTORE_ITEMS"]),
+    deleteItems() {
+      this.DELETE_ITEMS(this.ids).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("삭제가 완료되었습니다.");
+          this.ids = [];
+          this.closeDeleteModal();
+          this.getItems();
+        } else {
+          alert("삭제에 실패했습니다.");
+          this.ids = [];
+          this.closeDeleteModal();
+          this.getItems();
+        }
+      });
+    },
+    restoreItems() {
+      this.RESTORE_ITEMS(this.ids).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("복구가 완료되었습니다.");
+          this.ids = [];
+          this.closeDeleteModal();
+          this.getItems();
+        } else {
+          alert("복구에 실패했습니다.");
+          this.ids = [];
+          this.closeDeleteModal();
+          this.getItems();
+        }
+      });
+    },
+    openDeleteModal() {
+      this.deleteModal = true;
+    },
+    closeDeleteModal() {
+      this.deleteModal = false;
+    },
+    openRestoreModal() {
+      this.restoreModal = true;
+    },
+    closeRestoreModal() {
+      this.restoreModal = false;
+    },
+    getItems() {
+      this.GET_ITEMS({ userEmail: this.userInfo.useremail }).then((list) => {
+        console.log("trashPage list : ", list);
+        this.items = list;
+      });
+    },
+    selectAll: function() {
+      this.ids = [];
+      if (!this.allSelected) {
+        for (this.folder in this.folderList) {
+          this.ids.push(this.folderList[this.folder].id);
+        }
+      }
+    },
+    select: function() {
+      this.allSelected = false;
+      this.ids.push(this.folderList[this.folder].id);
+    },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      return result;
+    },
+    checkType(id) {
+      // var temp = id.subStr(0, 1);
+      var temp = String(id);
+      temp = temp.substring(0, 1);
+      return temp;
+    },
+    all() {
+      this.folders = true;
+      this.images = true;
+      this.videos = true;
+      this.noShow = true;
+    },
+    onlyFolder() {
+      this.folders = true;
+      this.images = false;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyImage() {
+      this.folders = false;
+      this.images = true;
+      this.videos = false;
+      this.noShow = false;
+    },
+    onlyVideo() {
+      this.folders = false;
+      this.images = false;
+      this.videos = true;
+      this.noShow = false;
+    },
   },
 };
 </script>
@@ -124,7 +317,31 @@ user agent stylesheet div {
   left: 0px;
   display: block;
 }
+.b0 {
+  background-color: #dee8eb;
+  color: white;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  border: none;
+}
 .b1 {
+  background-color: #a6c4c7;
+  color: white;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
+  border: none;
+}
+.b2 {
   background-color: white;
   color: #474346;
   border: 1px solid #d2cdc5;
@@ -136,7 +353,7 @@ user agent stylesheet div {
   text-align: center;
   outline: none;
 }
-.b2 {
+.b3 {
   background-color: #d2cdc5;
   color: white;
   margin-right: 10px;
@@ -148,19 +365,20 @@ user agent stylesheet div {
   outline: none;
   border: none;
 }
-.b3 {
+.b4 {
   background-color: #a49988;
   color: white;
   margin-right: 10px;
   border-radius: 4px;
+  text-align: center;
   width: 60px;
   height: 30px;
   font-size: 12px;
-  text-align: center;
+  border: none;
   outline: none;
   border: none;
 }
-.b4 {
+.b5 {
   background-color: #474346;
   color: white;
   margin-right: 10px;
