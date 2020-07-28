@@ -1016,15 +1016,14 @@ export default {
   border: none;
 }
 
-
 .slide-image-container {
   display:flex;
   justify-content:center;
-  height : 100%;
+  height : 80%;
   line-height: 100%;
   vertical-align: middle;
-  padding: 5px;
-
+  margin-top: 2%;
+  
 }
 
 .element li {
@@ -1078,6 +1077,7 @@ export default {
   border-radius: 3px;
   bottom: 15px;
   padding: 20px;
+  margin-top: 5px;
 }
 
 .slide-image-container {
