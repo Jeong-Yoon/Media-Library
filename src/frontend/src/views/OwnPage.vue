@@ -316,6 +316,9 @@ export default {
       "GET_IMAGELIST",
       "DELETE_FILE",
     ]),
+    resetImg(){
+      this.idOfImage="";
+    },
     goToStart() {
       if (document.getElementById("video1").currentTime == 15) {
         document.getElementById("video1").currentTime = 0;
@@ -344,17 +347,59 @@ export default {
     },
     deleteFolder() {},
     download() {
-      console.log("download : " + this.ids);
-      this.DOWNLOAD_FILE(this.ids).then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]), {
-          type: "*",
-        }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", this.ids.content_name);
-        document.body.appendChild(link);
-        link.click();
-      });
+      // console.log("download : " + this.ids);
+      // this.DOWNLOAD_FILE(this.ids).then((res) => {
+      //   console.log(res)
+      //   console.log("res : " + res.data)
+      //   console.log(res.headers)
+      //   // const url = window.URL.createObjectURL(new Blob([res.data]), {
+      //   //   type: "*",
+      //   // }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+      //   // console.log("url :  "+ url)
+      //   // const link = document.createElement("a");
+      //   // link.href = url;
+      //   // link.setAttribute("download", this.ids);
+      //   // document.body.appendChild(link);
+      //   // link.click();
+      //   // console.log("link :  "+ link)
+
+      //           function replaceAll (str, searchStr, replaceStr) {
+      //               return str.split(searchStr).join(replaceStr)
+      //           }
+      //           const url = window.URL.createObjectURL(new Blob([res.data]))
+      //           const link = document.createElement('a')
+      //           link.href = url
+      //           const filename = replaceAll(decodeURI(res.headers.filename), '+', ' ')
+      //           link.setAttribute('download', filename)
+      //           document.body.appendChild(link)
+      //           link.click()
+      // });
+
+
+      console.log("downloadFile실행..");
+      console.log(this.ids);
+      this.DOWNLOAD_FILE(this.ids)
+        .then((res) => {
+          console.log(res);
+          console.log("downloadFile ㅎ액션~!");
+          console.log(res.headers)
+          console.log('content-type ' + res.headers['CONTENT_DISPOSITION'])
+          const url = window.URL.createObjectURL(new Blob([res.data]),{type: '*'}); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', this.ids + '.png');
+          document.body.appendChild(link);
+          link.click();
+          // this.ids = [];
+          alert("다운로드가 완료되었습니다.");
+          // return res;
+        })
+        .catch((err) => {
+          console.log("err~!");
+          console.error(err);
+        });
+
+
     },
     getImg(imageId) {
       console.log("getImg...", imageId);

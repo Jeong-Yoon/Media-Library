@@ -5,7 +5,7 @@
         <ul class="menu-root">
           <li id="usage">
             <p class="p1">{{ use }}GB /</p>
-            <p class="p2">{{ total  }}GB</p>
+            <p class="p2">{{ total }}GB</p>
             <div id="progress">
               <k-progress
                 :percent="percentage"
@@ -59,47 +59,41 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   // el: "progress",
   data() {
     return {
-      use: "0",
-      total: "0",
-      percentage: "0",
-      spare_capacity: "0",
+      use: "",
+      total: "",
+      percentage: "",
+      spare_capacity: "",
     };
   },
-  created(){
+  created() {
     this.getcapacity();
     // this.use_capacity;
     // this.total_capacity;
   },
   computed: {
     ...mapState({
-      userInfo : "userInfo",
-      total_capacity : "total_capacity",
-      use_capacity : "use_capacity"
-    })
+      userInfo: "userInfo",
+      total_capacity: "total_capacity",
+      use_capacity: "use_capacity",
+    }),
   },
-  methods : {
-    getcapacity(){
-      this.total = Math.floor(this.total_capacity / 1000000);
-      this.use = Math.floor(this.use_capacity / 1000000);
-      this.percentage = this.total / this.use;
-    }
-    // ...mapActions(['GET_CAPACITY']),
-    // getCapacity(){
-    //   this.GET_CAPACITY({ email : this.userInfo.useremail }).then((data) =>{
-    //     console.log(this.userInfo.useremail)
-    //     console.log("navigation : " + data);
-    //     this.total_capacity = Math.floor(data.total_capacity / 1000000);
-    //     this.use_capacity = Math.floor(data.use_capacity / 1000000);
-    //     this.percentage = this.total_capacity / this.use_capacity;
-    //     this.spare_capacity = this.total_capacity - this.use_capacity;
-    //   });
-    // }
+  methods: {
+    ...mapActions(["GET_CAPACITY"]),
+    getcapacity() {
+      console.log("method", this.userInfo.useremail);
+      this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
+        console.log(list);
+        this.total = Math.floor(list.total_capacity / 1000000);
+        this.use = Math.floor(list.use_capacity / 1000000);
+        this.percentage = this.total / this.use;
+      });
+    },
   },
 };
 </script>
