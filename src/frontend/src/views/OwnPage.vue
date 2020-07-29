@@ -210,7 +210,7 @@
           v-if="videoModal"
           @close="closeVideoModal"
         />
-        <p>selected ids : {{ ids }}</p>
+        <!--<p>selected ids : {{ ids }}</p>-->
       </div>
     </div>
     <fab
@@ -295,6 +295,7 @@ export default {
       noShow: true,
       imageList: [],
       fileName: "",
+      downloadId: "",
     };
   },
   created() {
@@ -339,15 +340,17 @@ export default {
         console.log(data);
         if (data == 1) {
           alert("삭제된 파일이 휴지통으로 이동하였습니다.");
+          this.ids = [];
           this.getFolders();
         } else {
           alert("파일 삭제에 실패했습니다.");
+          this.ids = [];
           this.getFolders();
         }
       });
     },
     deleteFolder() {},
-    download() {
+    async download() {
       // console.log("download : " + this.ids);
       // this.DOWNLOAD_FILE(this.ids).then((res) => {
       //   console.log(res)
@@ -377,44 +380,35 @@ export default {
       // });
 
       console.log("downloadFile실행..");
-      console.log(this.ids);
-      this.DOWNLOAD_FILE(this.ids)
-        .then((res) => {
-          console.log(res);
-          console.log("downloadFile ㅎ액션~!");
-          console.log(res.headers);
-          console.log("content-type " + res.headers["CONTENT_DISPOSITION"]);
-          const url = window.URL.createObjectURL(new Blob([res.data]), {
-            type: "*",
-          }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-          for (var j = 0; j < this.ids.length; j++) {
+      for (var j = 0; j < this.ids.length; j++) {
+        this.downloadId = this.ids[j];
+        this.fileName = "";
+        await this.DOWNLOAD_FILE({ id: this.ids[j] })
+          .then((res) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]), {
+              type: "*",
+            }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
             for (var i = 0; i < this.folderList.length; i++) {
-              console.log(
-                i +
-                  "," +
-                  this.folderList[i].id +
-                  "," +
-                  this.folderList[i].content_name
-              );
-              if (this.ids[j] === this.folderList[i].id) {
+              // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
+              if (this.downloadId === this.folderList[i].id) {
                 this.fileName = this.folderList[i].content_name;
               }
             }
-            console.log(this.fileName);
             const link = document.createElement("a");
             link.href = url;
             link.setAttribute("download", this.fileName);
             document.body.appendChild(link);
             link.click();
-          }
-          // this.ids = [];
-          alert("다운로드가 완료되었습니다.");
-          // return res;
-        })
-        .catch((err) => {
-          console.log("err~!");
-          console.error(err);
-        });
+            // this.ids = [];
+            // return res;
+          })
+          .catch((err) => {
+            console.log("err~!");
+            console.error(err);
+          });
+      }
+      alert("다운로드가 완료되었습니다.");
+      this.ids = [];
     },
     getImg(imageId) {
       console.log("getImg...", imageId);
@@ -513,6 +507,7 @@ export default {
     },
     closeModal() {
       this.modal = false;
+      this.getFolders();
     },
     closeFileModal() {
       this.fileModal = false;
@@ -520,12 +515,15 @@ export default {
     },
     closeFolderModal() {
       this.folderModal = false;
+      this.getFolders();
     },
     closeImageModal() {
       this.imageModal = false;
+      this.getFolders();
     },
     closeVideoModal() {
       this.videoModal = false;
+      this.getFolders();
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {

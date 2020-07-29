@@ -32,7 +32,7 @@ const actions = {
     });
   },
   GET_CAPACITY(_, { email }) {
-    console.log("----------------------email-------", email);
+    //console.log("----------------------email-------", email);
     return api.getCapacity.getCapacity({ email });
   },
   NEW_FOLDER(_, { parent, newFolderName, userEmail }) {
@@ -83,16 +83,17 @@ const actions = {
     //   dispatch("GET_FOLDERS", { parent });
     // });
   },
-  DOWNLOAD_FILE(_, id) {
-    return api.download.download(id);
+  DOWNLOAD_FILE(_, { id }) {
+    console.log("action " + id);
+    return api.download.download({ id });
   },
   DELETE_FILE(_, content_id) {
     console.log("DELETE_FILE / action : ", content_id);
     return api.deleteFile.deleteFile(content_id);
   },
-  GET_ITEMS(_, { useremail }) {
-    console.log("action / getItems : ", useremail);
-    return api.getItems.getItems(useremail);
+  GET_ITEMS(_, { email }) {
+    console.log("action / getItems : ", { email });
+    return api.getItems.getItems({ email });
   },
   DELETE_ITEMS(_, ids) {
     console.log("action / deleteItems : ", ids);

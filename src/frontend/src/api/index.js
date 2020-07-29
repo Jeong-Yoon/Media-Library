@@ -64,7 +64,7 @@ export const signup = {
 
 export const getCapacity = {
   getCapacity({ email }) {
-    console.log({ email } + " : getcapacity api");
+    //console.log({ email } + " : getcapacity api");
     return request("post", "/api/users/capacity", { email });
   },
 };
@@ -131,12 +131,16 @@ export const uploadFile = {
 };
 
 export const download = {
-  download(id) {
+  download({ id }) {
     console.log("api " + id);
     // return request("post", "/api/contents/download", id , {responseType:"blob"})
-    return axios.post(DOMAIN + "/api/contents/download", id, {
-      responseType: "blob",
-    });
+    return axios.post(
+      DOMAIN + "/api/contents/download",
+      { id },
+      {
+        responseType: "blob",
+      }
+    );
   },
 };
 
@@ -169,9 +173,9 @@ export const deleteFile = {
 };
 
 export const getItems = {
-  getItems({ useremail }) {
-    console.log("api / getItems", useremail);
-    return request("post", "/api/", { useremail });
+  getItems({ email }) {
+    console.log("api / getItems", { email });
+    return request("post", "/api/garbages/garbageList/", { email });
   },
 };
 
@@ -185,7 +189,7 @@ export const deleteItems = {
 export const restoreItems = {
   restoreItems(ids) {
     console.log("api / restore : ", ids);
-    return;
+    return request("post", "/api/garbages/restore", ids);
   },
 };
 // export const getVideo = {

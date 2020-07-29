@@ -119,6 +119,7 @@
         </div>
       </div>
     </div>
+    <p>selected ids : {{ ids }}</p>
     <delete-modal @close="closeDeleteModal" v-if="deleteModal">
       <p class="p1">{{ ids.length }}개의 항목을 삭제하시겠습니까?</p>
       <p class="p2">휴지통에서 삭제하신 항목을 복구할 수 없습니다.</p>
@@ -130,9 +131,10 @@
       </template>
     </delete-modal>
     <restore-modal @close="closeRestoreModal" v-if="restoreModal">
-      <p class="p1">{{ ids.length }}개의 항목을 복구하시겠습니까?</p>
-      <p class="p2">복구된 항목은 기존 자리로 돌아갑니다.</p>
-
+      <div class="input">
+        <p class="p1">{{ ids.length }}개의 항목을 복원하시겠습니까?</p>
+        <p class="p2">복원된 항목은 기존 위치로 돌아갑니다.</p>
+      </div>
       <!-- footer 슬롯 콘텐츠 -->
       <template slot="footer">
         <button class="button1" @click="restoreItems">복구</button>
@@ -162,9 +164,12 @@ export default {
       items: [],
       deleteModal: false,
       restoreModal: false,
+      allSelected: true,
     };
   },
-  created() {},
+  created() {
+    this.getItems();
+  },
   computed: {
     ...mapState({
       userInfo: "userInfo",
@@ -189,50 +194,58 @@ export default {
       });
     },
     restoreItems() {
+      console.log("--------------restore Start--------------");
+      console.log("보낼 ids 리스트 : ", this.ids);
       this.RESTORE_ITEMS(this.ids).then((data) => {
-        console.log(data);
+        console.log("받은 결과값 : ", data);
         if (data == 1) {
-          alert("복구가 완료되었습니다.");
+          alert("복원이 완료되었습니다.");
           this.ids = [];
-          this.closeDeleteModal();
+          this.closeRestoreModal();
           this.getItems();
         } else {
-          alert("복구에 실패했습니다.");
+          alert("복원이 실패했습니다.");
           this.ids = [];
-          this.closeDeleteModal();
+          this.closeRestoreModal();
           this.getItems();
         }
       });
+      console.log("--------------restore End--------------");
     },
     openDeleteModal() {
       this.deleteModal = true;
     },
     closeDeleteModal() {
       this.deleteModal = false;
+      this.getItems();
     },
     openRestoreModal() {
       this.restoreModal = true;
     },
     closeRestoreModal() {
       this.restoreModal = false;
+      this.getItems();
     },
     getItems() {
-      this.GET_ITEMS({ userEmail: this.userInfo.useremail }).then((list) => {
-        console.log("trashPage list : ", list);
+      console.log("----------getItems start------------");
+      console.log(this.userInfo.useremail);
+      this.GET_ITEMS({ email: this.userInfo.useremail }).then((list) => {
         this.items = list;
+        console.log("trashPage Items : ", this.items);
       });
+      console.log("----------getItems end------------");
     },
     selectAll: function() {
       this.ids = [];
       if (!this.allSelected) {
-        for (this.folder in this.folderList) {
-          this.ids.push(this.folderList[this.folder].id);
+        for (this.item in this.items) {
+          this.ids.push(this.items[this.item].id);
         }
       }
     },
     select: function() {
       this.allSelected = false;
-      this.ids.push(this.folderList[this.folder].id);
+      this.ids.push(this.items[this.item].id);
     },
     roadImg(data) {
       const result = "data:image;base64," + data;
@@ -273,6 +286,46 @@ export default {
 </script>
 
 <style scoped>
+.input {
+  border-bottom: 1px solid #a49988;
+  width: 320px;
+}
+.p1 {
+  font-size: 20px;
+  padding-bottom: 5px;
+  padding-top: 20px;
+}
+.p2 {
+  padding-bottom: 35px;
+  font-size: 12px;
+  color: #a49988;
+}
+.button1 {
+  font-family: inherit;
+  font-size: 90%;
+  margin: 0;
+  cursor: pointer;
+  border: none;
+  background-color: #494346;
+  color: white;
+  width: 100px;
+  border-radius: 4px;
+  height: 30px;
+  margin-right: 50px;
+  margin-left: 25px;
+}
+.button2 {
+  font-family: inherit;
+  font-size: 90%;
+  margin: 0;
+  cursor: pointer;
+  border: none;
+  background-color: #d2cdc5;
+  color: white;
+  width: 100px;
+  border-radius: 4px;
+  height: 30px;
+}
 hr {
   margin-bottom: 30px;
 }
@@ -286,6 +339,42 @@ hr {
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 user agent stylesheet div {
+  display: block;
+}
+
+.agree2 {
+  position: absolute;
+  z-index: 5;
+  opacity: 0.5;
+}
+.agree2:hover {
+  opacity: 1;
+}
+.agree2 input[type="checkbox"] {
+  display: none;
+}
+.agree2 input[type="checkbox"] + label {
+  width: 30px;
+  height: 30px;
+  background: #d2cdc5;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  margin-right: 10px;
+}
+.agree2 input[type="checkbox"] + label:hover {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+.agree2 input[type="checkbox"]:checked + label {
+  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
+  float: left;
+  opacity: initial;
+  background-color: #a6c4c7;
+}
+.agree2 input[type="checkbox"] + label span {
+  position: absolute;
+  left: 0px;
   display: block;
 }
 
@@ -485,11 +574,31 @@ img {
   width: 150px;
 }
 .title {
+  /*
   display: block;
   font-size: 12px;
   line-height: 15px;
   background-color: white;
   width: 150px;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #222;
+  cursor: default;
+  text-decoration: none;
+  text-align: center;
+  overflow: hidden;
+  width: 130px;
+  padding-bottom: 5px;
 }
 </style>

@@ -8,7 +8,7 @@
             <p class="p2">{{ total }}GB</p>
             <div id="progress">
               <k-progress
-                :percent="percentage"
+                :percent="percent"
                 active
                 :color="['#E3E2E1', '#DEE8EB', '#A6C4C7', '#A49988']"
                 :show-text="false"
@@ -67,7 +67,7 @@ export default {
     return {
       use: "",
       total: "",
-      percentage: "",
+      percent: "",
       spare_capacity: "",
     };
   },
@@ -79,19 +79,29 @@ export default {
   computed: {
     ...mapState({
       userInfo: "userInfo",
-      total_capacity: "total_capacity",
-      use_capacity: "use_capacity",
     }),
   },
   methods: {
     ...mapActions(["GET_CAPACITY"]),
     getcapacity() {
-      console.log("method", this.userInfo.useremail);
+      //console.log("method", this.userInfo.useremail);
       this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
-        console.log(list);
+        //console.log(list);
         this.total = Math.floor(list.total_capacity / 1000000);
         this.use = Math.floor(list.use_capacity / 1000000);
-        this.percentage = this.total / this.use;
+        this.percent = parseInt((this.use / this.total) * 100);
+        this.spare_capacity = this.total - this.use;
+        /*console.log(
+          "total : ",
+          this.total,
+          " / user : ",
+          this.use,
+          " / percent : ",
+          this.percent,
+          " / spare : ",
+          this.spare_capacity
+        );
+        */
       });
     },
   },
