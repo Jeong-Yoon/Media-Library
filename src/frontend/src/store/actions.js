@@ -84,7 +84,7 @@ const actions = {
     // });
   },
   DOWNLOAD_FILE(_, { id }) {
-    console.log("action " + id);
+    console.log("action " + { id });
     return api.download.download({ id });
   },
   DELETE_FILE(_, content_id) {
