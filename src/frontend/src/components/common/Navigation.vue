@@ -87,8 +87,8 @@ export default {
       //console.log("method", this.userInfo.useremail);
       this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
         //console.log(list);
-        this.total = Math.floor(list.total_capacity / 1000000);
-        this.use = Math.floor(list.use_capacity / 1000000);
+        this.total = Math.floor(list.total_capacity / 1000000000);
+        this.use = Math.floor(list.use_capacity / 1000000000);
         this.percent = parseInt((this.use / this.total) * 100);
         this.spare_capacity = this.total - this.use;
         /*console.log(

@@ -182,7 +182,7 @@ export const getItems = {
 export const deleteItems = {
   deleteItems(ids) {
     console.log("api / delete : ", ids);
-    return;
+    return request("delete", "/api/garbages", ids);
   },
 };
 

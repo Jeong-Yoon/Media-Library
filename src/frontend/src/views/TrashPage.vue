@@ -180,7 +180,7 @@ export default {
     deleteItems() {
       this.DELETE_ITEMS(this.ids).then((data) => {
         console.log(data);
-        if (data == 1) {
+        if (data > 0) {
           alert("삭제가 완료되었습니다.");
           this.ids = [];
           this.closeDeleteModal();
