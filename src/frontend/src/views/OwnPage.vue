@@ -453,6 +453,7 @@ export default {
       this.videos = true;
       this.noShow = false;
     },
+    intoFolder() {},
     getOnly(target) {
       this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
         // this.targetList = list;

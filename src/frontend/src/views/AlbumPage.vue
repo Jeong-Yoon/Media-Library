@@ -8,10 +8,9 @@
             <label for="a1"></label>
           </div>
         </div>
-        <button class="b1">새폴더</button>
-        <button class="b2">폴더</button>
         <button class="b3">사진</button>
         <button class="b4">동영상</button>
+        <!--
         <form class="search">
           <select id="key" name="keyword" class="key">
             <option value="file_origin_name">파일명</option>
@@ -33,30 +32,12 @@
             />
           </button>
         </form>
+        -->
       </div>
       <hr class="top-hr" />
 
       <div class="bottom-content">
         <ul class="list_thumb">
-          <li class="li" title="2020">
-            <label for>
-              <div class="thumb">
-                <span class="folder">
-                  <img
-                    src="@/assets/image/folder.png"
-                    alt="folder.png"
-                    width="150"
-                    height="150"
-                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  />
-                </span>
-              </div>
-              <div class="info">
-                <span class="title">2020</span>
-              </div>
-            </label>
-          </li>
-
           <li class="li" title="june.jpg">
             <label for>
               <div class="thumb">
@@ -78,35 +59,14 @@
         </ul>
       </div>
     </div>
-    <quick-menu
-      :menu-count="count"
-      :icon-class="icons"
-      :menu-url-list="list"
-      :position="position"
-      :background-color="backgroundColor"
-    />
   </content>
 </template>
 
 <script>
-import quickMenu from "vue-quick-menu";
-
 export default {
-  components: {
-    quickMenu,
-  },
+  components: {},
   data() {
-    return {
-      count: 2,
-      icons: ["fa fa-folder", "fa fa-file"],
-      list: [
-        { isLink: true, url: "/" },
-        { isLink: true, url: "/" },
-        { isLink: true, url: "/" },
-      ],
-      position: "bottom-right",
-      backgroundColor: "#474346",
-    };
+    return {};
   },
 };
 </script>

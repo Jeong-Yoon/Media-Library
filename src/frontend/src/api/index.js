@@ -91,7 +91,8 @@ export const newFolder = {
 export const getFolders = {
   getFolders({ parent }) {
     console.log(parent + ": api / getfolders");
-    return request("post", "/api/folders/getfolders", { parent });
+    // return request("post", "/api/folders/getfolders", { parent });
+    return request("get", `/api/folders/getfolders/${parent}`);
   },
 };
 export const getOnly = {

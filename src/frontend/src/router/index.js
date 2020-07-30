@@ -35,7 +35,7 @@ const routes = [
     component: () => import("@/views/SignupPage.vue"),
   },
   {
-    path: "/ownDocumentBox",
+    path: "/ownDocumentBox/:parent",
     name: "ownDocumentBox",
     component: () => import("@/views/OwnPage.vue"),
   },
@@ -53,16 +53,6 @@ const routes = [
     path: "/trashDocumentBox",
     name: "trashDocumentBox",
     component: () => import("@/views/TrashPage.vue"),
-  },
-  {
-    path: "/uploadFile",
-    name: "uploadFile",
-    component: () => import("@/views/UploadFilePage.vue"),
-  },
-  {
-    path: "/uploadFolder",
-    name: "uploadFolder",
-    component: () => import("@/views/UploadFolderPage.vue"),
   },
 ];
 

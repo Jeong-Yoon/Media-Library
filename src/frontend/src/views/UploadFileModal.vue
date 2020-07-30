@@ -38,6 +38,7 @@
               </button>
             </div>
           </div>
+          <!--
           <input
             type="file"
             class="file-input"
@@ -45,10 +46,13 @@
             ref="fileInput"
             @change="onFileChange"
           />
+          -->
         </div>
+        <!--
         <div v-show="imageSrc" class="upload-image">
           <img :src="imageSrc" />
         </div>
+        -->
       </div>
     </div>
   </transition>
