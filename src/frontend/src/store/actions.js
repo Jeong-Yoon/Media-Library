@@ -44,7 +44,6 @@ const actions = {
     });
   },
   GET_FOLDERS(_, { parent }) {
-    console.log("parent", parent);
     console.log(parent + " : actions / getFolders");
     return api.getFolders.getFolders({
       parent,
