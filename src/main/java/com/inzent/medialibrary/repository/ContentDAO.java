@@ -46,11 +46,12 @@ public class ContentDAO {
 
 	public ImageDTO getContentById(long imageId) {
 		ImageDTO image = new ImageDTO();
-		do {
-			image = sqlSession.selectOne("getcontentbyid",imageId);
-			imageId++;
-		}while(image.getContent_type().equals("V"));
-		return image;
+//		do {
+//			image = sqlSession.selectOne("getcontentbyid",imageId);
+//			imageId++;
+//		}while(image.getContent_type().equals("V"));
+//		return image;
+		return sqlSession.selectOne("getcontentbyid",imageId);
 	}
 
 	public int deleteContent(List<Long> contentIdList) {

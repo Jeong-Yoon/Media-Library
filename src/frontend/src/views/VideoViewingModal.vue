@@ -59,13 +59,13 @@
       <!-- content -->
       <div class="content">
         <div class="video-container">
-          <!-- <video controls autoplay muted loop :src="this.idOfVideo" type="video/mp4"></video> -->
-          <video width="320" height="240" autoplay="autoplay" controls>
+          <video controls autoplay muted loop :src="this.src" type="video/mp4"></video>
+          <!-- <video width="320" height="240" autoplay="autoplay" controls>
             <source :src="this.idOfVideo" type="video/mp4">
-          </video>
-
-          <!-- <video id="video" controls muted loop autoplay preload="none" style ="height: 640px"> -->
-            <!-- <source :src="this.idOfVideo" type="video/mp4"/> -->
+          </video> -->
+          <!-- <video  autoplay playsinline :ref="this.idOfVideo" id="video" width="300" height="200"></video>
+          <video id="video" controls muted loop autoplay preload="none" style ="height: 640px">
+            <source src="/api/videos/video/30101" type="video/mp4"/> -->
             <!-- <source id="mp4" :src="this.idOfVideo" type="video/mp4" />
             <source
               id="webm"
@@ -243,14 +243,17 @@ export default {
   ],
   data() {
     return {
-
+        video: {},
+        // MediaTrackConstraints를 변수로 정의
+        mediaContraint: {
+            video: true
+        },
+        scr:""
     };
   },
-
   created() {
-      console.log(this.idOfVideo)
+    this.src = "/api/videos/video/" + this.idOfVideo;
   },
-
   methods: {
     //모달
     openVideoNav() {

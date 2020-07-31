@@ -82,6 +82,7 @@ public class UserController {
 		System.out.println("capacity" + emailDTO.getEmail());
 		CapacityDTO capacity = userService.getCapacity(emailDTO);
 		System.out.println(capacity.getTotal_capacity());
+		System.out.println(capacity.getUse_capacity());
 		return new ResponseEntity<CapacityDTO>(capacity, HttpStatus.OK);
 	}
 }

@@ -17,7 +17,7 @@ public interface ContentService {
 	public int uploadContent(ContentDTO contentDTO);
 	public void uploadContentDetail(ContentDetailDTO detailDTO, Map<String, Object> json);
 	public void getContentDetail(Long contentId);
-	public ImageDTO getContentById(long image_id);
+	public ImageDTO getContentById(Long image_id);
 	public int deleteContent(List<Long> contentIdList);
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO);
 	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO);

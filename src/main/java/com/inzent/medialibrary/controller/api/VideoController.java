@@ -1,9 +1,17 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -26,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import com.inzent.medialibrary.dto.ContentIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
@@ -59,7 +68,6 @@ public class VideoController {
     	System.out.println(videoId);
 //    	ImageDTO content = contentService.getContentById(Long.parseLong(videoId)); 
     	ImageDTO content = contentService.getContentById(videoId); 
-//        log.info("getVideo");
         UrlResource video = new UrlResource("file:" + content.getContent_storage());
         System.out.println(video.contentLength());
         System.out.println("if exists : " + video.exists());
@@ -71,7 +79,29 @@ public class VideoController {
                             .body(region);
     }
 
-
+//    @GetMapping("/video/{videoId}")
+//    public StreamingResponseBody streaming(@PathVariable(value="videoId") Long videoId) throws FileNotFoundException {
+//    	System.out.println(videoId);
+//    	ImageDTO content = contentService.getContentById(videoId); 
+//        File file = new File(content.getContent_storage());
+//        System.out.println("비디오 중.");
+//        final InputStream is = new FileInputStream(file);
+//        return os -> {
+//        	System.out.println(os);
+//            readAndWrite(is, os);
+//        };
+//    }
+    
+    private void readAndWrite(final InputStream is, OutputStream os) throws IOException {
+        byte[] data = new byte[2048];
+        int read = 0;
+        while ((read = is.read(data)) > 0) {
+            os.write(data, 0, read);
+        }
+        System.out.println("비디오 변환");
+        os.flush();
+    }
+    
     private ResourceRegion resourceRegion(UrlResource video, HttpHeaders headers) throws IOException {
         final long chunkSize = 1000000L;
         long contentLength = video.contentLength();
@@ -117,5 +147,35 @@ public class VideoController {
         model.addAttribute("videoName", videoName);
         return "video";
     }
+    
+//    @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
+//    @GetMapping("/video/{videoId}")
+//    public void getVideo(HttpServletRequest req, HttpServletResponse res, @PathVariable Long videoId) {
+//    	System.out.println("video Controller");
+//    	System.out.println(videoId);
+////    	ImageDTO content = contentService.getContentById(Long.parseLong(videoId)); 
+//    	ImageDTO content = contentService.getContentById(videoId); 
+//      String filePath = content.getContent_storage();
+//      
+//      // 데이터 조회
+////      FileModel fileModel = fileService.getFileInfo(Integer.parseInt(id));
+//      System.out.println("동영상 스트리밍 요청 : " + filePath + content.getContent_save_name());
+//      File getFile = new File(filePath);
+//      
+//      try {
+//        // 미디어 처리
+//        MultipartFileSender
+//          .fromFile(getFile)
+//          .with(req)
+//          .with(res)
+//          .serveResource();
+//        
+//      } catch (Exception e) {
+//        // 사용자 취소 Exception 은 콘솔 출력 제외
+//        if (!e.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException")) e.printStackTrace();
+//      }
+//    }
+
+
 
 }

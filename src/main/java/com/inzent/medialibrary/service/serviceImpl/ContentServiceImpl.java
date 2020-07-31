@@ -1,5 +1,6 @@
 package com.inzent.medialibrary.service.serviceImpl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -70,11 +73,11 @@ public class ContentServiceImpl implements ContentService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("extension", ext);
 			ucDTO.setContent_attribute(map);
-//			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
+			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
 //			Map<String, Object> map = new HashMap<String, Object>();
-//			int height = image.getHeight();
-//			int width = image.getWidth();
-//			map.put("해상도", height + "*" + width);
+			int height = image.getHeight();
+			int width = image.getWidth();
+			map.put("resolution", height + "*" + width);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +99,7 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public ImageDTO getContentById(long image_id) {
+	public ImageDTO getContentById(Long image_id) {
 		ImageDTO image = contentDAO.getContentById(image_id);
 		InputStream in;
 		try {

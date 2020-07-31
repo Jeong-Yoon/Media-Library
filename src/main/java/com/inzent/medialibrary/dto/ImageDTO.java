@@ -2,9 +2,11 @@ package com.inzent.medialibrary.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class ImageDTO {
     private Long content_id;
     private String content_origin_name;
@@ -16,4 +18,6 @@ public class ImageDTO {
     private String content_save_name;
     private long content_size;
     private long folder_id;
+    private String path;
+    private String content_attribute;
 }

@@ -328,11 +328,13 @@ export default {
     },
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
-      this.GET_VIDEO({ videoId: videoId }).then((data) => {
-        console.log(data);
-        this.idOfVideo = data;
-        this.openVideoModal();
-      });
+      this.idOfVideo = videoId;
+      this.openVideoModal();
+      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
+      //   console.log(data);
+      //   this.idOfVideo = data;
+      //   this.openVideoModal();
+      // });
     },
     deleteFile() {
       console.log(this.ids);
