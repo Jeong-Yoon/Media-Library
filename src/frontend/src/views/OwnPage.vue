@@ -203,6 +203,7 @@
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
+          @deleted="deleted"
           @close="closeImageModal"
         />
         <VideoViewingModal
@@ -300,6 +301,7 @@ export default {
   },
   created() {
     this.getFolders();
+    this.deleted();
   },
   computed: {
     ...mapState({
@@ -414,7 +416,7 @@ export default {
       console.log("getImg...", imageId);
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
         console.log(data);
-        this.idOfImage = data;
+        this.idOfImage = data; 
       });
       this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
         console.log(this.parent);
@@ -428,6 +430,12 @@ export default {
       var temp = String(id);
       temp = temp.substring(0, 1);
       return temp;
+    },
+    deleted(){
+      console.log("삭제삭제")
+      console.log(this.imageList)
+      this.getFolders(this.imageList[0].content_id);
+      this.getImg(this.imageList[0].content_id);
     },
     all() {
       this.folders = true;
@@ -453,7 +461,6 @@ export default {
       this.videos = true;
       this.noShow = false;
     },
-    intoFolder() {},
     getOnly(target) {
       this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
         // this.targetList = list;

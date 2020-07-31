@@ -15,11 +15,12 @@
 
 
     <!-- 이미지 모달 -->
-    <div class="overlay" id="image_nav" tabindex="1" role="dialog">
+    <div class="overlay" id="image_nav" tabindex="1" role="dialog" >
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
-          <a class="v_btn_close" id="reset" @click="closeImageNav()" style="color:#fff; font-size: 15px; z-index :10; ">
+          <!-- <a class="v_btn_close" id="reset" @click="closeImageNav()" style="color:#fff; font-size: 15px; z-index :10; "> -->
+          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; z-index :10;">
             나가기
           </a>
 
@@ -214,24 +215,23 @@
             <br />
             <span style="margin-bottom : 5px">업로드일시</span>
             <a>{{idOfImage.content_reg_date}}</a> -->
-                <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
-                    <tr >
-                        <td style=" color : #d3d3d3;">파일정보</td>
-                    </tr>
-                    <tr>
-                        <td width = "100px;">해상도</td>
-                        <td>&nbsp;{{idOfImage.content_attribute}}</td>
-                    </tr>
-                    <tr>
-                        <td>파일크기</td>
-                        <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
-                    </tr>
-                    <tr>
-                        <td> 업로드일시</td>
-                        <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
-                    </tr>
-                </table>
-
+              <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
+                  <tr >
+                      <td style=" color : #d3d3d3;">파일정보</td>
+                  </tr>
+                  <tr>
+                      <td width = "100px;">해상도</td>
+                      <td>&nbsp;{{idOfImage.content_attribute}}</td>
+                  </tr>
+                  <tr>
+                      <td>파일크기</td>
+                      <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
+                  </tr>
+                  <tr>
+                      <td> 업로드일시</td>
+                      <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
+                  </tr>
+              </table>
           </div>
         </div>
 
@@ -241,14 +241,14 @@
             <a>{{idOfImage.path}}</a>
           </div> -->
          
-              <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
-                      <tr>
-                          <td style=" color : #d3d3d3">폴더 경로</td>
-                      </tr>
-                      <tr>
-                          <td><a herf="">{{idOfImage.path}}</a></td>
-                      </tr>
-              </table>
+            <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
+                    <tr>
+                        <td style=" color : #d3d3d3">폴더 경로</td>
+                    </tr>
+                    <tr>
+                        <td><a herf="">{{idOfImage.path}}</a></td>
+                    </tr>
+            </table>
         </div>
       </div>
     </div>
@@ -363,15 +363,15 @@ export default {
     computedImagelist :{ 
       get(){
         return this.imageList;
+        }
+      },
+      isPrevDisabled(){
+        return this.idOfImage.content_id === this.imageList[0].content_id;
+      },
+      isNextDisabled(){
+        return this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id;
       }
     },
-    isPrevDisabled(){
-      return this.idOfImage.content_id === this.imageList[0].content_id;
-    },
-    isNextDisabled(){
-      return this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id;
-    }
-  },
   created() {
     // let options = {
     //   holderNode: '.js-cropper-holder',
@@ -399,7 +399,7 @@ export default {
       console.log(this.idOfImage);
       document.getElementById("image_nav").style.display = "block";
     },
-    closeImageNav() {
+    close() {
       console.log("이미지모달 닫아");
       document.getElementById("image_nav").style.display = "none";
       document.getElementById("video_nav").style.display = "none";
@@ -433,7 +433,7 @@ export default {
       let myImg = document.getElementById("img");
       let imgCurrWidth = myImg.clientWidth;
       // let maxWidth = this.imgBox.clientWidth;
-      if (imgCurrWidth < 1000) {
+      if (imgCurrWidth < 2000) {
         myImg.style.width = `${imgCurrWidth + 100}px`;
       } else {
         return false;
@@ -504,7 +504,10 @@ export default {
         console.log(data);
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
-          this.getimage();
+          this.$emit("deleted")
+          // this.idOfimage.content_id();
+          this.imageList.content_id;
+
         } 
       });
     },
@@ -1148,7 +1151,7 @@ export default {
 
 /* SCROLL */
 ::-webkit-scrollbar { width: 10px; height: 10px;}
-::-webkit-scrollbar-track { background-color: #fff; }
+::-webkit-scrollbar-track { background-color: #000; }
 ::-webkit-scrollbar-thumb { 
    border-radius: 20px;
     background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 
