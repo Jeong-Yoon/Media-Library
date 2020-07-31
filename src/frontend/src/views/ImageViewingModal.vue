@@ -1,6 +1,18 @@
 <template>
   <div>
     <!-- <span @click="openImageNav" style="cursor: pointer;">이미지</span> -->
+<!-- 
+      <div id="app">
+      <image-magnifier :src="image"
+                    :zoom-src="image"
+                    width="400"
+                    height="300"
+                    zoom-width="400"
+                    zoom-height="300"></image-magnifier>
+  
+  
+    </div> -->
+
 
     <!-- 이미지 모달 -->
     <div class="overlay" id="image_nav" tabindex="1" role="dialog">
@@ -19,18 +31,18 @@
             id="in" 
             title="확대" 
             @click="zoomIn()" 
-            style="margin-right:5px; cursor: zoom-in"
+            style="margin-right:5px; "
           >
-            <img src="@/assets/image/v_task_zoomin.png" height="15.5px" />
+            <img src="@/assets/image/v_task_zoomin.png" height="16px"  style="top : 2px;"/>
           </a>
           <a 
             class="zoom-out" 
             id="out" 
             title="축소" 
             @click="zoomOut()" 
-            style="margin-right:5px; cursor: zoom-out"
+            style="margin-right:5px; /"
           >
-            <img src="@/assets/image/v_task_zoomout.png" height="15.5px" />
+            <img src="@/assets/image/v_task_zoomout.png" height="16px"  style="top : 2px;"/>
           </a>
 
           <!-- 회전 -->
@@ -40,21 +52,21 @@
             title="회전"
             style="margin-right:5px; top : 0.5px;"
           >
-            <img src="@/assets/image/v_task_rotate.png" height="16.7px"  style="top : 1px;" />
+            <img src="@/assets/image/v_task_rotate.png" height="17.5px"  style="top : 2px;" />
           </a>
 
           <!-- 돋보기 -->
-          <a 
+          <!-- <a 
             class="v_ta_magnifying" 
             @clisk="magnify()"
             title="돋보기" 
             style="margin-right:5px; top : 1.5px"
           >
             <img src="@/assets/image/v_task_magnify.png" height="15px" />
-          </a>
+          </a> -->
 
           <!-- 공유 -->
-          <a
+          <!-- <a
             class="share_modal"
             id="shareBtn"
             @click="openShareModal()"
@@ -62,20 +74,19 @@
             style="margin-right:5px"
           >
             <img src="@/assets/image/v_task_share.png" height="15px" style="top : 1px;"/>
-          </a>
+          </a> -->
 
           <!-- 정보 -->
           <a
-            class="info_modal"
+            class="info-toggle" data-js="info-toggle"
             id="infoBtn"
             @click="openInfoModal()"
             title="정보"
             style="margin-right:5px; top : 0.5px"
           >
-            <img src="@/assets/image/v_task_info.png" height="15.5px" />
+            <img src="@/assets/image/v_task_info.png" height="16px; " />
           </a>
           
-
           <!-- 삭제 -->
           <a 
             class="v_ta_trash" 
@@ -83,14 +94,14 @@
             @click="deleteFile"
              style="margin-right:5px; top : 0.5px"
           >
-            <img src="@/assets/image/v_task_delete.png" height="15px" />
+            <img src="@/assets/image/v_task_delete.png" height="16px;" />
           </a>
 
           <!-- 더보기 -->
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
             <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
-              <img src="@/assets/image/v_task_more.png" height="15px" />
+              <img src="@/assets/image/v_task_more.png" height="16px" />
             </a>
             <div class="dropdown-content" style="float:right;">
               <a
@@ -99,7 +110,7 @@
                 슬라이드쇼
               </a>
               <a class="publicfolder">공유 문서함 추가</a>
-              <a class="publicalbum">공유 앨범 추가</a>
+              <!-- <a class="publicalbum">공유 앨범 추가</a> -->
             </div>
           </div>
           <!-- 더보기 끝 -->
@@ -111,7 +122,7 @@
      <!-- content -->
       <div class="content" id="page"> 
          <div class="image-container" id="imgContainer">
-          <div v-ifelse>
+          <div>
                 <img
                   :src="roadImg(this.idOfImage.content)"
                   class="image" 
@@ -165,6 +176,7 @@
     </div>
     <!-- 이미지 모달 끝 -->
 
+
     <!-- 공유 모달 -->
     <div id="shareModal" class="sharemodal">
       <div class="share-modal-content">
@@ -187,27 +199,56 @@
     <div id="infoModal" class="infomodal">
       <div class="info-modal-content">
         <div class="info-modal-header">
-          <a style="font-size : 16px">정보</a>
+          <a style="font-size : 14px">{{idOfImage.content_origin_name}}</a>
           <span class="closeinfomodal" @click="closeInfoModal()">&times;</span>
         </div>
 
         <div class="info-modal-body">
-          <p style="margin-bottom : 5px;  color : #353535;">파일 정보</p>
+          <!-- <p style="margin-bottom : 5px;  color: #353535;">파일 정보</p> -->
           <div class="info" style="font-size:13px; margin-left : 5px">
-            <span>해상도</span>
-            <a style="font-color : #000">3024 X 3024</a>
+            <!-- <span>해상도</span>
+            <a style="font-color : #000">{{idOfImage.content_origin_name}}</a>
             <br />
             <span>파일크기</span>
+            <a>{{idOfImage.content_size}}</a>
             <br />
             <span style="margin-bottom : 5px">업로드일시</span>
+            <a>{{idOfImage.content_reg_date}}</a> -->
+                <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
+                    <tr >
+                        <td style=" color : #d3d3d3;">파일정보</td>
+                    </tr>
+                    <tr>
+                        <td width = "100px;">해상도</td>
+                        <td>&nbsp;{{idOfImage.content_attribute}}</td>
+                    </tr>
+                    <tr>
+                        <td>파일크기</td>
+                        <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
+                    </tr>
+                    <tr>
+                        <td> 업로드일시</td>
+                        <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
+                    </tr>
+                </table>
+
           </div>
         </div>
 
-        <div class="info-modal-body">
-          <p style="margin-bottom : 5px;  color : #353535;">폴더 경로</p>
-          <div class="info" style="font-size:13px; margin-left : 5px">
-            <a>개인문서함 /.../...</a>
-          </div>
+        <div class="info-modal-body"  style="font-size:13px; margin-left : 5px">
+          <!-- <p style="margin-bottom : 5px;  color : #353535;">폴더 경로</p> -->
+          <!-- <div class="info" style="font-size:13px; margin-left : 5px">
+            <a>{{idOfImage.path}}</a>
+          </div> -->
+         
+              <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
+                      <tr>
+                          <td style=" color : #d3d3d3">폴더 경로</td>
+                      </tr>
+                      <tr>
+                          <td><a herf="">{{idOfImage.path}}</a></td>
+                      </tr>
+              </table>
         </div>
       </div>
     </div>
@@ -262,12 +303,14 @@
 // import VueMagnifier from './test.vue' 
 // import Cropper from '../utils/cropper.js'
 import { mapActions } from "vuex";
+// import ImageMagnifier from "vue-image-magnifier";
 
 export default {
-  el: "#wrap",
+  // el: "#wrap",
+  // el: "#app",
   
   components : {
-    // VueMagnifier
+    // ImageMagnifier
   },
   props : [
     "idOfImage",
@@ -280,8 +323,8 @@ export default {
       // zoomIn:undefined,
       // zoomOut:undefined
 
-      src:'../assets/image/sample.jpg',
-      srcLarge:'../assets/image/sample.jpg',
+      // src:'../assets/image/sample.jpg',
+      // srcLarge:'../assets/image/sample.jpg',
      
       playing: false,
       //   bannerList: [
@@ -303,6 +346,7 @@ export default {
       imageData:"",
       imgList : [],
       // content_id : ""
+      // image : ' this.roadImg(this.idOfImage.content)',
     };
   },
   computed:{
@@ -350,7 +394,6 @@ export default {
       "DELETE_FILE",
     ]),
    
-    //모달
     openImageNav() {
       console.log("이미지모달");
       console.log(this.idOfImage);
@@ -363,6 +406,7 @@ export default {
       document.getElementById("shareModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
       document.webkitExitFullscreen().style.display = "none";
+
     },
     openShareModal() {
       console.log("공유모달");
@@ -464,7 +508,6 @@ export default {
         } 
       });
     },
-
 
     // main paginate
     plusDivs() {
@@ -670,7 +713,8 @@ export default {
   background: rgba(0, 0, 0, 0.8); /*  */
   color: #fff;
   position: fixed;
-  bottom: -200px; /* 접어두기 동작 수행*/
+  /* bottom: -200px; 접어두기 동작 수행 */
+  bottom: 0px;
   left: 0;
   width: 100%;
   height: 110px;
@@ -693,24 +737,22 @@ export default {
   z-index: 600;
   position: absolute;
   bottom: 20px;
-  right: 10px;
+  right: 5px;
   padding: 10px;
   background: rgba(0, 0, 0, 0.6);
   width: 100px;
-  /*   border-radius: 3px; */
   padding: 5px 5px;
   color: #fff;
-  /*   line-height:20px; */
+    /* line-height:20px; */
   font-size: 18px;
   text-align: center;
-  /*   -webkit-font-smoothing: antialiased; */
   cursor: pointer;
+  /* -webkit-font-smoothing: antialiased; */
   /* transition:all 500ms ease; */
 }
 
 #toggle + label:after {
   content: "on";
-  /* background:url('../assets/image/view_next.png'); */
 }
 
 .container {
@@ -719,11 +761,11 @@ export default {
 }
 
 #toggle:checked ~ .toggle-container {
-  bottom: 0px;
+  bottom:-200px;
 }
 
 #toggle:checked ~ .container {
-  margin-bottom: 150px;
+  margin-bottom: 0px;
 }
 
 #toggle:checked + label {
@@ -733,11 +775,14 @@ export default {
 #toggle:checked + label:after {
   /* font-style: italic; */
   content: "off";
+  /* bottom: 0px;  */
+  /* 접어두기 동작 수행 */
   /* background-image:  "@/assets/image/view_slideshow_back.png"; */
 }
 
 #toggle:checked ~ .imgContainer {
   margin-top: 150px;
+  /* 접어두기 동작 수행 */
 }
 
 /* thumb */
@@ -758,9 +803,10 @@ export default {
   z-index: 500; /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 1000%; /* Full width */
+  height: 1000%; /* Full height */
   background-color: rgba(0, 0, 0, 0.4); 
+  
 }
 
 .sharemodal:target:before {
@@ -781,9 +827,8 @@ export default {
   background: #fefefe;
   /* border: #333333 solid 1px; */
   /* border-radius: 5px; */
-  margin-left: -200px;
   position: fixed;
-  left: 50%;
+  left: 40.8%;
   z-index: 11;
   width: 360px;
   -webkit-transform: translate(0, 0);
@@ -804,13 +849,18 @@ export default {
 }
 
 .closesharemodal {
-  color: #353535;
+  color: #666;
   font-size: 25px;
   text-decoration: none;
   position: absolute;
   right: 10px;
   top: 0;
   cursor: pointer;
+}
+
+
+.closesharemodal:hover {
+  color : #000;
 }
 
 .btn_copy {
@@ -860,8 +910,8 @@ export default {
   z-index: 500; /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 1000%; /* Full width */
+  height: 1000%; /* Full height */
   background-color: rgba(0, 0, 0, 0.4); 
 }
 
@@ -883,9 +933,9 @@ export default {
   background: #fefefe;
   /* border: #333333 solid 1px; */
   /* border-radius: 5px; */
-  margin-left: -200px;
   position: fixed;
-  left: 50%;
+  /* left: 40.8%; */
+  left: 40.8%;
   z-index: 11;
   width: 360px;
   -webkit-transform: translate(0, 0);
@@ -906,13 +956,17 @@ export default {
 }
 
 .closeinfomodal {
-  color: #353535;
+  color: #666;
   font-size: 25px;
   text-decoration: none;
   position: absolute;
   right: 10px;
   top: 0;
   cursor: pointer;
+}
+
+.closeinfomodal:hover {
+  color : #000;
 }
 
 .info-modal-header {
@@ -1070,7 +1124,8 @@ export default {
   display: none;
 }
 
-#wrap {
+.slide-in {
+  /* background-color : #333; */
   overflow: hidden;
   width: 160px;
   text-align: center;
@@ -1099,6 +1154,19 @@ export default {
     background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 
 }
 ::-webkit-scrollbar-button { display: none; }
+
+
+
+
+
+/*  */
+
+
+
+
+
+
+
 
 
 </style>

@@ -93,7 +93,6 @@
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="intoFolder(folder.id)"
                 />
                 <div class="info">
                   <span class="title">{{ folder.folder_name }}</span>
@@ -220,9 +219,10 @@
       :actions="fabActions"
       :z-index="zIndex"
       @uploadFile="openFileModal"
+      @uploadFolder="openFolderModal"
     />
     <UploadFileModal @close="closeFileModal" v-if="fileModal" />
-    <!--<UploadFolderModal @close="closeFolderModal" v-if="folderModal" />-->
+    <UploadFolderModal @close="closeFolderModal" v-if="folderModal" />
     <!--
     <quick-menu
       :menu-count="count"
@@ -241,7 +241,7 @@ import NewFolderModal from "./NewFolderModal";
 import ImageViewingModal from "./ImageViewingModal";
 import VideoViewingModal from "./VideoViewingModal";
 import UploadFileModal from "./UploadFileModal";
-//import UploadFolderModal from "./UploadFolderModal";
+import UploadFolderModal from "./UploadFolderModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -252,7 +252,7 @@ export default {
     ImageViewingModal,
     VideoViewingModal,
     UploadFileModal,
-    //UploadFolderModal,
+    UploadFolderModal,
   },
   data() {
     return {
@@ -296,7 +296,6 @@ export default {
       imageList: [],
       fileName: "",
       downloadId: "",
-      intoParent: "",
     };
   },
   created() {
@@ -454,18 +453,12 @@ export default {
       this.videos = true;
       this.noShow = false;
     },
+    intoFolder() {},
     getOnly(target) {
       this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
         // this.targetList = list;
         // console.log("targetList : ", this.targetList);
         console.log("list", list);
-        this.folderList = list;
-      });
-    },
-    intoFolder(intoParent) {
-      console.log("-------------intoParent : ", intoParent);
-      this.intoParent = intoParent;
-      this.GET_FOLDERS({ parent: intoParent }).then((list) => {
         this.folderList = list;
       });
     },
@@ -515,23 +508,23 @@ export default {
     },
     closeModal() {
       this.modal = false;
-      this.intoFolder(this.intoParent);
+      this.getFolders();
     },
     closeFileModal() {
       this.fileModal = false;
-      this.intoFolder(this.intoParent);
+      this.getFolders();
     },
     closeFolderModal() {
       this.folderModal = false;
-      this.intoFolder(this.intoParent);
+      this.getFolders();
     },
     closeImageModal() {
       this.imageModal = false;
-      this.intoFolder(this.intoParent);
+      this.getFolders();
     },
     closeVideoModal() {
       this.videoModal = false;
-      this.intoFolder(this.intoParent);
+      this.getFolders();
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {
@@ -539,7 +532,7 @@ export default {
       } else {
         console.log(this.newFolderName + " : newFolderName");
         this.NEW_FOLDER({
-          parent: this.intoParent,
+          parent: this.parent,
           newFolderName: this.newFolderName,
           userEmail: this.userInfo.useremail,
         })
@@ -547,7 +540,7 @@ export default {
             alert("폴더가 생성되었습니다.");
             this.newFolderName = "";
             this.closeModal();
-            this.intoFolder(this.intoParent);
+            this.getFolders();
           })
           .catch((error) => {
             alert("폴더 생성에 실패했습니다.");
