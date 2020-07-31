@@ -432,7 +432,7 @@ export default {
       let myImg = document.getElementById("img");
       let imgCurrWidth = myImg.clientWidth;
       // let maxWidth = this.imgBox.clientWidth;
-      if (imgCurrWidth < 1000) {
+      if (imgCurrWidth < 2000) {
         myImg.style.width = `${imgCurrWidth + 100}px`;
       } else {
         return false;
@@ -503,7 +503,10 @@ export default {
         console.log(data);
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
-          this.getimage();
+          this.$emit("deleted")
+          // this.idOfimage.content_id();
+          this.imageList.content_id;
+
         } 
       });
     },
@@ -1147,7 +1150,7 @@ export default {
 
 /* SCROLL */
 ::-webkit-scrollbar { width: 10px; height: 10px;}
-::-webkit-scrollbar-track { background-color: #fff; }
+::-webkit-scrollbar-track { background-color: #000; }
 ::-webkit-scrollbar-thumb { 
    border-radius: 20px;
     background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 

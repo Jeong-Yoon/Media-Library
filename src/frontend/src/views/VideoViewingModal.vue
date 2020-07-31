@@ -7,13 +7,13 @@
       <div class="header">
         <!-- 나가기 -->
         <!-- <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a> -->
-          <a class="v_btn_close" id="reset" @click="closeVideoNav()" style="color:#fff; font-size: 15px; z-index :10; ">
+          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; z-index :10;">
             나가기
           </a>
 
         <div class="v_task">
           <!-- 공유 -->
-          <a
+          <!-- <a
             class="share_modal"
             id="shareBtn"
             @click="openShareModal()"
@@ -21,10 +21,10 @@
             style="margin-right:3px"
           >
             <img src="@/assets/image/v_task_share.png" height="15px" />
-          </a>
+          </a> -->
 
           <!-- 정보 -->
-          <a
+          <!-- <a
             class="info_modal"
             id="infoBtn"
             @click="openInfoModal()"
@@ -32,7 +32,7 @@
             style="margin-right:3px; top : 0.5px"
           >
             <img src="@/assets/image/v_task_info.png" height="15.5px" />
-          </a>
+          </a> -->
 
           <!-- 삭제 -->
           <a class="v_ta_trash" @click="aaa" title="휴지통">
