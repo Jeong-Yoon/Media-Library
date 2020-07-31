@@ -634,7 +634,6 @@ export default {
 
   // base 64
     roadImg(data) {
-      console.log("idOfImage", this.idOfImage.content)
       const result = "data:image;base64," + data;
       return result;
     },
