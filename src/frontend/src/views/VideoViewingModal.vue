@@ -11,46 +11,19 @@
             나가기
           </a>
 
+
         <div class="v_task">
-          <!-- 공유 -->
-          <!-- <a
-            class="share_modal"
-            id="shareBtn"
-            @click="openShareModal()"
-            title="공유"
-            style="margin-right:3px"
-          >
-            <img src="@/assets/image/v_task_share.png" height="15px" />
-          </a> -->
-
-          <!-- 정보 -->
-          <!-- <a
-            class="info_modal"
-            id="infoBtn"
-            @click="openInfoModal()"
-            title="정보"
-            style="margin-right:3px; top : 0.5px"
-          >
-            <img src="@/assets/image/v_task_info.png" height="15.5px" />
-          </a> -->
-
+    
           <!-- 삭제 -->
           <a class="v_ta_trash" @click="aaa" title="휴지통">
             <img src="@/assets/image/v_task_delete.png" height="15px" />
           </a>
 
-          <!-- 더보기 -->
-          <div class="dropdown">
-            <!-- <button class="dropbtn">Dropdown</button> -->
-            <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
-              <img src="@/assets/image/v_task_more.png" height="15px" />
-            </a>
-            <div class="dropdown-content" style="float : right;">
-              <a class="publicfolder">공유 문서함 추가</a>
-              <a class="publicalbum">공유 앨범 추가</a>
-            </div>
-          </div>
-          <!-- 더보기 끝 -->
+          <!-- 공유 문서함 추가  -->
+          <a class="v_ta_share_doc" @click="aaa" title="공유문서함">
+            <img src="@/assets/image/v_task_documentshare.png" height="16px"  style="margin-right:3px; top:1px;"/>
+          </a>
+
         </div>
         <!-- v_task 끝 -->
       </div>
@@ -59,179 +32,68 @@
       <!-- content -->
       <div class="content">
         <div class="video-container">
-          <video controls autoplay muted loop :src="this.src" type="video/mp4"></video>
-          <!-- <video width="320" height="240" autoplay="autoplay" controls>
-            <source :src="this.idOfVideo" type="video/mp4">
-          </video> -->
-          <!-- <video  autoplay playsinline :ref="this.idOfVideo" id="video" width="300" height="200"></video>
-          <video id="video" controls muted loop autoplay preload="none" style ="height: 640px">
-            <source src="/api/videos/video/30101" type="video/mp4"/> -->
-            <!-- <source id="mp4" :src="this.idOfVideo" type="video/mp4" />
-            <source
-              id="webm"
-              :src="this.idOfVideo"
-              type="video/webm"
-            />
-            <source id="ogv" :src="this.idOfVideo" type="video/ogg" /> -->
-          <!-- </video> -->
+          <video 
+            controls autoplay muted loop :src="this.src" 
+            type="video/mp4"
+            style ="width :1040px; height : 600px;"
+           >
+          </video>
+            <div class="footer-info">
+              <!-- <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
+              <p class="by-upload">2020.05.01 20:17:56</p>
+              <p class="by-author">By 최지은</p> -->
+               <table border="0">
+                  <tr >
+                      <td class="media-heading">Lorem ipsum dolor asit ame.mp4</td>
+                  </tr>
+                  <tr>
+                      <td class="by-footer">2020.05.01 20:17:56</td> 
+                      <!-- <td class="by-footer">최지은</td> -->
+                  </tr>
+                  <tr>
+                      <td class="by-footer">최지은</td>
+                  </tr>
+     
+              </table>
+            </div>
+
         </div>
+        <!-- video-con -->
 
-          <div class ="side-contanier">
-              <a class="container-title">
-                  <b>다음동영상</b>
-              </a>
 
-              <div class ="video-thumb">
-                <ul class="media-list main-list ypt_thumbs">
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img src="@/assets/image/sample.jpg" height="100px" />
-                    </a>
-                    <div class="media-body">
-                      <!-- 파일명, 업로드일시, 올린사람 -->
-                      <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                      <p class="by-author">2020.05.01 20:17:56</p>
-                      <p class="by-author">By 최지은</p>
-                    </div>
-                  </li>
 
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img src="@/assets/image/sample.jpg" height="100px" />
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                      <p class="by-author">2020.05.01 20:17:56</p>
-                      <p class="by-author">By 최지은</p>
-                    </div>
-                  </li>
+        <div class ="side-contanier">
+            <a class="container-title">
+                다음동영상
+            </a>
 
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img src="@/assets/image/sample.jpg" height="100px" />
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                      <p class="by-author">2020.05.01 20:17:56</p>
-                      <p class="by-author">By 최지은</p>
-                    </div>
-                  </li>
+            <div class ="video-thumb">
+              <ul class="media-list main-list ypt_thumbs">
+                <li class="media">
+                  <a class="pull-left" href="#">
+                    <img src="@/assets/image/sample.jpg" height="100px" />
+                  </a>
+                  <div class="media-body">
+                    <!-- 파일명, 업로드일시, 올린사람 -->
+                    <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
+                    <p class="by-author">2020.05.01 20:17:56</p>
+                    <p class="by-author">By 최지은</p>
+                  </div>
+                </li>
 
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img src="@/assets/image/sample.jpg" height="100px" />
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                      <p class="by-author">2020.05.01 20:17:56</p>
-                      <p class="by-author">By 최지은</p>
-                    </div>
-                  </li>
+            
+              </ul>
+            </div>
 
-                  <li class="media">
-                    <a class="pull-left" href="#">
-                      <img src="@/assets/image/sample.jpg" height="100px" />
-                    </a>
-                    <div class="media-body">
-                      <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                      <p class="by-author">2020.05.01 20:17:56</p>
-                      <p class="by-author">By 최지은</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- thumb-list 끝 -->
+              <!-- video thumb 끝 -->
           </div>
           <!-- side-content 끝 -->
        </div> 
-      <!-- contrent 끝 -->
-
-      <!-- footer -->
-      <!-- <div class="footer">
-        <input type="checkbox" name="toggle" id="toggle" />
-        <label for="toggle"></label>
-
-        <div class="toggle-container"> -->
-          <!-- thumb list -->
-          <!-- <div class="v_photo_list">
-            <ul class="image_list">
-              <li class="image_item">
-                <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
-                  <span class="mask_sel" />
-                </a>
-              </li>
-
-              <li class="image_item">
-                <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
-                  <span class="mask_sel" />
-                </a>
-              </li>
-
-              <li class="image_item">
-                <a>
-                  <img src="https://www.w3schools.com/images/w3schools_green.jpg" />
-                  <span class="mask_sel" />
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div> -->
-        <!-- thumb list-->
-      <!-- </div> -->
-      <!--footer 끝-->
+      <!-- content 끝 -->
     </div>
-    <!-- 큰 모달 끝 -->
+    <!-- 비디오 모달 끝 -->
 
-    <!-- 공유 모달 -->
-    <div id="shareModal" class="sharemodal">
-      <div class="share-modal-content">
-        <div class="share-modal-header">
-          <a style="font-size : 16px">공유 URL 생성</a>
-          <span class="closesharemodal" @click="closeShareModal()">&times;</span>
-        </div>
-
-        <div class="share-modal-body">
-          <button type="button" class="btn_copy" data-dismiss="modal">복사</button>
-          <p>URL 영역</p>
-        </div>
-
-        <div class="share-modal-footer"></div>
-      </div>
-    </div>
-    <!-- 공유 모달 끝 -->
-
-     <!-- 정보 모달 -->
-    <div id="infoModal" class="infomodal">
-      <div class="info-modal-content">
-        <div class="info-modal-header">
-          <a style="font-size : 16px">정보</a>
-          <span class="closeinfomodal" @click="closeInfoModal()">&times;</span>
-        </div>
-
-        <div class="info-modal-body">
-          <p style="margin-bottom : 5px;  color : #353535;">파일 정보</p>
-          <div class="info" style="font-size:13px; margin-left : 5px">
-            <span>해상도</span>
-            <a style="font-color : #000">3024 X 3024</a>
-            <br />
-            <span>파일크기</span>
-            <br />
-            <span style="margin-bottom : 5px">업로드일시</span>
-          </div>
-        </div>
-
-        <div class="info-modal-footer">
-          <p style="margin-bottom : 5px;  color : #353535;">폴더 경로</p>
-          <div class="info" style="font-size:13px; margin-left : 5px">
-            <a>개인문서함 /.../...</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 정보 모달 끝 -->
+   
   </div>
 </template>
 
@@ -269,25 +131,7 @@ export default {
       document.getElementById("infoModal").style.display = "none";
       document.webkitExitFullscreen().style.display = "none";
     },
-    openShareModal() {
-      console.log("공유모달");
-      document.getElementById("shareModal").style.display = "block";
-    },
-    closeShareModal() {
-      console.log("공유모달 닫아");
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-    },
-    openInfoModal() {
-      console.log("정보모달");
-      document.getElementById("infoModal").style.display = "block";
-    },
-    closeInfoModal() {
-      console.log("정보모달 닫아");
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-      document.getElementById("shareModal").style.display = "none";
-    },
+  
   }
 };
 </script>
@@ -315,18 +159,32 @@ export default {
   left : 150px;
 }
 
+.footer-info{
+  position: absolute;
+  display: flex;
+  /* background-color: #e9ecef; */
+  color: #ffffff;
+  font-size: 25px;
+  font-style: bold;
+  justify-content: center;
+  align-items: center;
+  bottom: -70px;
+  left : 10px;
+}
+
+
 /* 다음동영상 */
 .container-title{
   position: absolute;
   display: flex;
   /* background-color: #e9ecef; */
   color: #ffffff;
-  font-size: 18px;
-  font-style: bold;
+  font-size: 16px;
+  /* font-style: bold; */
   justify-content: center;
   align-items: center;
   top: 120px;
-  right : 440px;
+  right : 550px;
 }
 
 .video-thumb {
@@ -336,16 +194,30 @@ export default {
   font-style: bold;
   justify-content: center;
   align-items: center;
-  top: 185px;
-  left : 1300px;
+  top: 175px;
+  left : 1250px;
+  height : 600px;
+  overflow-y: scroll;
+  display: inline-block;
+  white-space:nowrap;
+  margin-right : 150px;
+  /* margin-left : -50px; */
 }
 
 .by-author {
-   font-style: italic;
+  font-style: italic;
   font-size: 14px;
 	line-height: 1.5;
 	color: #aab6aa;
 }
+
+.by-footer {
+  /* font-style: italic; */
+  font-size: 15px;
+	line-height: 1.5;
+	color: #d3d3d3;
+}
+
 
 .media-body {
   font-size : 14px;
@@ -353,8 +225,19 @@ export default {
   float : right;
 }
 
+.footer-info {
+  /* font-size : 14px; */
+  color: #ffffff;
+  font-size: 20px;
+  color : #ffffff;
+  top : 650px;
+  line-height: 1.5;
+}
+
+
+
  .media {
-	padding-bottom: 0.7em;
+	padding-bottom: 0.5em;
 	/* border-bottom: 1px solid #e8e8e8; */
 }
 
@@ -390,249 +273,15 @@ export default {
   margin-bottom: 10px;
 }
 
-/* 공유 모달 */
-.p {
-  margin-bottom: 20px;
+/* SCROLL */
+::-webkit-scrollbar { width: 10px; height: 10px;}
+::-webkit-scrollbar-track { background-color: #000; }
+::-webkit-scrollbar-thumb { 
+   border-radius: 20px;
+    background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 
 }
+::-webkit-scrollbar-button { display: none; }
 
-.sharemodal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 500; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  /* background-color: rgba(0, 0, 0, 0.4);  */
-}
-
-.sharemodal:target:before {
-  display: none;
-}
-.sharemodal:before {
-  content: "";
-  display: block;
-  background: rgba(0, 0, 0, 0.6);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-}
-
-.share-modal-content {
-  background: #fefefe;
-  border: #333333 solid 1px;
-  border-radius: 5px;
-  margin-left: -200px;
-  position: fixed;
-  left: 50%;
-  z-index: 11;
-  width: 360px;
-  -webkit-transform: translate(0, 0);
-  -ms-transform: translate(0, 0);
-  transform: translate(0, 0);
-  -webkit-transition: -webkit-transform 0.3s ease-out;
-  -moz-transition: -moz-transform 0.3s ease-out;
-  -o-transition: -o-transform 0.3s ease-out;
-  transition: transform 0.3s ease-out;
-  top: 20%;
-}
-
-.sharemodal:target .share-modal-content {
-  top: -100%;
-  -webkit-transform: translate(0, -500%);
-  -ms-transform: translate(0, -500%);
-  transform: translate(0, -500%);
-}
-
-.closesharemodal {
-  color: #353535;
-  font-size: 25px;
-  text-decoration: none;
-  position: absolute;
-  right: 10px;
-  top: 0;
-  cursor: pointer;
-}
-
-.btn_copy {
-  background: #474346;
-  border: solid 1px;
-  border-radius: 3px;
-  color: #fff;
-  display: inline-block;
-  font-size: 14px;
-  padding: 8px 15px;
-  text-decoration: none;
-  text-align: center;
-  min-width: 60px;
-  position: relative;
-  transition: color 0.1s ease;
-}
-
-.share-modal-header {
-  text-align: center;
-  float: center;
-  font-size: 20px;
-  padding: 10px;
-  border-bottom: #eeeeee solid 1px;
-}
-
-.share-modal-body {
-  padding: 20px;
-}
-.share-modal-header {
-  padding: 10px 20px;
-}
-
-.share-modal-footer {
-  text-align: right;
-}
-
-/* 정보 모달 */
-.p {
-  margin-bottom: 20px;
-}
-.infomodal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 500; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-}
-
-.infomodal:target:before {
-  display: none;
-}
-.infomodal:before {
-  content: "";
-  display: block;
-  background: rgba(0, 0, 0, 0.6);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-}
-
-.info-modal-content {
-  color: #353535;
-  font-size: 25px;
-  text-decoration: none;
-  position: absolute;
-  right: 10px;
-  top: 0;
-  cursor: pointer;
-}
-
-.infomodal:target .info-modal-content {
-  top: -100%;
-  -webkit-transform: translate(0, -500%);
-  -ms-transform: translate(0, -500%);
-  transform: translate(0, -500%);
-}
-
-.closeinfomodal {
-  color: #aaaaaa;
-  font-size: 30px;
-  text-decoration: none;
-  position: absolute;
-  right: 5px;
-  top: 0;
-  cursor: pointer;
-}
-
-.btn_copy {
-  background: #474346;
-  border: solid 1px;
-  border-radius: 3px;
-  color: #fff;
-  display: inline-block;
-  font-size: 14px;
-  padding: 8px 15px;
-  text-decoration: none;
-  text-align: center;
-  min-width: 60px;
-  position: relative;
-  transition: color 0.1s ease;
-  float: right;
-  bottom: 5px;
-}
-
-.info-modal-header {
-  text-align: center;
-  float: center;
-  font-size: 20px;
-  padding: 10px;
-  border-bottom: #eeeeee solid 1px;
-}
-
-.info-modal-body {
-  padding: 20px;
-  padding: 10px 20px;
-  border-bottom: #eeeeee solid 1px;
-}
-.info-modal-header {
-  padding: 10px 20px;
-}
-
-.info-modal-footer {
-  border-top: #eeeeee solid 1px;
-  padding: 20px;
-  padding: 10px 20px;
-}
-
-/* 드롭다운 */
-.dropbtn {
-  /* background-color: #4CAF50; */
-  position: relative;
-  color: white;
-  padding: 40px;
-  border: none;
-  cursor: pointer;
-  top: 0px;
-}
-
-.dropdown {
-  /* position: relative; */
-  display: inline-block;
-  border-radius: 5px;
-  /* float: right; */
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 150px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  border-radius: 5px;
-  right: 0;
-}
-
-.dropdown-content a {
-  font-size: 12px;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  border-radius: 5px;
-}
-
-.dropdown-content a:hover {
-  background-color: #e9ecef;
-  border-radius: 5px;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
 
 
 </style>
