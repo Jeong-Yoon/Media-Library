@@ -110,13 +110,6 @@ export const getImage = {
   },
 };
 
-// export const getImageList = {
-//   getImageList(parent, imagelist) {
-//     console.log(imagelist + " : api/getimagelist");
-//     return request("post", "/api/images/getimagelist", parent, imagelist);
-//   },
-// };
-
 export const getImageList = {
   getImageList({ folderId }) {
     console.log(folderId + " : api/getimagelist");
@@ -165,6 +158,20 @@ export const getVideo = {
     return request("get", `/api/videos/video/${videoId}`);
   },
 };
+
+export const getVideoList = {
+  getVideoList({ folderId, videoId }){
+    console.log("get video list api : " + folderId + ", " + videoId);
+    return request("post", "/api/videos/videolist", { folderId, videoId }
+      // {
+      //   params : {
+      //     "folderId":folderId, 
+      //     "videoId" : videoId
+      //   } 
+      // }
+    );
+  }
+}
 
 export const deleteFile = {
   deleteFile(content_id) {

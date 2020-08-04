@@ -215,6 +215,7 @@
         />
         <VideoViewingModal
           :idOfVideo="idOfVideo"
+          :videoList="videoList"
           v-if="videoModal"
           @close="closeVideoModal"
         />
@@ -326,6 +327,8 @@ export default {
       "GET_VIDEO",
       "GET_IMAGELIST",
       "DELETE_FILE",
+      "GET_VIDEO_LIST",
+
     ]),
     resetImg() {
       this.idOfImage = "";
@@ -335,10 +338,22 @@ export default {
         document.getElementById("video1").currentTime = 0;
       }
     },
+
+
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
+      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then((result) => {
+        console.log(this.parent);
+        console.log("video list " + result)
+        this.videoList = result;
+      });
       this.openVideoModal();
+      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
+      //   console.log(data);
+      //   this.idOfVideo = data;
+      //   this.openVideoModal();
+      // });
       // this.GET_VIDEO({ videoId: videoId }).then((data) => {
       //   console.log(data);
       //   this.idOfVideo = data;
@@ -440,12 +455,13 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
-    deleted(){
+    deleted(imageId){
       console.log("삭제삭제")
       console.log(this.imageList)
       this.getFolders(this.imageList[0].content_id);
-      this.getImg(this.imageList[0].content_id);
+      this.getImg(imageId);
     },
+
     all() {
       this.folders = true;
       this.images = true;

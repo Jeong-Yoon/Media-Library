@@ -494,23 +494,31 @@ export default {
     // to be ...
 
 
-
-
     // 삭제
       deleteFile() {
       console.log(this.idOfImage.content_id);
+      if(this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id){
+        this.nextImageId = this.imageList[this.imageList.length-2].content_id;
+      } else  {
+        for(var i = 0; i < this.imageList.length-1; i++){
+          if(this.idOfImage.content_id === this.imageList[i].content_id){
+            this.nextImageId = this.imageList[i+1].content_id;
+            break;
+          }
+        }
+      }
       this.DELETE_FILE([this.idOfImage.content_id]).then((data) => {
         console.log(data);
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
-          this.$emit("deleted")
+          this.$emit("getImg", this.nextImageId)
           // this.idOfimage.content_id();
           this.imageList.content_id;
-
         } 
       });
     },
 
+    
     // main paginate
     plusDivs() {
       // console.log("slide_next");

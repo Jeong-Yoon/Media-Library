@@ -15,12 +15,16 @@
         <div class="v_task">
     
           <!-- 삭제 -->
-          <a class="v_ta_trash" @click="aaa" title="휴지통">
+          <a 
+            class="v_ta_trash"
+            @click="deleteFile" 
+            title="휴지통"
+          >
             <img src="@/assets/image/v_task_delete.png" height="15px" />
           </a>
 
           <!-- 공유 문서함 추가  -->
-          <a class="v_ta_share_doc" @click="aaa" title="공유문서함">
+          <a class="v_ta_share_doc" title="공유문서함">
             <img src="@/assets/image/v_task_documentshare.png" height="16px"  style="margin-right:3px; top:1px;"/>
           </a>
 
@@ -38,24 +42,12 @@
             style ="width :1040px; height : 600px;"
            >
           </video>
-            <div class="footer-info">
-              <!-- <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-              <p class="by-upload">2020.05.01 20:17:56</p>
-              <p class="by-author">By 최지은</p> -->
-               <table border="0">
-                  <tr >
-                      <td class="media-heading">Lorem ipsum dolor asit ame.mp4</td>
-                  </tr>
-                  <tr>
-                      <td class="by-footer">2020.05.01 20:17:56</td> 
-                      <!-- <td class="by-footer">최지은</td> -->
-                  </tr>
-                  <tr>
-                      <td class="by-footer">최지은</td>
-                  </tr>
-     
-              </table>
-            </div>
+            <!-- <div class="footer-info"  style="margin-right : 20px;">
+              <h4 class="media-heading"  style="margin-right : 20px;">{{this.idOfVideo}}</h4>
+              <p class="by-upload"  style="margin-right : 20px; ">2020.05.01 20:17:56</p>
+              <p class="by-upload">By 최지은</p>
+            
+            </div> -->
 
         </div>
         <!-- video-con -->
@@ -69,15 +61,24 @@
 
             <div class ="video-thumb">
               <ul class="media-list main-list ypt_thumbs">
-                <li class="media">
-                  <a class="pull-left" href="#">
-                    <img src="@/assets/image/sample.jpg" height="100px" />
-                  </a>
-                  <div class="media-body">
+              
+                <li 
+                  class="media"
+                  v-for="list in videoList"
+                  v-bind:key="list.content_id"
+                >
+                    <img
+                      :src="roadImg(list.content)"
+                      @click="getVideoId(list.content_id)"
+                      height="100px"
+                      
+                    />
+                  
+                    <div class="media-body" style="margin-right : 10px;"> 
                     <!-- 파일명, 업로드일시, 올린사람 -->
-                    <h4 class="media-heading">Lorem ipsum dolor asit ame.mp4</h4>
-                    <p class="by-author">2020.05.01 20:17:56</p>
-                    <p class="by-author">By 최지은</p>
+                    <h4 class="media-heading">{{idOfVideo.content_origin_name }}</h4>
+                    <p class="by-author">{{videoList.content_reg_date}}</p>
+                    <p class="by-author">{{videoList.content_reg_user}}</p>
                   </div>
                 </li>
 
@@ -102,35 +103,54 @@
 export default {
   props : [
     "idOfVideo",
+    "videoList",
   ],
-  data() {
+   data() {
     return {
         video: {},
         // MediaTrackConstraints를 변수로 정의
         mediaContraint: {
             video: true
         },
-        scr:""
+        scr:"",
+        vList:"",
+        videoId :""
     };
   },
   created() {
-    this.src = "/api/videos/video/" + this.idOfVideo;
+    this.videoId = this.idOfVideo;
+    this.src = "/api/videos/video/" + this.videoId;
+    this.vList = this.videoList;
+    console.log(this.videoList)
   },
   methods: {
     //모달
+    getVideoId(id){
+      this.videoId = id;
+      this.src = "/api/videos/video/" + this.videoId;
+    },
     openVideoNav() {
       console.log("동영상모달열어!");
       document.getElementById("video_nav").style.display = "block";
       // this.openshareModal = [];
       // event.target.reset();
     },
-    closeVideoNav() {
+    close() {
       console.log("동영상모달닫아!");
       document.getElementById("video_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
       document.webkitExitFullscreen().style.display = "none";
     },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      return result;
+    },
+
+
+
+    // 삭제
+  
   
   }
 };
@@ -204,41 +224,42 @@ export default {
   /* margin-left : -50px; */
 }
 
-.by-author {
-  font-style: italic;
-  font-size: 14px;
-	line-height: 1.5;
-	color: #aab6aa;
-}
 
-.by-footer {
+.by-upload {
   /* font-style: italic; */
   font-size: 15px;
-	line-height: 1.5;
-	color: #d3d3d3;
+   line-height: 1.5;
+   /* color: #d3d3d3; */
+  color : #fff;
 }
 
 
 .media-body {
   font-size : 14px;
-  color : #ffffff;
+  color : #d3d3d3;
   float : right;
+}
+
+.by-author {
+  /* font-style: italic; */
+  font-size: 14px;
+   line-height: 1.5;
+   color: #d3d3d3;
+  /* color : #fff; */
+  line-height: 1.5;
 }
 
 .footer-info {
   /* font-size : 14px; */
-  color: #ffffff;
   font-size: 20px;
   color : #ffffff;
-  top : 650px;
+  /* top : 650px; */
   line-height: 1.5;
 }
 
-
-
  .media {
-	padding-bottom: 0.5em;
-	/* border-bottom: 1px solid #e8e8e8; */
+   padding-bottom: 0.5em;
+   /* border-bottom: 1px solid #e8e8e8; */
 }
 
 

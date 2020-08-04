@@ -75,6 +75,13 @@ const actions = {
       videoId,
     });
   },
+  GET_VIDEO_LIST(_,{ folderId, videoId }){
+    console.log('video list action : ' + folderId + ', ' + videoId);
+    return api.getVideoList.getVideoList({
+      folderId,
+      videoId
+    })
+  },
   UPLOAD_FILE(_, formData) {
     return api.uploadFile.uploadFile(formData);
     // .then(() => {
