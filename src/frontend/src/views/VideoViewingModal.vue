@@ -17,7 +17,6 @@
           <!-- 삭제 -->
           <a 
             class="v_ta_trash"
-            @click="deleteFile" 
             title="휴지통"
           >
             <img src="@/assets/image/v_task_delete.png" height="15px" />
@@ -35,9 +34,10 @@
 
       <!-- content -->
       <div class="content">
-        <div class="video-container">
+        <div class="video-container" id="video-div">
           <video 
-            controls autoplay muted loop :src="this.src" 
+            id="video"
+            controls autoplay muted loop :src="src" 
             type="video/mp4"
             style ="width :1040px; height : 600px;"
            >
@@ -64,21 +64,20 @@
               
                 <li 
                   class="media"
-                  v-for="list in videoList"
+                  v-for="list in this.videoList"
                   v-bind:key="list.content_id"
                 >
                     <img
                       :src="roadImg(list.content)"
                       @click="getVideoId(list.content_id)"
                       height="100px"
-                      
                     />
-                  
+                    {{ list.content_id }}
                     <div class="media-body" style="margin-right : 10px;"> 
                     <!-- 파일명, 업로드일시, 올린사람 -->
                     <h4 class="media-heading">{{idOfVideo.content_origin_name }}</h4>
-                    <p class="by-author">{{videoList.content_reg_date}}</p>
-                    <p class="by-author">{{videoList.content_reg_user}}</p>
+                    <p class="by-author">{{list.content_reg_date}}</p>
+                    <p class="by-author">{{list.content_reg_user}}</p>
                   </div>
                 </li>
 
@@ -126,8 +125,19 @@ export default {
   methods: {
     //모달
     getVideoId(id){
+      console.log(id + ' get video method')
       this.videoId = id;
-      this.src = "/api/videos/video/" + this.videoId;
+      console.log(this.videoId + ' get video method')
+      this.src ="/api/videos/video/" + this.videoId;
+      var v1 = document.getElementById("video-div");
+      // v1.parentNode.replaceChild(p);
+      var p = '<video id="video"'
+            + 'controls autoplay muted loop src="'+this.src+'"' 
+            + ' type="video/mp4"'
+            + 'style ="width :1040px; height : 600px;"'
+           + '> </video>';
+      v1.innerHTML = p;
+      // v1.  = p
     },
     openVideoNav() {
       console.log("동영상모달열어!");
