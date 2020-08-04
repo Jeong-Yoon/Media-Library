@@ -54,12 +54,11 @@ public class ContentController {
 	private ContentService contentService;
 	
 	@GetMapping("/{folder_id}")
-	public ResponseEntity<List<ContentVO>> getContentList(@PathVariable("folder_id")Long folderId){
-		List<ContentVO> fileList = contentService.getContentList(folderId);
+	public ResponseEntity<List<ContentVO>> getImageList(@PathVariable("folder_id")Long folderId){
+		List<ContentVO> fileList = contentService.getImageList(folderId);
 		return new ResponseEntity<>(fileList, HttpStatus.OK);	
 	}
-	
-	
+
 	@PostMapping("/upload")
 //	public FileUploadResponse uploadContent(@RequestParam("file") MultipartFile file){
 	public ResponseEntity<?> uploadContent(ContentDTO contentDTO){
@@ -226,6 +225,7 @@ public class ContentController {
 		return new HttpEntity<byte[]>(content, header);
 	}
 	
+	// content_detail 가져가기 -> 동영상에서 사용할 듯.
 	@GetMapping("/content/{content_id}")
 	public void getContentDetail(@PathVariable("content_id")Long contentId) {
 		contentService.getContentDetail(contentId);

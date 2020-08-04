@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Paths;
+import java.util.List;
 
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -27,7 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inzent.medialibrary.dto.ContentIdDTO;
+import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.VideoListDTO;
 import com.inzent.medialibrary.service.ContentService;
 
 @RestController
@@ -114,6 +119,17 @@ public class VideoController {
         model.addAttribute("videoName", videoName);
         return "video";
     }
+	
+    @PostMapping("/videolist")
+	public ResponseEntity<List<ImageDTO>> getVideoList(@RequestBody VideoListDTO videoListDTO) throws IOException, JCodecException {
+//				@RequestParam(value = "folderId", required = false) Long folderId, 
+//				@RequestParam(value = "videoId", required = false) Long videoId
+//			) throws IOException, JCodecException{
+    		System.out.println("get video list============" + videoListDTO.getFolderId() + " , " + videoListDTO.getVideoId());
+    		List<ImageDTO> list = contentService.getVideoList(videoListDTO);
+    		System.out.println(list.get(0).getContent_origin_name());
+    		return new ResponseEntity<List<ImageDTO>>(list, HttpStatus.OK);
+    	}
     
 //    @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
 //    @GetMapping("/video/{videoId}")

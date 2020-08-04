@@ -16,6 +16,7 @@ import com.inzent.medialibrary.dto.ImageListDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
+import com.inzent.medialibrary.dto.VideoListDTO;
 
 @Repository
 public class ContentDAO {
@@ -23,8 +24,8 @@ public class ContentDAO {
 	@Autowired
 	private SqlSession sqlSession;
 
-	public List<ContentVO> getContentList(Long folderId) {
-		return sqlSession.selectList("getcontentlistbyfolderid",folderId);
+	public List<ContentVO> getImageList(Long folderId) {
+		return sqlSession.selectList("getimagelistbyfolderid",folderId);
 	}
 
 	public int uploadContent(UploadContentDTO ucDTO) {
@@ -56,7 +57,7 @@ public class ContentDAO {
 
 	public int deleteContent(List<Long> contentIdList) {
 		System.out.println(contentIdList.size() + " : delete dao");
-		return sqlSession.update("deletecontentlist", contentIdList);
+		return sqlSession.update("deleteitems", contentIdList);
 	}
 
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO) {
@@ -65,6 +66,10 @@ public class ContentDAO {
 
 	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) {
 		Long folderId = folderIdDTO.getFolderId();
-		return sqlSession.selectList("getcontentlistbyfolderid", folderId);
+		return sqlSession.selectList("getimagelistbyfolderid", folderId);
+	}
+
+	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) {
+		return sqlSession.selectList("getvideolistbyfolderid", videoListDTO);
 	}
 }

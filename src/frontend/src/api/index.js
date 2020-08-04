@@ -166,12 +166,33 @@ export const getVideo = {
   },
 };
 
+export const getVideoList = {
+  getVideoList({ folderId, videoId }){
+    console.log("get video list api : " + folderId + ", " + videoId);
+    return request("post", "/api/videos/videolist", { folderId, videoId }
+      // {
+      //   params : {
+      //     "folderId":folderId, 
+      //     "videoId" : videoId
+      //   } 
+      // }
+    );
+  }
+}
+
 export const deleteFile = {
   deleteFile(content_id) {
     console.log("api / deleteFile", content_id);
     return request("delete", "/api/contents", content_id);
   },
 };
+
+export const deleteFolder = {
+  deleteFolder(folder_ids){
+    console.log("api / deleteFolder", folder_ids);
+    return request("delete", "/api/folders", folder_ids);
+  }
+}
 
 export const getItems = {
   getItems({ email }) {
@@ -193,6 +214,13 @@ export const restoreItems = {
     return request("post", "/api/garbages/restore", ids);
   },
 };
+
+export const getShareItems ={
+  getShareItems(){
+    console.log("api / share");
+    return request("get", "/api/folders/getshareitems")
+  }
+}
 // export const getVideo = {
 //   getVideo({videoId}){
 //     return request("post", "/api/videos/full", {content_id : videoId});

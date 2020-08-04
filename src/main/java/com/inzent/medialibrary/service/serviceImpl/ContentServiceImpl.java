@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +28,11 @@ import com.inzent.medialibrary.dto.ImageListDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
+import com.inzent.medialibrary.dto.VideoListDTO;
 import com.inzent.medialibrary.repository.ContentDAO;
 import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.service.ContentService;
+import com.inzent.medialibrary.utils.GetThumbnail;
 import com.inzent.medialibrary.utils.MakeDir;
 
 @Service
@@ -41,8 +44,8 @@ public class ContentServiceImpl implements ContentService {
 	private UserDAO userDAO;
 	
 	@Override
-	public List<ContentVO> getContentList(Long folderId) {
-		return contentDAO.getContentList(folderId);
+	public List<ContentVO> getImageList(Long folderId) {
+		return contentDAO.getImageList(folderId);
 	}
 
 	@Override
@@ -159,6 +162,16 @@ public class ContentServiceImpl implements ContentService {
 					e.printStackTrace();
 				}
 			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) throws IOException, JCodecException {
+		List<ImageDTO> list = contentDAO.getVideoList(videoListDTO);
+		for(ImageDTO i : list) {
+			File file = new File(i.getContent_storage());
+			i.setContent(GetThumbnail.getThumbnail(file));
 		}
 		return list;
 	}
