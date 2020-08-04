@@ -495,8 +495,6 @@ export default {
     // to be ...
 
 
-
-
     // 삭제
       deleteFile() {
       console.log(this.idOfImage.content_id);
@@ -521,6 +519,7 @@ export default {
       });
     },
 
+    
     // main paginate
     plusDivs() {
       // console.log("slide_next");

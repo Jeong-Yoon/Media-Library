@@ -338,6 +338,8 @@ export default {
         document.getElementById("video1").currentTime = 0;
       }
     },
+
+
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
@@ -347,6 +349,11 @@ export default {
         this.videoList = result;
       });
       this.openVideoModal();
+      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
+      //   console.log(data);
+      //   this.idOfVideo = data;
+      //   this.openVideoModal();
+      // });
       // this.GET_VIDEO({ videoId: videoId }).then((data) => {
       //   console.log(data);
       //   this.idOfVideo = data;
@@ -468,6 +475,7 @@ export default {
       this.getFolders(this.imageList[0].content_id);
       this.getImg(imageId);
     },
+
     all() {
       this.folders = true;
       this.images = true;
