@@ -66,22 +66,29 @@
                   class="media"
                   v-for="list in this.videoList"
                   v-bind:key="list.content_id"
+                  style="margin-bottom : 11px;"
                 >
                     <img
                       :src="roadImg(list.content)"
                       @click="getVideoId(list.content_id)"
-                      height="100px"
+                      style="                             
+                              height:100px;
+                              width : 180px;
+                              max-width : 240px;
+                              object-fit:contain;
+                              background-color : #fff; 
+                            "
                     />
-                    {{ list.content_id }}
-                    <div class="media-body" style="margin-right : 10px;"> 
-                    <!-- 파일명, 업로드일시, 올린사람 -->
-                    <h4 class="media-heading">{{idOfVideo.content_origin_name }}</h4>
-                    <p class="by-author">{{list.content_reg_date}}</p>
-                    <p class="by-author">{{list.content_reg_user}}</p>
-                  </div>
-                </li>
 
-            
+                    <!-- {{ list.content_id }} -->
+                    <div class="media-body" > 
+                    <!-- 파일명, 업로드일시, 올린사람 -->
+                    <h4 class="media-heading">{{list.content_origin_name }}</h4>
+                    <p class="by-author">{{list.content_reg_date}} </p>
+                    <p class="by-author">{{list.content_reg_user}} </p>
+                  </div>
+
+                </li>
               </ul>
             </div>
 
@@ -207,14 +214,18 @@ export default {
 .container-title{
   position: absolute;
   display: flex;
-  /* background-color: #e9ecef; */
-  color: #ffffff;
-  font-size: 16px;
-  /* font-style: bold; */
+  font-size: 18px;
+  font-style: bold;
   justify-content: center;
   align-items: center;
   top: 120px;
-  right : 550px;
+  left : 1240px;
+  height : 600px;
+  overflow-y: scroll;
+  display: inline-block;
+  white-space:nowrap;
+  margin-right : 150px;
+  /* margin-left : -50px; */
 }
 
 .video-thumb {
@@ -224,13 +235,12 @@ export default {
   font-style: bold;
   justify-content: center;
   align-items: center;
-  top: 175px;
+  top: 180px;
   left : 1250px;
   height : 600px;
   overflow-y: scroll;
   display: inline-block;
   white-space:nowrap;
-  margin-right : 150px;
   /* margin-left : -50px; */
 }
 
@@ -248,6 +258,8 @@ export default {
   font-size : 14px;
   color : #d3d3d3;
   float : right;
+  margin-left : 20px;
+  /* margin-right: ; */
 }
 
 .by-author {
@@ -259,6 +271,7 @@ export default {
   line-height: 1.5;
 }
 
+
 .footer-info {
   /* font-size : 14px; */
   font-size: 20px;
@@ -269,6 +282,7 @@ export default {
 
  .media {
    padding-bottom: 0.5em;
+   overflow: hidden;
    /* border-bottom: 1px solid #e8e8e8; */
 }
 
@@ -298,7 +312,9 @@ export default {
   cursor: pointer;
 }
 
-.ul, li {
+
+
+.li, .ul {
   list-style: none;
   float: left;
   margin-bottom: 10px;
@@ -309,7 +325,8 @@ export default {
 ::-webkit-scrollbar-track { background-color: #000; }
 ::-webkit-scrollbar-thumb { 
    border-radius: 20px;
-    background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 
+    /* background: linear-gradient(to bottom, #a6c4c7, #a6c4c7);  */
+    background: linear-gradient(to bottom, #000, #000); 
 }
 ::-webkit-scrollbar-button { display: none; }
 
