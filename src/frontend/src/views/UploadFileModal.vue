@@ -62,6 +62,7 @@
 import { mapActions, mapState } from "vuex";
 
 export default {
+  props: ["intoParent"],
   components: {},
   data() {
     return {
@@ -81,17 +82,18 @@ export default {
   methods: {
     ...mapActions(["UPLOAD_FILE"]),
     selectFile() {
-      console.log("select File 함수");
+      //console.log("select File 함수");
       this.attachFiles = this.$refs.fileTag.files;
-      console.log("selectFile << file >> : ", this.$refs.fileTag.files);
+      //console.log("selectFile << file >> : ", this.$refs.fileTag.files);
     },
     onSubmit() {
+      console.log("--------------------upload start------------------");
       if (this.attachFiles.length == 0) {
         alert("파일을 업로드 해주세요.");
       } else {
         let formData = new FormData();
         formData.append("regUser", this.regUser.useremail);
-        formData.append("folder", this.folder);
+        formData.append("folder", this.$route.params.id);
         if (this.attachFiles.length !== 0) {
           for (var i = 0, file; (file = this.attachFiles[i]); i++) {
             console.log(this.attachFiles[i]);
@@ -102,7 +104,7 @@ export default {
           .then(() => {
             alert("파일이 업로드 되었습니다.");
             this.$emit("close");
-            this.$router.push("/").catch(() => {});
+            //this.$router.push("/").catch(() => {});
             //this.$router.replace("/");
             //this.$route.fullPath("/");
           })
@@ -110,9 +112,10 @@ export default {
             this.error = res.data;
             alert("파일 업로드에 실패하셨습니다.");
             this.$emit("close");
-            this.$router.push("/").catch(() => {});
+            //this.$router.push("/").catch(() => {});
           });
       }
+      console.log("--------------------upload end------------------");
     },
     closeFileModal() {
       this.fileModal = false;

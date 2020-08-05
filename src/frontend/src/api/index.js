@@ -14,7 +14,7 @@ const request = (method, url, data) => {
     data,
   })
     .then((res) => {
-      console.log(res);
+      //console.log(res);
       return res.data;
     })
     .catch((result) => {
@@ -163,6 +163,13 @@ export const getVideo = {
   getVideo({ videoId }) {
     console.log("api : " + videoId);
     return request("get", `/api/videos/video/${videoId}`);
+  },
+};
+
+export const getVideoList = {
+  getVideoList({ folderId }) {
+    console.log("get video list api : " + folderId);
+    return request("get", `/api/videos/videolist/${folderId}`);
   },
 };
 

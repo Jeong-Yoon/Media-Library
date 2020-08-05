@@ -88,12 +88,14 @@
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
-                <img
-                  src="@/assets/image/folder.png"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                />
+                <router-link :to="`/ownDocumentBox/${folder.id}`">
+                  <img
+                    src="@/assets/image/folder.png"
+                    width="130"
+                    height="130"
+                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  />
+                </router-link>
                 <div class="info">
                   <span class="title">{{ folder.folder_name }}</span>
                 </div>
@@ -142,12 +144,10 @@
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
-                <video
-                  :src="folder.content"
+                <img
+                  :src="roadImg(folder.content)"
                   width="130"
                   height="130"
-                  preload="metadata"
-                  id="video1"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
                 />
@@ -219,10 +219,8 @@
       :actions="fabActions"
       :z-index="zIndex"
       @uploadFile="openFileModal"
-      @uploadFolder="openFolderModal"
     />
-    <UploadFileModal @close="closeFileModal" v-if="fileModal" />
-    <UploadFolderModal @close="closeFolderModal" v-if="folderModal" />
+    <UploadFileModal @close="closeFileModal()" v-if="fileModal" />
     <!--
     <quick-menu
       :menu-count="count"
@@ -241,7 +239,7 @@ import NewFolderModal from "./NewFolderModal";
 import ImageViewingModal from "./ImageViewingModal";
 import VideoViewingModal from "./VideoViewingModal";
 import UploadFileModal from "./UploadFileModal";
-import UploadFolderModal from "./UploadFolderModal";
+//import UploadFolderModal from "./UploadFolderModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -252,7 +250,7 @@ export default {
     ImageViewingModal,
     VideoViewingModal,
     UploadFileModal,
-    UploadFolderModal,
+    //UploadFolderModal,
   },
   data() {
     return {
@@ -270,10 +268,6 @@ export default {
         {
           name: "uploadFile",
           icon: "insert_drive_file",
-        },
-        {
-          name: "uploadFolder",
-          icon: "folder",
         },
       ],
       zIndex: 50,
@@ -296,10 +290,17 @@ export default {
       imageList: [],
       fileName: "",
       downloadId: "",
+      intoParent: "",
+      videoList: [],
     };
   },
   created() {
+    console.log("------create------");
     this.getFolders();
+  },
+  watch: {
+    // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다
+    $route: "getFolders",
   },
   computed: {
     ...mapState({
@@ -317,6 +318,7 @@ export default {
       "GET_VIDEO",
       "GET_IMAGELIST",
       "DELETE_FILE",
+      "GET_VIDEO_LIST",
     ]),
     resetImg() {
       this.idOfImage = "";
@@ -328,11 +330,18 @@ export default {
     },
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
-      this.GET_VIDEO({ videoId: videoId }).then((data) => {
-        console.log(data);
-        this.idOfVideo = data;
-        this.openVideoModal();
+      this.idOfVideo = videoId;
+      this.GET_VIDEO_LIST({ folderId: this.parent }).then((result) => {
+        //console.log(this.parent);
+        //console.log(result[0].content_id + " : video list");
+        this.videoList = result;
       });
+      this.openVideoModal();
+      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
+      //   console.log(data);
+      //   this.idOfVideo = data;
+      //   this.openVideoModal();
+      // });
     },
     deleteFile() {
       console.log(this.ids);
@@ -341,11 +350,11 @@ export default {
         if (data == 1) {
           alert("삭제된 파일이 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders();
+          this.getFolders(this.intoParent);
         } else {
           alert("파일 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.getFolders(this.intoParent);
         }
       });
     },
@@ -413,12 +422,12 @@ export default {
     getImg(imageId) {
       console.log("getImg...", imageId);
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
-        console.log(data);
+        //console.log(data);
         this.idOfImage = data;
       });
       this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
-        console.log(this.parent);
-        console.log(result[0].content_id + " : image list");
+        //console.log(this.parent);
+        //console.log(result[0].content_id + " : image list");
         this.imageList = result;
       });
       this.openImageModal();
@@ -453,7 +462,16 @@ export default {
       this.videos = true;
       this.noShow = false;
     },
-    intoFolder() {},
+    intoFolder(intoParent) {
+      console.log("--------into the folder start--------");
+      this.intoParent = intoParent;
+      console.log(this.intoParent);
+      this.GET_FOLDERS({ parent: intoParent }).then((list) => {
+        //console.log("intoParent List : ", list);
+        this.folderList = list;
+      });
+      console.log("--------into the folder end--------");
+    },
     getOnly(target) {
       this.GET_ONLY({ parent: this.parent, target: target }).then((list) => {
         // this.targetList = list;
@@ -463,11 +481,19 @@ export default {
       });
     },
     getFolders() {
-      this.GET_FOLDERS({ parent: this.parent }).then((list) => {
+      let id = this.parent;
+      if (this.$route.params.id) {
+        id = this.$route.params.id;
+      }
+      console.log("---------------------get folders start ----------------");
+      console.log("id : ", id);
+
+      this.GET_FOLDERS({ parent: id }).then((list) => {
         console.log("ownpage list : " + list[0]);
         this.folderList = list;
         console.log("ownpage folderlist : " + this.folderList);
       });
+      console.log("---------------------get folders start----------------");
     },
     selectAll: function() {
       this.ids = [];
@@ -508,23 +534,23 @@ export default {
     },
     closeModal() {
       this.modal = false;
-      this.getFolders();
+      this.getFolders(this.intoParent);
     },
     closeFileModal() {
       this.fileModal = false;
-      this.getFolders();
+      this.intoFolder(this.$route.params.id);
     },
     closeFolderModal() {
       this.folderModal = false;
-      this.getFolders();
+      this.getFolders(this.intoParent);
     },
     closeImageModal() {
       this.imageModal = false;
-      this.getFolders();
+      this.getFolders(this.intoParent);
     },
     closeVideoModal() {
       this.videoModal = false;
-      this.getFolders();
+      this.getFolders(this.intoParent);
     },
     doNewFolder() {
       if (this.newFolderName.length < 0) {
@@ -532,7 +558,7 @@ export default {
       } else {
         console.log(this.newFolderName + " : newFolderName");
         this.NEW_FOLDER({
-          parent: this.parent,
+          parent: this.intoParent,
           newFolderName: this.newFolderName,
           userEmail: this.userInfo.useremail,
         })
@@ -540,14 +566,14 @@ export default {
             alert("폴더가 생성되었습니다.");
             this.newFolderName = "";
             this.closeModal();
-            this.getFolders();
+            this.getFolders(this.$route.params.id);
           })
           .catch((error) => {
             alert("폴더 생성에 실패했습니다.");
             this.error = error.data.error;
             this.newFolderName = "";
             this.closeModal();
-            this.getFolders();
+            this.getFolders(this.$route.params.id);
           });
       }
     },

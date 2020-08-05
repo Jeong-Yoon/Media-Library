@@ -9,7 +9,7 @@ const requireAuth = () => (to, from, next) => {
   if (store.state.token === "") {
     return next("/login");
   }
-  console.log(store.state.token);
+  //console.log(store.state.token);
   store.getters.isAuth ? next() : next(loginPath);
 };
 
@@ -35,7 +35,12 @@ const routes = [
     component: () => import("@/views/SignupPage.vue"),
   },
   {
-    path: "/ownDocumentBox/:parent",
+    path: "/ownDocumentBox",
+    name: "ownDocumentBox",
+    component: () => import("@/views/OwnPage.vue"),
+  },
+  {
+    path: "/ownDocumentBox/:id",
     name: "ownDocumentBox",
     component: () => import("@/views/OwnPage.vue"),
   },

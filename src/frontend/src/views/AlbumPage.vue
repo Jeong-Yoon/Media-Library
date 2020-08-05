@@ -8,8 +8,7 @@
             <label for="a1"></label>
           </div>
         </div>
-        <button class="b3">사진</button>
-        <button class="b4">동영상</button>
+        <button class="b1">새앨범</button>
         <!--
         <form class="search">
           <select id="key" name="keyword" class="key">
@@ -38,13 +37,13 @@
 
       <div class="bottom-content">
         <ul class="list_thumb">
-          <li class="li" title="june.jpg">
+          <li class="li" title="2020">
             <label for>
               <div class="thumb">
-                <span class="file">
+                <span class="folder">
                   <img
-                    src="@/assets/image/june.jpg"
-                    alt="june.jpg"
+                    src="@/assets/image/album.png"
+                    alt="folder.png"
                     width="150"
                     height="150"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
@@ -52,7 +51,7 @@
                 </span>
               </div>
               <div class="info">
-                <span class="title">쭈니.jpg</span>
+                <span class="title">2020</span>
               </div>
             </label>
           </li>

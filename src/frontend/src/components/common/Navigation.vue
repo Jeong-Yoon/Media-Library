@@ -8,7 +8,7 @@
             <p class="p2">{{ total }}GB</p>
             <div id="progress">
               <k-progress
-                :percent="percent"
+                :percent="this.percent"
                 active
                 :color="['#E3E2E1', '#DEE8EB', '#A6C4C7', '#A49988']"
                 :show-text="false"
@@ -20,23 +20,36 @@
           <hr class="top" />
           <div class="document">
             <perfect-scrollbar>
-              <li>
+              <li
+                v-for="item in items"
+                @click="choose(item)"
+                :class="{ active: item == selected }"
+                :key="item.id"
+              >
+                <router-link :to="`${item.link}`" class="a">
+                  <h3>{{ item.title }}</h3>
+                </router-link>
+                <hr class="middle2" />
+              </li>
+              <!--
+              <li  :class="{ active: own == selected }">
                 <router-link to="/ownDocumentBox" class="a">
                   <h3>개인 문서함</h3>
                 </router-link>
               </li>
               <hr class="middle1" />
-              <li>
+              <li  :class="{ active: share == selected }">
                 <router-link to="/shareDocumentBox" class="a">
                   <h3>공유 문서함</h3>
                 </router-link>
               </li>
               <hr class="middle2" />
-              <li>
+              <li @click="choose(album)" :class="{ active: album == selected }">
                 <router-link to="/albumDocumentBox" class="a">
                   <h3>앨범</h3>
                 </router-link>
               </li>
+              -->
             </perfect-scrollbar>
           </div>
           <hr class="bottom" />
@@ -67,8 +80,14 @@ export default {
     return {
       use: "",
       total: "",
-      percent: "",
+      percent: 0,
       spare_capacity: "",
+      items: [
+        { id: 1, title: "개인 문서함", link: "/ownDocumentBox" },
+        { id: 2, title: "공유 문서함", link: "/shareDocumentBox" },
+        { id: 3, title: "앨범", link: "/albumDocumentBox" },
+      ],
+      selected: null,
     };
   },
   created() {
@@ -83,13 +102,16 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CAPACITY"]),
+    choose: function(index) {
+      this.selected = index;
+    },
     getcapacity() {
       //console.log("method", this.userInfo.useremail);
       this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
         //console.log(list);
         this.total = Math.floor(list.total_capacity / 1000000000);
-        this.use = Math.floor(list.use_capacity / 1000000000);
-        this.percent = parseInt((this.use / this.total) * 100);
+        this.use = Math.floor(list.use_capacity / 10000000);
+        this.percent = Math.floor((this.use / this.total) * 100);
         this.spare_capacity = this.total - this.use;
         /*console.log(
           "total : ",
@@ -109,6 +131,10 @@ export default {
 </script>
 
 <style scoped>
+.active h3 {
+  color: #a6c4c7;
+  text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
+}
 li {
   padding-left: 25px;
   padding-right: 15px;
@@ -120,7 +146,7 @@ img:hover {
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
 }
 h3:hover {
-  color: #a6c4c7;
+  color: #dee8eb;
   text-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
 }
 #main.fix-sidebar .sidebar {
@@ -211,9 +237,6 @@ user agent stylesheet div {
 .middle2 {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-left: 25px;
-  margin-right: 15px;
-  width: 170px;
   border: 1px solid #e3e2e1;
 }
 .bottom {
