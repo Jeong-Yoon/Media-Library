@@ -58,4 +58,9 @@ public class FolderServiceImpl implements FolderService{
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO) {
 		return folderDAO.selectTarget(selectTargetDTO.getParent());
 	}
+
+	@Override
+	public List<String> getShareItems() {
+		return folderDAO.getShareItems();
+	}
 }

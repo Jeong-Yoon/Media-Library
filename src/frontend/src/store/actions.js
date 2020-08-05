@@ -75,10 +75,11 @@ const actions = {
       videoId,
     });
   },
-  GET_VIDEO_LIST(_, { folderId }) {
-    console.log("video list action : " + folderId);
+  GET_VIDEO_LIST(_, { folderId, videoId }) {
+    console.log("video list action : " + folderId + ", " + videoId);
     return api.getVideoList.getVideoList({
       folderId,
+      videoId,
     });
   },
   UPLOAD_FILE(_, formData) {
@@ -96,6 +97,10 @@ const actions = {
     console.log("DELETE_FILE / action : ", content_id);
     return api.deleteFile.deleteFile(content_id);
   },
+  DELETE_FOLDERS(_, folder_ids) {
+    console.log("DELETE_FOLDER / action : ", folder_ids);
+    return api.deleteFolder.deleteFolder(folder_ids);
+  },
   GET_ITEMS(_, { email }) {
     console.log("action / getItems : ", { email });
     return api.getItems.getItems({ email });
@@ -107,6 +112,10 @@ const actions = {
   RESTORE_ITEMS(_, ids) {
     console.log("action / restoreItems : ", ids);
     return api.restoreItems.restoreItems(ids);
+  },
+  GET_SHARE_ITEMS() {
+    console.log("share actions");
+    return api.getShareItems.getShareItems();
   },
 };
 

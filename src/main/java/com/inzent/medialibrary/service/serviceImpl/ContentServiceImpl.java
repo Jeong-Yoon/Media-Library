@@ -1,5 +1,6 @@
 package com.inzent.medialibrary.service.serviceImpl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +28,11 @@ import com.inzent.medialibrary.dto.ImageListDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
+import com.inzent.medialibrary.dto.VideoListDTO;
 import com.inzent.medialibrary.repository.ContentDAO;
 import com.inzent.medialibrary.repository.UserDAO;
 import com.inzent.medialibrary.service.ContentService;
+import com.inzent.medialibrary.utils.GetThumbnail;
 import com.inzent.medialibrary.utils.MakeDir;
 
 @Service
@@ -38,8 +44,8 @@ public class ContentServiceImpl implements ContentService {
 	private UserDAO userDAO;
 	
 	@Override
-	public List<ContentVO> getContentList(Long folderId) {
-		return contentDAO.getContentList(folderId);
+	public List<ContentVO> getImageList(Long folderId) {
+		return contentDAO.getImageList(folderId);
 	}
 
 	@Override
@@ -70,11 +76,11 @@ public class ContentServiceImpl implements ContentService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("extension", ext);
 			ucDTO.setContent_attribute(map);
-//			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
+			BufferedImage image = ImageIO.read(uploadContent.getInputStream());
 //			Map<String, Object> map = new HashMap<String, Object>();
-//			int height = image.getHeight();
-//			int width = image.getWidth();
-//			map.put("해상도", height + "*" + width);
+			int height = image.getHeight();
+			int width = image.getWidth();
+			map.put("resolution", height + "*" + width);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +102,7 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public ImageDTO getContentById(long image_id) {
+	public ImageDTO getContentById(Long image_id) {
 		ImageDTO image = contentDAO.getContentById(image_id);
 		InputStream in;
 		try {
@@ -156,6 +162,16 @@ public class ContentServiceImpl implements ContentService {
 					e.printStackTrace();
 				}
 			}
+		}
+		return list;
+	}
+
+	@Override
+	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) throws IOException, JCodecException {
+		List<ImageDTO> list = contentDAO.getVideoList(videoListDTO);
+		for(ImageDTO i : list) {
+			File file = new File(i.getContent_storage());
+			i.setContent(GetThumbnail.getThumbnail(file));
 		}
 		return list;
 	}

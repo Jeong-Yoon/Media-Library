@@ -54,12 +54,11 @@ public class ContentController {
 	private ContentService contentService;
 	
 	@GetMapping("/{folder_id}")
-	public ResponseEntity<List<ContentVO>> getContentList(@PathVariable("folder_id")Long folderId){
-		List<ContentVO> fileList = contentService.getContentList(folderId);
+	public ResponseEntity<List<ContentVO>> getImageList(@PathVariable("folder_id")Long folderId){
+		List<ContentVO> fileList = contentService.getImageList(folderId);
 		return new ResponseEntity<>(fileList, HttpStatus.OK);	
 	}
-	
-	
+
 	@PostMapping("/upload")
 //	public FileUploadResponse uploadContent(@RequestParam("file") MultipartFile file){
 	public ResponseEntity<?> uploadContent(ContentDTO contentDTO){
@@ -204,26 +203,29 @@ public class ContentController {
 //	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //	    }
 	 
-	 @ResponseStatus(HttpStatus.OK)
-	 @PostMapping("/download")
-	 public HttpEntity<byte[]> downloadExcelReport(HttpServletRequest request, HttpServletResponse response, @RequestBody List<Long> downloadIdDTO) throws IOException {
-		 ImageDTO f = contentService.getContentById(downloadIdDTO.get(0));
-		 File file = new File(f.getContent_storage());
-         System.out.println(file.toPath());
-         Files.copy(file.toPath(), response.getOutputStream());
-         InputStream in = new FileInputStream(f.getContent_storage());
-         response.getOutputStream().write(IOUtils.toByteArray(in)); 
-	     byte[] content = IOUtils.toByteArray(in);
-	     // prepare response
-	     HttpHeaders header = new HttpHeaders();
-	     header.setContentType(new MediaType("application", "octet-stream"));
-	     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(f.getContent_origin_name(), "UTF-8") + ";");
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/download")
+	public HttpEntity<byte[]> downloadExcelReport(HttpServletRequest request, HttpServletResponse response, @RequestBody DownloadIdDTO download) throws IOException {
+		System.out.println(download.getId());
+		ImageDTO f = contentService.getContentById(download.getId());
+		File file = new File(f.getContent_storage());
+		System.out.println(file.toPath());
+		Files.copy(file.toPath(), response.getOutputStream());
+		InputStream in = new FileInputStream(f.getContent_storage());
+		response.getOutputStream().write(IOUtils.toByteArray(in));
+		byte[] content = IOUtils.toByteArray(in);
+		// prepare response
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(new MediaType("application", "octet-stream"));
+		header.set(HttpHeaders.CONTENT_DISPOSITION,
+				"attachment; filename=" + URLEncoder.encode(f.getContent_origin_name(), "UTF-8") + ";");
 //	     header.add("Content-Disposition", "attachment; filename="+file.getName());
-	     header.setContentLength(content.length);
-	  
-	     return new HttpEntity<byte[]>(content, header);
-	 }
+		header.setContentLength(content.length);
+
+		return new HttpEntity<byte[]>(content, header);
+	}
 	
+	// content_detail 가져가기 -> 동영상에서 사용할 듯.
 	@GetMapping("/content/{content_id}")
 	public void getContentDetail(@PathVariable("content_id")Long contentId) {
 		contentService.getContentDetail(contentId);
@@ -239,5 +241,20 @@ public class ContentController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	public static void thumbnail() {
+		Runtime run = Runtime.getRuntime();
+		String videofile = "C:/Users/Min/Desktop/test1/test.mp4";
+		String command = "C:/ffmpeg-20191109-0f89a22-win64-static/bin/ffmpeg.exe -i \"" + videofile + "\" -ss 00:00:01 -vcodec png -vframes 1 \""  +videofile + "_%2d.png\""; // 동영상 1초에서 Thumbnail 추출
+		System.out.println(command);
+		try{
+		    run.exec("cmd.exe chcp 65001");  // cmd에서 한글문제로 썸네일이 만들어지지않을시 cmd창에서 utf-8로 변환하는 명령
+		    run.exec(command);
+		}catch(Exception e){
+		    System.out.println("error : "+e.getMessage());
+		    e.printStackTrace();
+		}       
+
+
+	}
 }
 

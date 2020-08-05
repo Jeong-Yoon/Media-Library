@@ -29,8 +29,9 @@ import com.inzent.medialibrary.service.ContentService;
 @CrossOrigin("*")
 @RequestMapping("/api/images")
 public class ImageController {
+	
 	@Autowired
-	ContentService contentService;
+	private ContentService contentService;
 	
 	@PostMapping("/getimages")
 	public ResponseEntity<ImageDTO> getImage(@RequestBody ImageIdDTO imageIdDTO) throws IOException{

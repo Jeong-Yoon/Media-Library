@@ -19,4 +19,6 @@ public interface FolderService {
 	public Long createRootFolder(Long user_id);
 
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO);
+
+	public List<String> getShareItems();
 }

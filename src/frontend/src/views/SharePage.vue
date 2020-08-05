@@ -160,6 +160,8 @@
 
 <script>
 import UnShareModal from "@/views/UnShareModal.vue";
+import { mapActions } from "vuex";
+
 export default {
   components: {
     UnShareModal,
@@ -177,7 +179,19 @@ export default {
       downloadId: "",
     };
   },
+  created() {
+    this.getItems();
+    // this.unShared();
+  },
   methods: {
+    ...mapActions(["GET_SHARE_ITEMS"]),
+    getItems() {
+      this.GET_SHARE_ITEMS().then((list) => {
+        console.log("share page list : " + list[0]);
+        this.items = list;
+        console.log("share page folderlist : " + this.items);
+      });
+    },
     selectAll: function() {
       this.ids = [];
       if (!this.allSelected) {
@@ -388,7 +402,7 @@ user agent stylesheet div {
   left: 0px;
   display: block;
 }
-.b0 {
+.download {
   background-color: #dee8eb;
   color: white;
   margin-right: 10px;
@@ -400,7 +414,7 @@ user agent stylesheet div {
   outline: none;
   border: none;
 }
-.b1 {
+.unShare {
   background-color: #a6c4c7;
   color: white;
   margin-right: 10px;

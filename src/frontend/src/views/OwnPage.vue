@@ -144,6 +144,13 @@
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
+                <!-- <video
+                  :src="folder.content"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(folder.id)"
+                /> -->
                 <img
                   :src="roadImg(folder.content)"
                   width="130"
@@ -203,10 +210,12 @@
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
+          @deleted="deleted"
           @close="closeImageModal"
         />
         <VideoViewingModal
           :idOfVideo="idOfVideo"
+          :videoList="videoList"
           v-if="videoModal"
           @close="closeVideoModal"
         />
@@ -297,6 +306,7 @@ export default {
   created() {
     console.log("------create------");
     this.getFolders();
+    this.deleted();
   },
   watch: {
     // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다
@@ -328,14 +338,17 @@ export default {
         document.getElementById("video1").currentTime = 0;
       }
     },
+
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
-      this.GET_VIDEO_LIST({ folderId: this.parent }).then((result) => {
-        //console.log(this.parent);
-        //console.log(result[0].content_id + " : video list");
-        this.videoList = result;
-      });
+      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+        (result) => {
+          console.log(this.parent);
+          console.log("video list result : " + result[0]);
+          this.videoList = result;
+        }
+      );
       this.openVideoModal();
       // this.GET_VIDEO({ videoId: videoId }).then((data) => {
       //   console.log(data);
@@ -358,7 +371,21 @@ export default {
         }
       });
     },
-    deleteFolder() {},
+    deleteFolder() {
+      console.log(this.ids);
+      this.DELETE_FOLDERS(this.ids).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("삭제된 폴더가 휴지통으로 이동하였습니다.");
+          this.ids = [];
+          this.getFolders();
+        } else {
+          alert("폴더 삭제에 실패했습니다.");
+          this.ids = [];
+          this.getFolders();
+        }
+      });
+    },
     async download() {
       // console.log("download : " + this.ids);
       // this.DOWNLOAD_FILE(this.ids).then((res) => {
@@ -422,7 +449,7 @@ export default {
     getImg(imageId) {
       console.log("getImg...", imageId);
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
-        //console.log(data);
+        console.log(data);
         this.idOfImage = data;
       });
       this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
@@ -438,6 +465,13 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
+    deleted(imageId) {
+      console.log("삭제삭제");
+      console.log(this.imageList);
+      this.getFolders(this.imageList[0].content_id);
+      this.getImg(imageId);
+    },
+
     all() {
       this.folders = true;
       this.images = true;

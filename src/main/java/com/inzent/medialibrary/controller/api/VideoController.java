@@ -1,13 +1,14 @@
 package com.inzent.medialibrary.controller.api;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inzent.medialibrary.dto.ContentIdDTO;
+import com.inzent.medialibrary.dto.ContentVO;
+import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.VideoListDTO;
 import com.inzent.medialibrary.service.ContentService;
 
 @RestController
@@ -59,7 +63,6 @@ public class VideoController {
     	System.out.println(videoId);
 //    	ImageDTO content = contentService.getContentById(Long.parseLong(videoId)); 
     	ImageDTO content = contentService.getContentById(videoId); 
-//        log.info("getVideo");
         UrlResource video = new UrlResource("file:" + content.getContent_storage());
         System.out.println(video.contentLength());
         System.out.println("if exists : " + video.exists());
@@ -70,7 +73,6 @@ public class VideoController {
                             .contentType(MediaTypeFactory.getMediaType(video).orElse(MediaType.APPLICATION_OCTET_STREAM))
                             .body(region);
     }
-
 
     private ResourceRegion resourceRegion(UrlResource video, HttpHeaders headers) throws IOException {
         final long chunkSize = 1000000L;
@@ -117,5 +119,46 @@ public class VideoController {
         model.addAttribute("videoName", videoName);
         return "video";
     }
+	
+    @PostMapping("/videolist")
+	public ResponseEntity<List<ImageDTO>> getVideoList(@RequestBody VideoListDTO videoListDTO) throws IOException, JCodecException {
+//				@RequestParam(value = "folderId", required = false) Long folderId, 
+//				@RequestParam(value = "videoId", required = false) Long videoId
+//			) throws IOException, JCodecException{
+    		System.out.println("get video list============" + videoListDTO.getFolderId() + " , " + videoListDTO.getVideoId());
+    		List<ImageDTO> list = contentService.getVideoList(videoListDTO);
+    		System.out.println(list.get(0).getContent_origin_name());
+    		return new ResponseEntity<List<ImageDTO>>(list, HttpStatus.OK);
+    	}
+    
+//    @RequestMapping(value = "/video/{id}", method = RequestMethod.GET)
+//    @GetMapping("/video/{videoId}")
+//    public void getVideo(HttpServletRequest req, HttpServletResponse res, @PathVariable Long videoId) {
+//    	System.out.println("video Controller");
+//    	System.out.println(videoId);
+////    	ImageDTO content = contentService.getContentById(Long.parseLong(videoId)); 
+//    	ImageDTO content = contentService.getContentById(videoId); 
+//      String filePath = content.getContent_storage();
+//      
+//      // 데이터 조회
+////      FileModel fileModel = fileService.getFileInfo(Integer.parseInt(id));
+//      System.out.println("동영상 스트리밍 요청 : " + filePath + content.getContent_save_name());
+//      File getFile = new File(filePath);
+//      
+//      try {
+//        // 미디어 처리
+//        MultipartFileSender
+//          .fromFile(getFile)
+//          .with(req)
+//          .with(res)
+//          .serveResource();
+//        
+//      } catch (Exception e) {
+//        // 사용자 취소 Exception 은 콘솔 출력 제외
+//        if (!e.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException")) e.printStackTrace();
+//      }
+//    }
+
+
 
 }

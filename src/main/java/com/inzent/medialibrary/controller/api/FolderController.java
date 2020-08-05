@@ -1,18 +1,30 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.jcodec.api.FrameGrab;
+import org.jcodec.api.JCodecException;
+import org.jcodec.common.model.Picture;
+import org.jcodec.scale.AWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +41,7 @@ import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.service.ContentService;
 import com.inzent.medialibrary.service.FolderService;
+import com.inzent.medialibrary.utils.GetThumbnail;
 
 @RestController
 @CrossOrigin("*")
@@ -39,6 +52,7 @@ public class FolderController {
 	private FolderService folderService;
 	@Autowired
 	private ContentService contentService;
+
 	
 	@PostMapping("/add")
 	public ResponseEntity<Integer> addFolder(@RequestBody @Valid AddFolderDTO addFolderDTO, BindingResult bindingResult){
@@ -49,20 +63,25 @@ public class FolderController {
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/getfolders")
-	public ResponseEntity<List<Map<String, Object>>> getFolderList(@RequestBody ParentIdDTO parentDTO) throws JsonMappingException, JsonProcessingException{
-		System.out.println("get folder");
-		List<String> list = folderService.getFolderList(parentDTO.getParent());
+	@GetMapping("/getfolders/{parent}")
+	public ResponseEntity<List<Map<String, Object>>> getFolderList(@PathVariable(value="parent") Long parent) throws IOException, JCodecException{
+		System.out.println("get folder" + parent);
+		List<String> list = folderService.getFolderList(parent);
 		List<Map<String, Object>> folderlist = new ArrayList<Map<String,Object>>();
-		for(String s : list) {
+		for (String s : list) {
 			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
-			if(map.get("id").toString().startsWith("3") && map.get("content_type").toString().equals("I")) {
-				map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+			if (map.get("id").toString().startsWith("3")) {
+				if (map.get("content_type").toString().equals("I")) {
+					map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+				} else if(map.get("content_type").toString().equals("V")) {
+					File file = new File(contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent_storage());
+					map.put("content",GetThumbnail.getThumbnail(file));
+				}
 			}
 			folderlist.add(map);
 		}
 		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
-	}
+	}  
 	
 	@PutMapping
 	public ResponseEntity<?> changeFolderName(@RequestBody FolderNameDTO folderNameDTO){
@@ -86,5 +105,25 @@ public class FolderController {
 	@DeleteMapping("/{folder_id}")
 	public ResponseEntity<?> deleteFolder(@PathVariable("folder_id") Long folderId){
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/getshareitems")
+	public ResponseEntity<List<Map<String, Object>>> getShareItems() throws IOException, JCodecException{
+		System.out.println("get share items");
+		List<String> list = folderService.getShareItems();
+		List<Map<String, Object>> itemList = new ArrayList<Map<String,Object>>();
+		for (String s : list) {
+			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
+			if (map.get("id").toString().startsWith("3")) {
+				if (map.get("content_type").toString().equals("I")) {
+					map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+				} else if(map.get("content_type").toString().equals("V")) {
+					File file = new File(contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent_storage());
+					map.put("content",GetThumbnail.getThumbnail(file));
+				}
+			}
+			itemList.add(map);
+		}
+		return new ResponseEntity<List<Map<String, Object>>> (itemList, HttpStatus.OK);
 	}
 }

@@ -110,13 +110,6 @@ export const getImage = {
   },
 };
 
-// export const getImageList = {
-//   getImageList(parent, imagelist) {
-//     console.log(imagelist + " : api/getimagelist");
-//     return request("post", "/api/images/getimagelist", parent, imagelist);
-//   },
-// };
-
 export const getImageList = {
   getImageList({ folderId }) {
     console.log(folderId + " : api/getimagelist");
@@ -167,9 +160,19 @@ export const getVideo = {
 };
 
 export const getVideoList = {
-  getVideoList({ folderId }) {
-    console.log("get video list api : " + folderId);
-    return request("get", `/api/videos/videolist/${folderId}`);
+  getVideoList({ folderId, videoId }) {
+    console.log("get video list api : " + folderId + ", " + videoId);
+    return request(
+      "post",
+      "/api/videos/videolist",
+      { folderId, videoId }
+      // {
+      //   params : {
+      //     "folderId":folderId,
+      //     "videoId" : videoId
+      //   }
+      // }
+    );
   },
 };
 
@@ -177,6 +180,13 @@ export const deleteFile = {
   deleteFile(content_id) {
     console.log("api / deleteFile", content_id);
     return request("delete", "/api/contents", content_id);
+  },
+};
+
+export const deleteFolder = {
+  deleteFolder(folder_ids) {
+    console.log("api / deleteFolder", folder_ids);
+    return request("delete", "/api/folders", folder_ids);
   },
 };
 
@@ -198,6 +208,13 @@ export const restoreItems = {
   restoreItems(ids) {
     console.log("api / restore : ", ids);
     return request("post", "/api/garbages/restore", ids);
+  },
+};
+
+export const getShareItems = {
+  getShareItems() {
+    console.log("api / share");
+    return request("get", "/api/folders/getshareitems");
   },
 };
 // export const getVideo = {
