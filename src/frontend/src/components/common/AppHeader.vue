@@ -66,7 +66,7 @@ header {
   align-items: center;
   justify-content: space-between;
   background-color: #a6c4c7;
-  z-index: 2;
+  z-index: 6;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.25);
   transition: background-color 0.3s ease-in-out;
   font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;

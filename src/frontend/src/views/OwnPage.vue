@@ -301,6 +301,7 @@ export default {
       downloadId: "",
       intoParent: "",
       videoList: [],
+      folderId: ""
     };
   },
   created() {
@@ -452,7 +453,13 @@ export default {
         console.log(data);
         this.idOfImage = data;
       });
-      this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
+      if(typeof(this.$route.params.id) === 'undefined'){
+        this.folderId = this.parent;
+      } else {
+        this.folderId = this.$route.params.id
+      }
+      console.log("folderId : " + this.folderId)
+      this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
         //console.log(this.parent);
         //console.log(result[0].content_id + " : image list");
         this.imageList = result;
