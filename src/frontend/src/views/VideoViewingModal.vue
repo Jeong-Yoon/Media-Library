@@ -17,6 +17,7 @@
           <!-- 삭제 -->
           <a 
             class="v_ta_trash"
+            @click="deleteFile"
             title="휴지통"
           >
             <img src="@/assets/image/v_task_delete.png" height="15px" />
@@ -43,10 +44,9 @@
            >
           </video>
             <!-- <div class="footer-info"  style="margin-right : 20px;">
-              <h4 class="media-heading"  style="margin-right : 20px;">{{this.idOfVideo}}</h4>
+              <h4 class="media-heading"  style="margin-right : 20px;">{{list.content_origin_name}}</h4>
               <p class="by-upload"  style="margin-right : 20px; ">2020.05.01 20:17:56</p>
               <p class="by-upload">By 최지은</p>
-            
             </div> -->
 
         </div>
@@ -106,7 +106,9 @@
 
 
 <script>
+import { mapActions } from "vuex";
 export default {
+  
   props : [
     "idOfVideo",
     "videoList",
@@ -120,7 +122,8 @@ export default {
         },
         scr:"",
         vList:"",
-        videoId :""
+        videoId :"",
+        nextVideoId:"",
     };
   },
   created() {
@@ -129,8 +132,54 @@ export default {
     this.vList = this.videoList;
     console.log(this.videoList)
   },
-  methods: {
-    //모달
+
+   methods: {
+    ...mapActions([
+      "GET_VIDEO",
+      "DELETE_FILE",
+    ]),
+    
+    openVideoNav() {
+      document.getElementById("video_nav").style.display = "block";
+      // this.openshareModal = [];
+      // event.target.reset();
+    },
+    close() {
+      document.getElementById("video_nav").style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.webkitExitFullscreen().style.display = "none";
+    },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      return result;
+    },
+
+    // 삭제
+      deleteFile() {
+      console.log(this.idOfVideo);
+      if(this.idOfVideo === this.videoList[this.videoList.length-1].content_id){
+        this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
+      } else  {
+        for(var i = 0; i < this.videoList.length-1; i++){
+          if(this.idOfVideo.content_id === this.videoList[i].content_id){
+            this.nextVideoId = this.videoList[i+1].content_id;
+            break;
+          }
+        }
+      }
+      this.DELETE_FILE([this.idOfVideo]).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("파일 삭제에 성공하였습니다.");
+          this.$emit("getVideo", this.nextVideoId)
+          this.videoList.content_id;
+        } 
+      });
+    },
+
+
+    // 다음동영상
     getVideoId(id){
       console.log(id + ' get video method')
       this.videoId = id;
@@ -146,27 +195,9 @@ export default {
       v1.innerHTML = p;
       // v1.  = p
     },
-    openVideoNav() {
-      console.log("동영상모달열어!");
-      document.getElementById("video_nav").style.display = "block";
-      // this.openshareModal = [];
-      // event.target.reset();
-    },
-    close() {
-      console.log("동영상모달닫아!");
-      document.getElementById("video_nav").style.display = "none";
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-      document.webkitExitFullscreen().style.display = "none";
-    },
-    roadImg(data) {
-      const result = "data:image;base64," + data;
-      return result;
-    },
 
 
-
-    // 삭제
+    
   
   
   }
