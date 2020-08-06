@@ -8,23 +8,15 @@
             <label for="a1"></label>
           </div>
         </div>
-        <button class="b1" @click="doNewAlbum()">새앨범</button>
-        <div v-if="this.albumId > 0">
-          <button class="b2" @click="deleteAlbum()">삭제</button>
+        <div v-if="this.ids > 0">
+          <button class="b1" @click="deleteItem()">삭제</button>
         </div>
-        <NewFolderModal @close="closeModal" v-if="modal">
-          <!-- default 슬롯 콘텐츠 -->
-          <p>앨범 이름을 입력해주세요.</p>
-          <div>
-            <input class="input" v-model="newAlbumName" />
-          </div>
-          <!-- /default -->
-          <!-- footer 슬롯 콘텐츠 -->
-          <template slot="footer">
-            <button class="button" @click="doNewAlbum">생성</button>
-          </template>
-          <!-- /footer -->
-        </NewFolderModal>
+        <div v-else>
+          <button class="b2" @click="all">전체</button>
+          <button class="b3" @click="onlyFolder">폴더</button>
+          <button class="b4" @click="onlyImage">사진</button>
+          <button class="b5" @click="onlyVideo">동영상</button>
+        </div>
         <!--
         <form class="search">
           <select id="key" name="keyword" class="key">
@@ -52,42 +44,75 @@
       <hr class="top-hr" />
 
       <div class="bottom-content">
-        <ul class="table">
-          <li v-for="album in this.albums" v-bind:key="album.key" class="li">
-            <div>
-              <div class="agree2">
-                <input
-                  class="a2"
-                  :id="'a2' + album.id"
-                  type="checkbox"
-                  v-model="ids"
-                  @click="select(folalbumder.id)"
-                  :value="album.id"
-                />
-                <label :for="'a2' + album.id"></label>
-              </div>
-              <router-link :to="`/ownDocumentBox/${album.id}`">
+        <div>
+          <ul class="table">
+            <li
+              v-for="item in this.items"
+              v-bind:key="item.id"
+              @change="checkbox(item.id)"
+              class="li"
+            >
+              <!-- 사진 -->
+              <div
+                v-if="item.content_type == 'I' && checkType(item.id) == '3'"
+                v-show="images"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + item.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(item.id)"
+                    :value="item.id"
+                  />
+                  <label :for="'a2' + item.id"></label>
+                </div>
                 <img
-                  src="@/assets/image/album.png"
-                  alt="folder.png"
-                  width="150"
-                  height="150"
+                  :src="roadImg(item.content)"
+                  width="130"
+                  height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                 />
-              </router-link>
-              <div class="info">
-                <span class="title">{{ album.album_name }}</span>
+                <div class="info">
+                  <span class="title">{{ item.content_name }}</span>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+              <!-- 동영상 -->
+              <div
+                v-if="item.content_type == 'V' && checkType(item.id) == '3'"
+                v-show="videos"
+              >
+                <div class="agree2">
+                  <input
+                    class="a2"
+                    :id="'a2' + item.id"
+                    type="checkbox"
+                    v-model="ids"
+                    @click="select(item.id)"
+                    :value="item.id"
+                  />
+                  <label :for="'a2' + item.id"></label>
+                </div>
+                <img
+                  :src="roadImg(item.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                />
+                <div class="info">
+                  <span class="title">{{ item.content_name }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </content>
 </template>
 
 <script>
-import NewFolderModal from "./NewFolderModal";
 import { mapActions, mapState } from "vuex";
 
 export default {
@@ -96,7 +121,7 @@ export default {
       userInfo: "userInfo",
     }),
   },
-  components: { NewFolderModal },
+  components: {},
   data() {
     return {
       newAlbumName: "",
@@ -113,15 +138,7 @@ export default {
     $route: "getAlbums",
   },
   methods: {
-    ...mapActions(["NEW_ALBUM", "GET_ALBUMS", "INTO_ALBUM", "DELETE_ALBUM"]),
-    getAlbums() {
-      console.log("-------------Get Albums Start------------");
-      this.GET_ALBUMS({ userEmail: this.userInfo.useremail }).then((list) => {
-        this.albums = list;
-        console.log("albumList : ", this.albums);
-      });
-      console.log("-------------Get Albums End------------");
-    },
+    ...mapActions(["INTO_ALBUM", "DELETE_ITEM"]),
     intoAlbum(intoAlbumKey) {
       console.log("-------------Into Albums Start------------");
       this.intoAlbumKey = intoAlbumKey;
@@ -132,55 +149,28 @@ export default {
       });
       console.log("-------------Into Albums End------------");
     },
-    deleteAlbum() {
-      console.log("-------------delete Album Start------------");
-      console.log("삭제할 앨범 : ", this.albumId);
-      this.DELETE_ALBUM({ id: this.albumId }).then((data) => {
+    deleteItem() {
+      console.log("-------------delete Item Start------------");
+      console.log("삭제할 아이템목록 : ", this.ids);
+      this.DELETE_ITEM(this.ids).then((data) => {
+        console.log("결과값 : ", data);
         if (data == 1) {
-          alert("앨범이 삭제되었습니다.");
-          this.albumId = "";
-          this.getAlbums();
+          alert("파일이 앨범에서 삭제되었습니다.");
+          this.ids = [];
+          this.intoAlbum(this.$route.params.id);
         } else {
-          alert("앨범 삭제에 실패했습니다.");
-          this.albumId = "";
-          this.getAlbums();
+          alert("파일 삭제에 실패했습니다.");
+          this.ids = [];
+          this.intoAlbum(this.$route.params.id);
         }
       });
-      console.log("-------------delete Album End------------");
+      console.log("-------------delete Item End------------");
     },
-    doNewAlbum() {
-      console.log("-------------New Album Start-------------");
-      if (this.newAlbumName.length < 0) {
-        alert("앨범명을 입력해주세요.");
-      } else {
-        console.log(this.newAlbumName + " : newAlbumName");
-        this.NEW_ALBUM({
-          parent: this.intoParent,
-          newAlbumName: this.newAlbumName,
-          userEmail: this.userInfo.useremail,
-        })
-          .then(() => {
-            alert("앨범이 생성되었습니다.");
-            this.newAlbumName = "";
-            this.closeModal();
-            this.getAlbums(this.$route.params.id);
-          })
-          .catch((error) => {
-            alert("앨범 생성에 실패했습니다.");
-            this.error = error.data.error;
-            this.newAlbumName = "";
-            this.closeModal();
-            this.getAlbums(this.$route.params.id);
-          });
-      }
-      console.log("-------------New Album End-------------");
-    },
-    openModal() {
-      this.modal = true;
-    },
-    closeModal() {
-      this.modal = false;
-      this.getAlbums();
+    checkType(id) {
+      // var temp = id.subStr(0, 1);
+      var temp = String(id);
+      temp = temp.substring(0, 1);
+      return temp;
     },
     all() {
       this.folders = true;
@@ -243,42 +233,6 @@ export default {
   width: 210px;
   border-radius: 4px;
   height: 30px;
-}
-
-.agree2 {
-  position: absolute;
-  z-index: 5;
-  opacity: 0.5;
-}
-.agree2:hover {
-  opacity: 1;
-}
-.agree2 input[type="checkbox"] {
-  display: none;
-}
-.agree2 input[type="checkbox"] + label {
-  width: 30px;
-  height: 30px;
-  background: #d2cdc5;
-  cursor: pointer;
-  border-radius: 3px;
-  float: left;
-  margin-right: 10px;
-}
-.agree2 input[type="checkbox"] + label:hover {
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
-  opacity: 1;
-}
-.agree2 input[type="checkbox"]:checked + label {
-  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
-  float: left;
-  opacity: initial;
-  background-color: #a6c4c7;
-}
-.agree2 input[type="checkbox"] + label span {
-  position: absolute;
-  left: 0px;
-  display: block;
 }
 
 hr {
@@ -468,11 +422,20 @@ img {
   width: 150px;
 }
 .title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
   display: block;
   font-size: 12px;
+  font-weight: 500;
   line-height: 15px;
-  background-color: white;
-  width: 150px;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #222;
+  cursor: default;
+  text-decoration: none;
   text-align: center;
+  overflow: hidden;
+  width: 130px;
+  padding-bottom: 5px;
 }
 </style>
