@@ -44,7 +44,7 @@
            >
           </video>
             <!-- <div class="footer-info"  style="margin-right : 20px;">
-              <h4 class="media-heading"  style="margin-right : 20px;">{{list.content_origin_name}}</h4>
+              <h4 class="media-heading"  style="margin-right : 20px;">{{content_id.content_origin_name}}</h4>
               <p class="by-upload"  style="margin-right : 20px; ">2020.05.01 20:17:56</p>
               <p class="by-upload">By 최지은</p>
             </div> -->
@@ -66,8 +66,8 @@
                   class="media"
                   v-for="list in this.videoList"
                   v-bind:key="list.content_id"
-                  style="margin-bottom : 11px;"
-                >
+                  style="margin-bottom : 11px; height : 110px;"
+                > 
                     <img
                       :src="roadImg(list.content)"
                       @click="getVideoId(list.content_id)"
@@ -77,15 +77,19 @@
                               max-width : 240px;
                               object-fit:contain;
                               background-color : #fff; 
+                              float : left;
                             "
                     />
 
                     <!-- {{ list.content_id }} -->
-                    <div class="media-body" > 
+                    <div class="media-body" style="height : 110px; float : left;" > 
                     <!-- 파일명, 업로드일시, 올린사람 -->
                     <h4 class="media-heading">{{list.content_origin_name }}</h4>
                     <p class="by-author">{{list.content_reg_date}} </p>
                     <p class="by-author">{{list.content_reg_user}} </p>
+
+                    
+
                   </div>
 
                 </li>
@@ -129,7 +133,7 @@ export default {
   created() {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
-    this.vList = this.videoList;
+    // this.vList = this.videoList;
     console.log(this.videoList)
   },
 
@@ -173,7 +177,7 @@ export default {
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
           this.$emit("getVideo", this.nextVideoId)
-          this.videoList.content_id;
+          this.videoList;
         } 
       });
     },
@@ -195,10 +199,6 @@ export default {
       v1.innerHTML = p;
       // v1.  = p
     },
-
-
-    
-  
   
   }
 };
@@ -271,7 +271,7 @@ export default {
   height : 600px;
   overflow-y: scroll;
   display: inline-block;
-  white-space:nowrap;
+  /* white-space:nowrap; */
   /* margin-left : -50px; */
 }
 
@@ -288,8 +288,8 @@ export default {
 .media-body {
   font-size : 14px;
   color : #d3d3d3;
-  float : right;
-  margin-left : 20px;
+  /* float : right; */
+  margin-left : 10px;
   /* margin-right: ; */
 }
 
@@ -342,8 +342,6 @@ export default {
   font-size: 18px;
   cursor: pointer;
 }
-
-
 
 .li, .ul {
   list-style: none;

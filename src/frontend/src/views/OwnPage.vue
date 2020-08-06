@@ -210,13 +210,15 @@
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
-          @deleted="deleted"
+          @deletedImg="deletedImg"
           @close="closeImageModal"
         />
         <VideoViewingModal
           :idOfVideo="idOfVideo"
           :videoList="videoList"
           v-if="videoModal"
+          @getVideo="getVideo"
+          @deletedVideo="deletedVideo"
           @close="closeVideoModal"
         />
         <!--<p>selected ids : {{ ids }}</p>-->
@@ -301,12 +303,14 @@ export default {
       downloadId: "",
       intoParent: "",
       videoList: [],
+      folderId: ""
     };
   },
   created() {
     console.log("------create------");
     this.getFolders();
-    this.deleted();
+    this.deletedImg();
+    this.deletedVideo();
   },
   watch: {
     // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다
@@ -452,7 +456,13 @@ export default {
         console.log(data);
         this.idOfImage = data;
       });
-      this.GET_IMAGELIST({ folderId: this.parent }).then((result) => {
+      if(typeof(this.$route.params.id) === 'undefined'){
+        this.folderId = this.parent;
+      } else {
+        this.folderId = this.$route.params.id
+      }
+      console.log("folderId : " + this.folderId)
+      this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
         //console.log(this.parent);
         //console.log(result[0].content_id + " : image list");
         this.imageList = result;
@@ -465,11 +475,16 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
-    deleted(imageId) {
+    deletedImg(imageId) {
       console.log("삭제삭제");
       console.log(this.imageList);
       this.getFolders(this.imageList[0].content_id);
       this.getImg(imageId);
+    },
+    deletedVideo(videoId) {
+      console.log("삭제삭제");
+      this.getFolders(this.videoList[0].content_id);
+      this.getVideo(videoId);
     },
 
     all() {
