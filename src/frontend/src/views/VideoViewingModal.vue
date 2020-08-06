@@ -15,18 +15,38 @@
         <div class="v_task">
     
           <!-- 삭제 -->
-          <a 
+          <!-- <a 
             class="v_ta_trash"
             @click="deleteFile"
             title="휴지통"
           >
             <img src="@/assets/image/v_task_delete.png" height="15px" />
-          </a>
+          </a> -->
 
           <!-- 공유 문서함 추가  -->
-          <a class="v_ta_share_doc" title="공유문서함">
+          <!-- <a class="v_ta_share_doc" title="공유문서함">
             <img src="@/assets/image/v_task_documentshare.png" height="16px"  style="margin-right:3px; top:1px;"/>
-          </a>
+          </a> -->
+
+
+              <!-- 더보기 -->
+          <div class="dropdown">
+            <!-- <button class="dropbtn">Dropdown</button> -->
+            <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
+              <img src="@/assets/image/v_task_more.png" height="16px" />
+            </a>
+            <div class="dropdown-content" style="float:right;">
+              <!-- <a
+                class="slider_option"
+                @click="deleteFile"
+              >
+                삭제
+              </a> -->
+              <a class="publicfolder">공유 문서함 추가</a>
+              <!-- <a class="publicalbum">공유 앨범 추가</a> -->
+            </div>
+          </div>
+          <!-- 더보기 끝 -->
 
         </div>
         <!-- v_task 끝 -->
@@ -166,12 +186,9 @@ export default {
         this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
       } else  {
         for(var i = 0; i < this.videoList.length-1; i++){
-          console.log(this.videoList[i].content_id)
-          console.log(this.idOfVideo)
-          if(this.idOfVideo === this.videoList[i].content_id){
-          console.log(this.idOfVideo === this.videoList[i].content_id)
+          if(this.idOfVideo.content_id === this.videoList[i].content_id){
             this.nextVideoId = this.videoList[i+1].content_id;
-            console.log(this.nextVideoId + " : ----------------------------- : " + this.videoList[i+1].content_id)
+            break;
           }
         }
       }
@@ -180,22 +197,7 @@ export default {
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
           this.$emit("getVideo", this.nextVideoId)
-          // this.videoList.content_id;
-          console.log("===========next : " + this.nextVideoId)
-                this.videoId = this.idOfVideo;
-      console.log(this.nextVideoId + ' delete video method');
-      this.src ="/api/videos/video/" + this.nextVideoId;
-      console.log(this.src);
-      var v1 = document.getElementById("video-div");
-      // v1.parentNode.replaceChild(p);
-      var p = '<video id="video"'
-            + 'controls autoplay muted loop src="'+this.src+'"' 
-            + ' type="video/mp4"'
-            + 'style ="width :1040px; height : 600px;"'
-           + '> </video>';
-      v1.innerHTML = p;
-
-
+           this.videoList.content_id;
         } 
       });
     },
@@ -377,6 +379,43 @@ export default {
 }
 ::-webkit-scrollbar-button { display: none; }
 
+.dropdown {
+  /* position: relative; */
+  display: inline-block;
+  border-radius: 5px;
+  /* float: right; */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 5px;
+  right: 0;
+}
+
+.dropdown-content a {
+  font-size: 12px;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-radius: 5px;
+}
+
+.dropdown-content a:hover {
+   overflow: hidden;
+  background-color: #e9ecef;
+  border-radius: 5px;
+}
+
+.dropdown:hover .dropdown-content {
+   overflow: hidden;
+  display: block;
+}
 
 
 </style>
