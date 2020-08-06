@@ -116,9 +116,9 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public int deleteContent(List<Long> contentIdList) {
-		System.out.println(contentIdList.size() + " content delete service");
-		return contentDAO.deleteContent(contentIdList);
+	public int deleteContent(List<Long> ids) {
+		System.out.println(ids.size() + " content delete service");
+		return contentDAO.deleteContent(ids);
 	}
 
 	@Override

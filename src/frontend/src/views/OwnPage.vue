@@ -16,7 +16,7 @@
           <button class="download" @click="download" v-show="noShow">
             받기
           </button>
-          <button class="share">공유</button>
+          <button class="share" @click="shareItem">공유</button>
           <button class="album">앨범</button>
           <button class="delete" @click="deleteFile">삭제</button>
         </div>
@@ -217,6 +217,7 @@
           :idOfVideo="idOfVideo"
           :videoList="videoList"
           v-if="videoModal"
+          @getVideo="getVideo"
           @close="closeVideoModal"
         />
         <!--<p>selected ids : {{ ids }}</p>-->
@@ -339,10 +340,10 @@ export default {
         document.getElementById("video1").currentTime = 0;
       }
     },
-
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
+      console.log("get Video : " + this.idOfVideo)
       this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
         (result) => {
           console.log(this.parent);
@@ -386,6 +387,37 @@ export default {
           this.getFolders();
         }
       });
+    },
+    deleteItems(){
+      console.log(this.ids);
+      this.DELETE_ITEMS(this.ids).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("삭제된 폴더 및 파일이 휴지통으로 이동하였습니다.");
+          this.ids = [];
+          this.getFolders();
+        } else {
+          alert("폴더 및 파일 삭제에 실패했습니다.");
+          this.ids = [];
+          this.getFolders();
+        }
+      });
+    },
+    shareItem(){
+      console.log(this.ids + " : share item");
+      this.SHARE_ITEMS(this.ids).then((data) => {
+        if(data == 1){
+          console.log(data)
+          alert("공유에 성공했습니다.");
+          this.ids = [];
+          this.getFolders();
+        } else {
+          alert("공유에 실패했습니다.");
+          this.ids = [];
+          this.getFolders();
+        }
+      }
+      )
     },
     async download() {
       // console.log("download : " + this.ids);

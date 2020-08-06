@@ -190,6 +190,13 @@ export const deleteFolder = {
   },
 };
 
+export const deleteItems = {
+  deleteItems(ids) {
+    console.log("api / deleteItems", ids);
+    return request("delete", "/api/folders", ids);
+  },
+};
+
 export const getItems = {
   getItems({ email }) {
     console.log("api / getItems", { email });
@@ -197,10 +204,10 @@ export const getItems = {
   },
 };
 
-export const deleteItems = {
-  deleteItems(ids) {
-    console.log("api / delete : ", ids);
-    return request("delete", "/api/garbages", ids);
+export const hardDeleteItems = {
+  hardDeleteItems( { ids, email }) {
+    console.log("api / delete : " +  ids + " , "  + email );
+    return request("post", "/api/garbages/harddelete", { ids, email });
   },
 };
 

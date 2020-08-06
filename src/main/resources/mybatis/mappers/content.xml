@@ -112,16 +112,43 @@
 		</foreach>
 	</select>
 	
-	<delete id="harddelete">
+	<delete id="harddeletecontent" parameterType="java.util.List">
 		with del1 as (delete from contents where content_id IN
 		<foreach collection="list" item="item" open="(" close=")"
 			separator=",">
-			#{item}
-		</foreach>
-		) delete from contents_details where content_id IN 		
-			<foreach collection="list" item="item" open="(" close=")"
-			separator=",">
-			#{item}
-		</foreach>
+			#{item.content_id} returning content_id
+		) delete from contents_details where content_id IN (select content_id from del1)	
+<!-- 			#{item.content_id}
+ -->		</foreach>
 	</delete>
+	
+	<delete id="harddeletefolder">
+		<foreach collection="list" item="item" index="index"
+		separator="">
+		<choose>
+		<when test="item/10000 == 2">
+		with recursive id_list(folder_id) as (
+ 			select f.folder_id
+ 			from folders f
+ 			where f.folder_parent = #{item}
+ 			union
+ 			select f.folder_id
+			from folders f, id_list i
+ 			where f.folder_parent = i.folder_id
+ 			union
+ 			select f.folder_id
+ 			from folders f
+ 			where f.folder_id = #{item}
+			)
+ 		delete from folders where folder_id IN (select folder_id from id_list)
+ 		</when>
+ 		</choose>
+ 		</foreach>
+	</delete>
+	
+	<update id="minususecapacity" parameterType="map">
+		update capacities 
+		set use_capacity = use_capacity - #{sum} 
+		where user_id = (select user_id from users where user_email = #{email})
+	</update>
 </mapper>

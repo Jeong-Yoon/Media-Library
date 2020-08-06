@@ -22,7 +22,7 @@ public interface ContentService {
 	public void uploadContentDetail(ContentDetailDTO detailDTO, Map<String, Object> json);
 	public void getContentDetail(Long contentId);
 	public ImageDTO getContentById(Long image_id);
-	public int deleteContent(List<Long> contentIdList);
+	public int deleteContent(List<Long> ids);
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO);
 	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO);
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) throws IOException, JCodecException;

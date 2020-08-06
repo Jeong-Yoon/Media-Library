@@ -203,8 +203,8 @@
 	</update>
 	
 	<delete id="harddeleteitems">
-		<foreach collection="list" item="item" open="(" close=")"
-			separator=",">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
 			<choose>
 			<when test="item/10000 == 2">
 				delete from folders where folder_id IN #{item}
@@ -216,4 +216,34 @@
 			</choose>
 		</foreach>
 	</delete>
+	
+	<select id="getharddeleteitem" parameterType="java.util.List" resultType="imagedto">
+		<foreach collection="list" item="item" index="index"
+			separator="union">
+			<choose>
+			<when test="item/10000 == 2">
+ 				(with recursive id_list(folder_id) as (
+ 				select f.folder_id
+ 				from folders f
+ 				where f.folder_parent = #{item}
+ 				union
+ 				select f.folder_id
+				from folders f, id_list i
+ 				where f.folder_parent = i.folder_id
+				)select c.*
+ 				from id_list i, contents c 
+ 				where i.folder_id = c.folder_id 
+ 				union 
+ 				select c2.* 
+ 				from contents c2 
+ 				where c2.folder_id = #{item})
+ 			</when>
+ 			<otherwise>
+ 				select * 
+				from contents
+				where content_id = #{item}
+ 			</otherwise>
+			</choose>
+		 </foreach> 
+	</select>
 </mapper>

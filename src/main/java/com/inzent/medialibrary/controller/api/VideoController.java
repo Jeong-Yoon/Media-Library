@@ -127,7 +127,6 @@ public class VideoController {
 //			) throws IOException, JCodecException{
     		System.out.println("get video list============" + videoListDTO.getFolderId() + " , " + videoListDTO.getVideoId());
     		List<ImageDTO> list = contentService.getVideoList(videoListDTO);
-    		System.out.println(list.get(0).getContent_origin_name());
     		return new ResponseEntity<List<ImageDTO>>(list, HttpStatus.OK);
     	}
     

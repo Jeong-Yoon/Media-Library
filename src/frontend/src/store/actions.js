@@ -101,13 +101,17 @@ const actions = {
     console.log("DELETE_FOLDER / action : ", folder_ids);
     return api.deleteFolder.deleteFolder(folder_ids);
   },
+  DELETE_ITEMS(_, ids) {
+    console.log("DELETE_ITEMS / action : ", ids);
+    return api.deleteItems.deleteItems(ids);
+  },
   GET_ITEMS(_, { email }) {
     console.log("action / getItems : ", { email });
     return api.getItems.getItems({ email });
   },
-  DELETE_ITEMS(_, ids) {
-    console.log("action / deleteItems : ", ids);
-    return api.deleteItems.deleteItems(ids);
+  HARD_DELETE_ITEMS(_, { ids, email }) {
+    console.log("action / deleteItems : ", { ids, email });
+    return api.hardDeleteItems.hardDeleteItems({ ids, email });
   },
   RESTORE_ITEMS(_, ids) {
     console.log("action / restoreItems : ", ids);

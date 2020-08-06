@@ -31,7 +31,6 @@
             <li
               v-for="item in this.items"
               v-bind:key="item.id"
-              @change="checkbox(item.id)"
               class="li"
             >
               <!-- 폴더 -->
@@ -101,7 +100,13 @@
                   />
                   <label :for="'a2' + item.id"></label>
                 </div>
-                <video
+                <img
+                  :src="roadImg(item.content)"
+                  width="130"
+                  height="130"
+                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                />
+                <!-- <video
                   :src="item.content"
                   width="130"
                   height="130"
@@ -109,7 +114,7 @@
                   id="video1"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(item.id)"
-                />
+                /> -->
                 <div class="info">
                   <span class="title">{{ item.content_name }}</span>
                 </div>
@@ -176,9 +181,9 @@ export default {
     }),
   },
   methods: {
-    ...mapActions(["GET_ITEMS", "DELETE_ITEMS", "RESTORE_ITEMS"]),
+    ...mapActions(["GET_ITEMS", "DELETE_ITEMS", "RESTORE_ITEMS","HARD_DELETE_ITEMS"]),
     deleteItems() {
-      this.DELETE_ITEMS(this.ids).then((data) => {
+      this.HARD_DELETE_ITEMS({ ids : this.ids, email : this.userInfo.useremail} ).then((data) => {
         console.log(data);
         if (data > 0) {
           alert("삭제가 완료되었습니다.");
@@ -239,13 +244,13 @@ export default {
       this.ids = [];
       if (!this.allSelected) {
         for (this.item in this.items) {
-          this.ids.push(this.items[this.item].id);
+          // this.ids.push(this.items[this.item].id);
         }
       }
     },
     select: function() {
       this.allSelected = false;
-      this.ids.push(this.items[this.item].id);
+      // this.ids.push(this.items[this.item].id);
     },
     roadImg(data) {
       const result = "data:image;base64," + data;

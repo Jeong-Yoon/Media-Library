@@ -162,9 +162,12 @@ export default {
         this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
       } else  {
         for(var i = 0; i < this.videoList.length-1; i++){
-          if(this.idOfVideo.content_id === this.videoList[i].content_id){
+          console.log(this.videoList[i].content_id)
+          console.log(this.idOfVideo)
+          if(this.idOfVideo === this.videoList[i].content_id){
+          console.log(this.idOfVideo === this.videoList[i].content_id)
             this.nextVideoId = this.videoList[i+1].content_id;
-            break;
+            console.log(this.nextVideoId + " : ----------------------------- : " + this.videoList[i+1].content_id)
           }
         }
       }
@@ -173,7 +176,22 @@ export default {
         if (data == 1) {
           alert("파일 삭제에 성공하였습니다.");
           this.$emit("getVideo", this.nextVideoId)
-          this.videoList.content_id;
+          // this.videoList.content_id;
+          console.log("===========next : " + this.nextVideoId)
+                this.videoId = this.idOfVideo;
+      console.log(this.nextVideoId + ' delete video method');
+      this.src ="/api/videos/video/" + this.nextVideoId;
+      console.log(this.src);
+      var v1 = document.getElementById("video-div");
+      // v1.parentNode.replaceChild(p);
+      var p = '<video id="video"'
+            + 'controls autoplay muted loop src="'+this.src+'"' 
+            + ' type="video/mp4"'
+            + 'style ="width :1040px; height : 600px;"'
+           + '> </video>';
+      v1.innerHTML = p;
+
+
         } 
       });
     },
