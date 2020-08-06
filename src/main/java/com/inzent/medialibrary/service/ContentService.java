@@ -24,6 +24,6 @@ public interface ContentService {
 	public ImageDTO getContentById(Long image_id);
 	public int deleteContent(List<Long> ids);
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO);
-	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO);
+	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) throws IOException, JCodecException;
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) throws IOException, JCodecException;
 }

@@ -147,11 +147,12 @@ public class ContentServiceImpl implements ContentService {
 	}
 
 	@Override
-	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) {
+	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) throws IOException, JCodecException {
 		List<ImageDTO> list = contentDAO.getImageList(folderIdDTO);
 		for(ImageDTO i : list) {
 			if (i.getContent_type().equals("V")) {
-				break;
+				File file = new File(i.getContent_storage());
+				i.setContent(GetThumbnail.getThumbnail(file));
 			} else if(i.getContent_type().equals("I")){
 				InputStream in;
 				try {
