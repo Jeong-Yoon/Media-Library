@@ -59,6 +59,7 @@
                 src="@/assets/image/trash.png"
                 alt="trash logo"
                 height="30px"
+                @click="goTrash()"
               />
               <p class="p4">
                 휴지통
@@ -102,6 +103,12 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CAPACITY"]),
+    goTrash() {
+      if (this.$route.path == "/trashDocumentBox") {
+        // route.path가 트래쉬 페이지면은 액티브 클래스 없애기
+        console.log;
+      }
+    },
     choose: function(index) {
       this.selected = index;
     },

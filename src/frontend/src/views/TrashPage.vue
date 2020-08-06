@@ -78,7 +78,6 @@
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getImg(item.id)"
                 />
                 <div class="info">
                   <span class="title">{{ item.content_name }}</span>
@@ -104,14 +103,6 @@
                   :src="roadImg(item.content)"
                   width="130"
                   height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                />
-                <!-- <video
-                  :src="item.content"
-                  width="130"
-                  height="130"
-                  preload="metadata"
-                  id="video1"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(item.id)"
                 /> -->
