@@ -19,7 +19,7 @@
       <div class="header">
         <!-- 나가기 -->
           <!-- <a class="v_btn_close" id="reset" @click="closeImageNav()" style="color:#fff; font-size: 15px; z-index :10; "> -->
-          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; z-index :10;">
+          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; ">
             나가기
           </a>
 
@@ -86,6 +86,7 @@
             @click="openInfoModal()"
             title="정보"
             style="margin-right:5px; top : 0.5px"
+            v-if="this.idOfImage.content_type == 'I'"
           >
             <img src="@/assets/image/v_task_info.png" height="16px; " />
           </a>
@@ -123,19 +124,19 @@
       </div>
       <!-- header 끝 -->
 
-      <!-- media-control-->
+
+<!-- media-control-->
        <a 
             class="v_ta_trash" 
-            title="휴지통"
             v-if="this.idOfImage.content_type == 'V'"
             style="margin-right:5px; top : 0.5px"
           >
-            <img
-               src="@/assets/image/media_control.png" 
-               height="70px;" 
-               class="media-control"
-               @click="getVideo(content_id)"
-            />
+          <img
+            src="@/assets/image/media_control.png" 
+            height="70px;" 
+            class="media-control"
+            @click="getVideo"
+          />
        </a>
 
         <VideoViewingModal
@@ -143,12 +144,10 @@
           :videoList="videoList"
           v-if="videoModal"
           @getVideo="getVideo"
-          @deletedVideo="deletedVideo"
           @close="closeVideoModal"
         />
+<!-- ------------ -->
        
- <!-- <VideoViewingModal v-if="videoModal" /> -->
-<!-- <VideoViewingModal> </VideoViewingModal> -->
 
      <!-- content -->
       <div class="content" id="page"> 
@@ -319,7 +318,12 @@
           <div class ="slide-image-container" >
             <ul style="  list-style-type: none;" z-index:10 > 
               <li v-for="(list, index) in imageList" :key="index" :class="{ on: index === currentIndex }">
-                <img :src="roadImg(list.content)" :alt="index" style=" vertical-align: middle;" />
+                <img 
+                  :src="roadImg(list.content)" 
+                  :alt="index" 
+                  style=" vertical-align: middle;" 
+                  v-if="idOfImage.content_type == 'I'"
+                />
               </li>
             </ul>
           </div>
@@ -348,7 +352,6 @@ export default {
   props : [
     "idOfImage",
     "imageList",
-    "idOfVideo",
   ],
   data() {
     return {
@@ -360,6 +363,7 @@ export default {
       // src:'../assets/image/sample.jpg',
       // srcLarge:'../assets/image/sample.jpg',
       videoModal: false,
+      imageModal : false,
    
       playing: false,
       //   bannerList: [
@@ -380,7 +384,9 @@ export default {
       timer : null,
       imageData:"",
       imgList : [],
-      nextImageId:""
+      nextImageId:"",
+      idOfVideo:"",
+      videoList: [],
       // content_id : ""
       // image : ' this.roadImg(this.idOfImage.content)',
     };
@@ -432,11 +438,11 @@ export default {
       "GET_VIDEO_LIST",
     ]),
 
-     getVideo(videoId) {
-      console.log("getVideo : " + videoId);
-      this.idOfVideo = videoId;
+     getVideo() {
+      console.log("getVideo : " + this.idOfImage.content_id);
+      this.idOfVideo = this.idOfImage.content_id;
       console.log("get Video : " + this.idOfVideo)
-      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+      this.GET_VIDEO_LIST({ folderId: this.idOfImage.folder_id, videoId: this.idOfImage.content_id }).then(
         (result) => {
           console.log(this.parent);
           console.log("video list result : " + result[0]);
@@ -444,15 +450,15 @@ export default {
         }
       );
       this.openVideoModal();
-      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
-      //   console.log(data);
-      //   this.idOfVideo = data;
-      //   this.openVideoModal();
-      // });
+    },
+
+    openVideoModal() {
+      this.videoModal = true;
     },
 
     closeVideoModal() {
       this.videoModal = false;
+      document.getElementById("image_nav").style.display = "none";
     },
    
     openImageNav() {
@@ -766,6 +772,7 @@ export default {
   top: 10px;
   cursor: pointer;
   left: 10px;
+  z-index: 15;
 }
 
 .v_task {
@@ -775,7 +782,7 @@ export default {
   right: 5px;
   font-size: 18px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 15;
 }
 
 /* footer */
@@ -804,7 +811,7 @@ export default {
 
 #toggle + label {
   font-style: italic;
-  z-index: 600;
+  z-index: 15;
   position: absolute;
   bottom: 20px;
   right: 5px;
@@ -1239,7 +1246,7 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%; 
-  z-index: 1000000;
+  z-index: 15;
   cursor: pointer;
 }
 
