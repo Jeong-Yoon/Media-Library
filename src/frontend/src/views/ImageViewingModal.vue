@@ -250,16 +250,16 @@
                       <td style=" color : #d3d3d3;">파일정보</td>
                   </tr>
                   <tr>
-                      <td width = "100px;">해상도</td>
-                      <td>&nbsp;{{idOfImage.content_attribute}}</td>
-                  </tr>
-                  <tr>
-                      <td>파일크기</td>
+                      <td  width = "100px;">파일크기</td>
                       <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
                   </tr>
                   <tr>
                       <td> 업로드일시</td>
                       <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
+                  </tr>
+                  <tr>
+                      <td width = "100px;">올린사람</td>
+                      <td>&nbsp;{{idOfImage.content_reg_user}}</td>
                   </tr>
               </table>
           </div>
@@ -273,9 +273,9 @@
          
             <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
                     <tr>
-                        <td style=" color : #d3d3d3">폴더 경로</td>
                     </tr>
                     <tr>
+                        <td style=" color : #d3d3d3">폴더 경로</td>
                         <td><a herf="">{{idOfImage.path}}</a></td>
                     </tr>
             </table>
@@ -1118,7 +1118,7 @@ export default {
   display: block;
 }
 
-/* paginate */
+/* 전 후 이미지 */
 .v_btn_prev {
   overflow: hidden;
   position: absolute;
@@ -1154,7 +1154,6 @@ export default {
   line-height: 100%;
   vertical-align: middle;
   margin-top: 2%;
-  
 }
 
 .element li {
@@ -1231,9 +1230,6 @@ export default {
     background: linear-gradient(to bottom, #a6c4c7, #a6c4c7); 
 }
 ::-webkit-scrollbar-button { display: none; }
-
-
-
 
 
 /*  */
