@@ -119,9 +119,9 @@
                 </div>
                 <img
                   :src="roadImg(folder.content)"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  width="130px"
+                  height="130px"
+                  style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getImg(folder.id)"
                 />
                 <div class="info">
@@ -153,9 +153,9 @@
                 /> -->
                 <img
                   :src="roadImg(folder.content)"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  width="130px"
+                  height="130px"
+                  style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
                 />
                 <div class="info">

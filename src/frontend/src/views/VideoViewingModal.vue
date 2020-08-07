@@ -8,7 +8,7 @@
         <!-- 나가기 -->
         <!-- <a class="v_btn_close" @click="closeVideoNav()" style="color:#fff;  font-size: 14px;">나가기</a> -->
           <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; z-index :10;">
-            나가기
+             <img src="@/assets/image/view_ss_exit.png" height="14px" />
           </a>
 
 
@@ -33,7 +33,7 @@
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
             <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
-              <img src="@/assets/image/v_task_more.png" height="16px" />
+              <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
             <div class="dropdown-content" style="float:right;">
               <!-- <a
@@ -50,6 +50,7 @@
 
         </div>
         <!-- v_task 끝 -->
+
       </div>
       <!-- header 끝 -->
 
@@ -72,6 +73,15 @@
         </div>
         <!-- video-con -->
 
+         <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @deletedImg="deletedImg"
+          @close="closeImageModal"
+        />
+
 
 
         <div class ="side-contanier">
@@ -89,6 +99,7 @@
                   style="margin-bottom : 11px; height : 110px;"
                 > 
                     <img
+                      class="vvvvvv"
                       :src="roadImg(list.content)"
                       @click="getVideoId(list.content_id)"
                       style="                             
@@ -98,6 +109,7 @@
                               object-fit:contain;
                               background-color : #fff; 
                               float : left;
+                              z-index : 500000;
                             "
                     />
 
@@ -127,6 +139,127 @@
    
   </div>
 </template>
+
+
+<script>
+import { mapActions } from "vuex";
+import ImageViewingModal from "./ImageViewingModal";
+export default {
+  components: {
+    ImageViewingModal,
+  },
+  
+  props : [
+    "idOfVideo",
+    "videoList",
+  ],
+   data() {
+    return {
+        video: {},
+        // MediaTrackConstraints를 변수로 정의
+        mediaContraint: {
+            video: true
+        },
+        scr:"",
+        vList:"",
+        videoId :"",
+        nextVideoId:"",
+        videoModal: false,
+    };
+  },
+  created() {
+    this.videoId = this.idOfVideo;
+    this.src = "/api/videos/video/" + this.videoId;
+    // this.vList = this.videoList;
+    console.log(this.videoList)
+  },
+
+   methods: {
+    ...mapActions([
+      "GET_VIDEO",
+      "DELETE_FILE",
+    ]),
+    
+    openVideoNav() {
+      document.getElementById("video_nav").style.display = "block";
+      document.getElementById("image_nav").style.display = "block";
+      // this.openshareModal = [];
+      // event.target.reset();
+    },
+    close() {
+      document.getElementById("video_nav").style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.getElementById("image_nav").style.display = "block";
+      document.webkitExitFullscreen().style.display = "none";
+    },
+    roadImg(data) {
+      const result = "data:image;base64," + data;
+      return result;
+    },
+
+    // 삭제
+      deleteFile() {
+      console.log(this.idOfVideo);
+      if(this.idOfVideo === this.videoList[this.videoList.length-1].content_id){
+        this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
+      } else  {
+        for(var i = 0; i < this.videoList.length-1; i++){
+          console.log(this.videoList[i].content_id)
+          console.log(this.idOfVideo)
+          if(this.idOfVideo === this.videoList[i].content_id){
+          console.log(this.idOfVideo === this.videoList[i].content_id)
+            this.nextVideoId = this.videoList[i+1].content_id;
+            console.log(this.nextVideoId + " : ----------------------------- : " + this.videoList[i+1].content_id)
+          }
+        }
+      }
+      this.DELETE_FILE([this.idOfVideo]).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("파일 삭제에 성공하였습니다.");
+          this.$emit("getVideo", this.nextVideoId)
+          // this.videoList.content_id;
+          console.log("===========next : " + this.nextVideoId)
+                this.videoId = this.idOfVideo;
+      console.log(this.nextVideoId + ' delete video method');
+      this.src ="/api/videos/video/" + this.nextVideoId;
+      console.log(this.src);
+      var v1 = document.getElementById("video-div");
+      // v1.parentNode.replaceChild(p);
+      var p = '<video id="video"'
+            + 'controls autoplay muted loop src="'+this.src+'"' 
+            + ' type="video/mp4"'
+            + 'style ="width :1040px; height : 600px;"'
+           + '> </video>';
+      v1.innerHTML = p;
+
+
+        } 
+      });
+    },
+
+
+    // 다음동영상
+    getVideoId(id){
+      console.log(id + ' get video method')
+      this.videoId = id;
+      console.log(this.videoId + ' get video method')
+      this.src ="/api/videos/video/" + this.videoId;
+      var v1 = document.getElementById("video-div");
+      // v1.parentNode.replaceChild(p);
+      var p = '<video id="video"'
+            + 'controls autoplay muted loop src="'+this.src+'"' 
+            + ' type="video/mp4"'
+            + 'style ="width :1040px; height : 600px;"'
+           + '> </video>';
+      v1.innerHTML = p;
+      // v1.  = p
+    },
+  
+  }
+};
+</script>
 
 
 <script>
@@ -170,6 +303,7 @@ export default {
     },
     close() {
       document.getElementById("video_nav").style.display = "none";
+      document.getElementById("image_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
       document.webkitExitFullscreen().style.display = "none";
@@ -244,7 +378,7 @@ export default {
   justify-content: center;
   align-items: center;
   top: 180px;
-  left : 150px;
+  left : 100px;
 }
 
 .footer-info{
@@ -270,7 +404,7 @@ export default {
   justify-content: center;
   align-items: center;
   top: 120px;
-  left : 1240px;
+  left : 1140px;
   height : 600px;
   overflow-y: scroll;
   display: inline-block;
@@ -287,7 +421,7 @@ export default {
   justify-content: center;
   align-items: center;
   top: 180px;
-  left : 1250px;
+  left : 1150px;
   height : 600px;
   overflow-y: scroll;
   display: inline-block;
@@ -319,7 +453,7 @@ export default {
    line-height: 1.5;
    color: #d3d3d3;
   /* color : #fff; */
-  line-height: 1.5;
+  line-height: 1.8;
 }
 
 
@@ -349,7 +483,7 @@ export default {
 
 .v_btn_close {
   position: absolute;
-  top: 10px;
+  top: 7px;
   cursor: pointer;
   left: 10px;
 }
@@ -415,6 +549,10 @@ export default {
 .dropdown:hover .dropdown-content {
    overflow: hidden;
   display: block;
+}
+
+.vvvvvv{
+  z-index: 999999;
 }
 
 

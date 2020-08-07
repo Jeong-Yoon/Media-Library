@@ -13,7 +13,6 @@
   
     </div> -->
 
-
     <!-- 이미지 모달 -->
     <div class="overlay" id="image_nav" tabindex="1" role="dialog" >
       <!-- header -->
@@ -32,6 +31,7 @@
             id="in" 
             title="확대" 
             @click="zoomIn()" 
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; "
           >
             <img src="@/assets/image/v_task_zoomin.png" height="16px"  style="top : 2px;"/>
@@ -41,6 +41,7 @@
             id="out" 
             title="축소" 
             @click="zoomOut()" 
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; /"
           >
             <img src="@/assets/image/v_task_zoomout.png" height="16px"  style="top : 2px;"/>
@@ -51,6 +52,7 @@
             class="v_ta_rotate"
             @click="rotate()"
             title="회전"
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; top : 0.5px;"
           >
             <img src="@/assets/image/v_task_rotate.png" height="17.5px"  style="top : 2px;" />
@@ -106,6 +108,7 @@
             </a>
             <div class="dropdown-content" style="float:right;">
               <a
+                v-if="this.idOfImage.content_type == 'I'"
                 class="slider_option"
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();">
                 슬라이드쇼
@@ -120,6 +123,33 @@
       </div>
       <!-- header 끝 -->
 
+      <!-- media-control-->
+       <a 
+            class="v_ta_trash" 
+            title="휴지통"
+            v-if="this.idOfImage.content_type == 'V'"
+            style="margin-right:5px; top : 0.5px"
+          >
+            <img
+               src="@/assets/image/media_control.png" 
+               height="70px;" 
+               class="media-control"
+               @click="getVideo(content_id)"
+            />
+       </a>
+
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          :videoList="videoList"
+          v-if="videoModal"
+          @getVideo="getVideo"
+          @deletedVideo="deletedVideo"
+          @close="closeVideoModal"
+        />
+       
+ <!-- <VideoViewingModal v-if="videoModal" /> -->
+<!-- <VideoViewingModal> </VideoViewingModal> -->
+
      <!-- content -->
       <div class="content" id="page"> 
          <div class="image-container" id="imgContainer">
@@ -128,6 +158,7 @@
                   :src="roadImg(this.idOfImage.content)"
                   class="image" 
                   id="img"
+
                 >
           </div>
         </div>
@@ -285,7 +316,7 @@
           <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{bannerList.length}}</strong></span> -->
 
           <!-- 이미지 -->
-          <div class ="slide-image-container">
+          <div class ="slide-image-container" >
             <ul style="  list-style-type: none;" z-index:10 > 
               <li v-for="(list, index) in imageList" :key="index" :class="{ on: index === currentIndex }">
                 <img :src="roadImg(list.content)" :alt="index" style=" vertical-align: middle;" />
@@ -302,6 +333,7 @@
 <script>
 // import VueMagnifier from './test.vue' 
 // import Cropper from '../utils/cropper.js'
+import VideoViewingModal from "./VideoViewingModal";
 import { mapActions } from "vuex";
 // import ImageMagnifier from "vue-image-magnifier";
 
@@ -310,11 +342,13 @@ export default {
   // el: "#app",
   
   components : {
+    VideoViewingModal,
     // ImageMagnifier
   },
   props : [
     "idOfImage",
     "imageList",
+    "idOfVideo",
   ],
   data() {
     return {
@@ -325,7 +359,8 @@ export default {
 
       // src:'../assets/image/sample.jpg',
       // srcLarge:'../assets/image/sample.jpg',
-     
+      videoModal: false,
+   
       playing: false,
       //   bannerList: [
       //     {imgsrc : this.roadImg(this.idOfImage.content) },       
@@ -393,7 +428,32 @@ export default {
     ...mapActions([
       "GET_IMAGE",
       "DELETE_FILE",
+      "GET_VIDEO",
+      "GET_VIDEO_LIST",
     ]),
+
+     getVideo(videoId) {
+      console.log("getVideo : " + videoId);
+      this.idOfVideo = videoId;
+      console.log("get Video : " + this.idOfVideo)
+      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+        (result) => {
+          console.log(this.parent);
+          console.log("video list result : " + result[0]);
+          this.videoList = result;
+        }
+      );
+      this.openVideoModal();
+      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
+      //   console.log(data);
+      //   this.idOfVideo = data;
+      //   this.openVideoModal();
+      // });
+    },
+
+    closeVideoModal() {
+      this.videoModal = false;
+    },
    
     openImageNav() {
       console.log("이미지모달");
@@ -1170,6 +1230,18 @@ export default {
 
 
 /*  */
+.media-control{
+  --current-rotate-cycle: 0;
+  --current-rotate: rotate(0deg);
+  --current-scale: scale(1);
+  transform: var(--current-rotate) var(--current-scale) translate(-50%, -50%);
+  transform-origin: 0 0;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  z-index: 1000000;
+  cursor: pointer;
+}
 
 
 
