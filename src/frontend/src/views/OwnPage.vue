@@ -17,8 +17,29 @@
             받기
           </button>
           <button class="share">공유</button>
-          <button class="album">앨범</button>
+          <button class="album" @click="openAlbumModal">앨범</button>
           <button class="delete" @click="deleteFile">삭제</button>
+          <ChooseAlbumModal @close="closeAlbumModal" v-if="albumModal">
+            <p class="pp">
+              {{ ids.length }}개의 파일 어떤 앨범에 추가하시겠습니까?
+            </p>
+            <div>
+              <select v-model="albumId" class="select-box">
+                <option disabled value>앨범을 선택해주세요</option>
+                <option
+                  v-for="album in this.albums"
+                  :value="album.album_id"
+                  :key="album.album_id"
+                >
+                  {{ album.title }}
+                </option>
+              </select>
+            </div>
+            <template slot="footer">
+              <!--<button class="button1" @click="doNewAlbum">새앨범</button>-->
+              <button class="buttonAdd" @click="addAlbum">추가</button>
+            </template>
+          </ChooseAlbumModal>
         </div>
         <div v-else>
           <button class="b1" @click="openModal" v-show="noShow">새폴더</button>
@@ -72,7 +93,6 @@
             <li
               v-for="folder in this.folderList"
               v-bind:key="folder.id"
-              @change="checkbox(folder.id)"
               class="li"
             >
               <!-- 폴더 -->
@@ -165,46 +185,7 @@
             </li>
           </ul>
         </div>
-        <!--  
-        <ul class="list_thumb">
-          <li class="li" title="image" @click="openImageModal">
-            <label for>
-              <div class="thumb">
-                <span class="image">
-                  <img
-                    src="@/assets/image/june.jpg"
-                    width="130"
-                    height="130"
-                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  />
-                </span>
-              </div>
-              <div class="info">
-                <span class="title">image</span>
-              </div>
-            </label>
-          </li>
-          <li class="li" title="video" @click="openVideoModal">
-            <label for>
-              <div class="thumb">
-                <span class="video">
-                  <img
-                    src="@/assets/image/video.jpg"
-                    width="130"
-                    height="130"
-                    style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  />
-                </span>
-              </div>
-              <div class="info">
-                <span class="title">video</span>
-              </div>
-            </label>
-          </li>
-          <ImageViewingModal :idOfImage="idOfImage" :imageList="imageList" v-if="imageModal" @getImg="getImg" />
-          <VideoViewingModal v-if="videoModal" />
-        </ul>
-        -->
+
         <ImageViewingModal
           :idOfImage="idOfImage"
           :imageList="imageList"
@@ -250,6 +231,7 @@ import NewFolderModal from "./NewFolderModal";
 import ImageViewingModal from "./ImageViewingModal";
 import VideoViewingModal from "./VideoViewingModal";
 import UploadFileModal from "./UploadFileModal";
+import ChooseAlbumModal from "./ChooseAlbumModal.vue";
 //import UploadFolderModal from "./UploadFolderModal";
 import { mapActions, mapState } from "vuex";
 
@@ -261,6 +243,7 @@ export default {
     ImageViewingModal,
     VideoViewingModal,
     UploadFileModal,
+    ChooseAlbumModal,
     //UploadFolderModal,
   },
   data() {
@@ -283,6 +266,7 @@ export default {
       ],
       zIndex: 50,
       modal: false,
+      albumModal: false,
       imageModal: false,
       videoModal: false,
       fileModal: false,
@@ -303,14 +287,16 @@ export default {
       downloadId: "",
       intoParent: "",
       videoList: [],
-      folderId: ""
+      folderId: "",
+      albumId: "",
+      albums: [],
     };
   },
   created() {
     console.log("------create------");
     this.getFolders();
-    this.deletedImg();
-    this.deletedVideo();
+    //this.deletedImg();
+    //this.deletedVideo();
   },
   watch: {
     // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다
@@ -324,6 +310,8 @@ export default {
   },
   methods: {
     ...mapActions([
+      "ADD_ALBUM",
+      "GET_ALBUMS",
       "NEW_FOLDER",
       "GET_FOLDERS",
       "DOWNLOAD_FILE",
@@ -334,6 +322,32 @@ export default {
       "DELETE_FILE",
       "GET_VIDEO_LIST",
     ]),
+    addAlbum() {
+      console.log("----------------addAlbum start---------------");
+      console.log("albumId : ", this.albumId);
+      console.log("ids : ", this.ids);
+      this.ADD_ALBUM({ album_id: this.albumId, ids: this.ids }).then((data) => {
+        console.log("data : ", data);
+        if (data == 1) {
+          alert("앨범에 파일이 추가되었습니다.");
+          this.albumId = "";
+          this.ids = [];
+        } else {
+          alert("파일 추가에 실패하였습니다.");
+          this.albumId = "";
+          this.ids = [];
+        }
+      });
+      console.log("----------------addAlbum end---------------");
+    },
+    getAlbums() {
+      console.log("-------------Get Albums Start------------");
+      this.GET_ALBUMS({ email: this.userInfo.useremail }).then((list) => {
+        this.albums = list;
+        console.log("albumList : ", this.albums);
+      });
+      console.log("-------------Get Albums End------------");
+    },
     resetImg() {
       this.idOfImage = "";
     },
@@ -354,11 +368,6 @@ export default {
         }
       );
       this.openVideoModal();
-      // this.GET_VIDEO({ videoId: videoId }).then((data) => {
-      //   console.log(data);
-      //   this.idOfVideo = data;
-      //   this.openVideoModal();
-      // });
     },
     deleteFile() {
       console.log(this.ids);
@@ -368,10 +377,12 @@ export default {
           alert("삭제된 파일이 휴지통으로 이동하였습니다.");
           this.ids = [];
           this.getFolders(this.intoParent);
+          this.intoFolder();
         } else {
           alert("파일 삭제에 실패했습니다.");
           this.ids = [];
           this.getFolders(this.intoParent);
+          this.intoFolder();
         }
       });
     },
@@ -382,43 +393,15 @@ export default {
         if (data == 1) {
           alert("삭제된 폴더가 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders();
+          this.getFolders(this.$route.params.id);
         } else {
           alert("폴더 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.getFolders(this.$route.params.id);
         }
       });
     },
     async download() {
-      // console.log("download : " + this.ids);
-      // this.DOWNLOAD_FILE(this.ids).then((res) => {
-      //   console.log(res)
-      //   console.log("res : " + res.data)
-      //   console.log(res.headers)
-      //   // const url = window.URL.createObjectURL(new Blob([res.data]), {
-      //   //   type: "*",
-      //   // }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-      //   // console.log("url :  "+ url)
-      //   // const link = document.createElement("a");
-      //   // link.href = url;
-      //   // link.setAttribute("download", this.ids);
-      //   // document.body.appendChild(link);
-      //   // link.click();
-      //   // console.log("link :  "+ link)
-
-      //           function replaceAll (str, searchStr, replaceStr) {
-      //               return str.split(searchStr).join(replaceStr)
-      //           }
-      //           const url = window.URL.createObjectURL(new Blob([res.data]))
-      //           const link = document.createElement('a')
-      //           link.href = url
-      //           const filename = replaceAll(decodeURI(res.headers.filename), '+', ' ')
-      //           link.setAttribute('download', filename)
-      //           document.body.appendChild(link)
-      //           link.click()
-      // });
-
       console.log("downloadFile실행..");
       for (var j = 0; j < this.ids.length; j++) {
         this.downloadId = this.ids[j];
@@ -456,12 +439,12 @@ export default {
         console.log(data);
         this.idOfImage = data;
       });
-      if(typeof(this.$route.params.id) === 'undefined'){
+      if (typeof this.$route.params.id === "undefined") {
         this.folderId = this.parent;
       } else {
-        this.folderId = this.$route.params.id
+        this.folderId = this.$route.params.id;
       }
-      console.log("folderId : " + this.folderId)
+      console.log("folderId : " + this.folderId);
       this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
         //console.log(this.parent);
         //console.log(result[0].content_id + " : image list");
@@ -475,6 +458,7 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
+    /*
     deletedImg(imageId) {
       console.log("삭제삭제");
       console.log(this.imageList);
@@ -486,7 +470,7 @@ export default {
       this.getFolders(this.videoList[0].content_id);
       this.getVideo(videoId);
     },
-
+    */
     all() {
       this.folders = true;
       this.images = true;
@@ -552,6 +536,7 @@ export default {
         }
       }
     },
+    /*
     checkbox(folder_id) {
       console.log(folder_id);
       // this.ids.pudh(folder_id)
@@ -562,9 +547,18 @@ export default {
       //   this.ids.splice(this.ids.indexOf(folder_id), 1);
       // }
     },
+    */
     select: function() {
       this.allSelected = false;
       this.ids.push(this.folderList[this.folder].id);
+    },
+    openAlbumModal() {
+      this.albumModal = true;
+      this.getAlbums();
+    },
+    closeAlbumModal() {
+      this.albumModal = false;
+      this.intoFolder(this.$route.params.id);
     },
     openImageModal() {
       this.imageModal = true;
@@ -635,6 +629,62 @@ export default {
 </script>
 
 <style scoped>
+option {
+  color: #a49988;
+}
+.pp {
+  padding-bottom: 10px;
+}
+.buttonAdd {
+  font-family: inherit;
+  font-size: 90%;
+  margin: 0;
+  cursor: pointer;
+  border: none;
+  background-color: #494346;
+  color: white;
+  border-radius: 4px;
+  height: 30px;
+  width: 100px;
+  margin-left: 100px;
+}
+
+.agree3 {
+  position: absolute;
+  z-index: 5;
+  opacity: 0.5;
+}
+.agree3:hover {
+  opacity: 1;
+}
+.agree3 input[type="checkbox"] {
+  display: none;
+}
+.agree3 input[type="checkbox"] + label {
+  width: 20px;
+  height: 20px;
+  background: #d2cdc5;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  margin-right: 10px;
+}
+.agree3 input[type="checkbox"] + label:hover {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+.agree3 input[type="checkbox"]:checked + label {
+  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
+  float: left;
+  opacity: initial;
+  background-color: #a6c4c7;
+}
+.agree3 input[type="checkbox"] + label span {
+  position: absolute;
+  left: 0px;
+  display: block;
+}
+
 .input {
   margin-top: 30px;
   border-bottom: 1px solid #a49988;

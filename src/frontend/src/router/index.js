@@ -55,6 +55,11 @@ const routes = [
     component: () => import("@/views/AlbumPage.vue"),
   },
   {
+    path: "/albumDocumentBox/:album_id",
+    name: "intoAlbumDocumentBox",
+    component: () => import("@/views/AlbumIntoPage.vue"),
+  },
+  {
     path: "/trashDocumentBox",
     name: "trashDocumentBox",
     component: () => import("@/views/TrashPage.vue"),

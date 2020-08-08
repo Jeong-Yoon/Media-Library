@@ -117,6 +117,33 @@ const actions = {
     console.log("share actions");
     return api.getShareItems.getShareItems();
   },
+  GET_ALBUMS(_, { email }) {
+    console.log("action : ", email);
+    return api.getAlbums.getAlbums({ email });
+  },
+  NEW_ALBUM(_, { newAlbumName, userEmail }) {
+    console.log("action : ", newAlbumName);
+    console.log("action : ", userEmail);
+    return api.doNewAlbum.doNewAlbum({ newAlbumName, userEmail });
+  },
+  DELETE_ALBUM(_, albumIds) {
+    console.log("action : ", albumIds);
+    return api.deleteAlbum.deleteAlbum(albumIds);
+  },
+  INTO_ALBUM(_, { album_id }) {
+    console.log("action : ", album_id);
+    return api.intoAlbum.intoAlbum({ album_id });
+  },
+  DELETE_ALBUM_ITEMS(_, { album_id, ids }) {
+    console.log("action : ", album_id);
+    console.log("action : ", ids);
+    return api.deleteAlbumItems.deleteAlbumItems(ids);
+  },
+  ADD_ALBUM(_, { album_id, ids }) {
+    console.log("action : ", album_id);
+    console.log("action : ", ids);
+    return api.addAlbum.addAlbum({ album_id, ids });
+  },
 };
 
 export default actions;

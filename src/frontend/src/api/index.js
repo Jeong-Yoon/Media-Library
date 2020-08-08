@@ -223,6 +223,50 @@ export const getShareItems = {
 //   }
 // }
 
+export const getAlbums = {
+  getAlbums({ email }) {
+    console.log("api : ", email);
+    return request("get", `/api/albums/${email}`);
+  },
+};
+
+export const doNewAlbum = {
+  doNewAlbum(data) {
+    const newAlbumName = data.newAlbumName;
+    const userEmail = data.userEmail;
+    return request("post", "/api/albums/add", { newAlbumName, userEmail });
+  },
+};
+
+export const deleteAlbum = {
+  deleteAlbum(albumIds) {
+    console.log("api : ", albumIds);
+    return request("delete", "/api/albums", albumIds);
+  },
+};
+
+export const intoAlbum = {
+  intoAlbum({ album_id }) {
+    console.log("api : ", album_id);
+    return request("post", "/api/albums/intoAlbum", { album_id });
+  },
+};
+
+export const deleteAlbumItems = {
+  deleteAlbumItems({ album_id, ids }) {
+    console.log("api : ", album_id);
+    return request("delete", "/api/albums/deleteitem", { album_id, ids });
+  },
+};
+
+export const addAlbum = {
+  addAlbum({ album_id, ids }) {
+    console.log("api : ", album_id);
+    console.log("api : ", ids);
+    return request("post", "/api/albums/additem", { album_id, ids });
+  },
+};
+
 function createInstance() {
   return axios.create({
     baseURL: DOMAIN,

@@ -2,20 +2,23 @@
   <content>
     <div class="content">
       <div class="top-content">
-        <div class="agree">
-          <div class="all_agree">
-            <input type="checkbox" id="a1" name="전체동의" />
-            <label for="a1"></label>
-          </div>
+        <div class="agree" v-show="noShow">
+          <input
+            type="checkbox"
+            id="a1"
+            name="전체동의"
+            @click="selectAll"
+            v-model="allSelected"
+          />
+          <label for="a1"></label>
         </div>
         <div v-if="this.ids > 0">
           <button class="b1" @click="deleteItem()">삭제</button>
         </div>
         <div v-else>
           <button class="b2" @click="all">전체</button>
-          <button class="b3" @click="onlyFolder">폴더</button>
-          <button class="b4" @click="onlyImage">사진</button>
-          <button class="b5" @click="onlyVideo">동영상</button>
+          <button class="b3" @click="onlyImage">사진</button>
+          <button class="b4" @click="onlyVideo">동영상</button>
         </div>
         <!--
         <form class="search">
@@ -73,6 +76,7 @@
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getImg(item.id)"
                 />
                 <div class="info">
                   <span class="title">{{ item.content_name }}</span>
@@ -99,6 +103,7 @@
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(item.id)"
                 />
                 <div class="info">
                   <span class="title">{{ item.content_name }}</span>
@@ -107,6 +112,22 @@
             </li>
           </ul>
         </div>
+        <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @deletedImg="deletedImg"
+          @close="closeImageModal"
+        />
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          :videoList="videoList"
+          v-if="videoModal"
+          @getVideo="getVideo"
+          @deletedVideo="deletedVideo"
+          @close="closeVideoModal"
+        />
       </div>
     </div>
   </content>
@@ -114,6 +135,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import ImageViewingModal from "./ImageViewingModal";
+import VideoViewingModal from "./VideoViewingModal";
 
 export default {
   computed: {
@@ -121,30 +144,38 @@ export default {
       userInfo: "userInfo",
     }),
   },
-  components: {},
+  components: {
+    ImageViewingModal,
+    VideoViewingModal,
+  },
   data() {
     return {
-      newAlbumName: "",
-      modal: false,
-      albums: [],
       items: [],
-      intoAlbumKey: "",
+      album_id: "",
       ids: [],
-      albumId: "",
+      imageModal: false,
+      videoModal: false,
+      imageList: [],
+      videoList: [],
+      images: true,
+      videos: true,
+      noShow: true,
+      allSelected: true,
     };
   },
-  created() {},
+  created() {
+    this.intoAlbum();
+  },
   watch: {
     $route: "getAlbums",
   },
   methods: {
-    ...mapActions(["INTO_ALBUM", "DELETE_ITEM"]),
-    intoAlbum(intoAlbumKey) {
+    ...mapActions(["INTO_ALBUM", "DELETE_ALBUM_ITEMS"]),
+    intoAlbum() {
       console.log("-------------Into Albums Start------------");
-      this.intoAlbumKey = intoAlbumKey;
-      this.albumId = "";
-      console.log("intoAlbum : ", this.intoAlbum);
-      this.INTO_ALBUM({ intoAlbumKey: intoAlbumKey }).then((list) => {
+      this.album_id = this.$route.params.album_id;
+      console.log("intoAlbum : ", this.album_id);
+      this.INTO_ALBUM({ album_id: this.album_id }).then((list) => {
         this.items = list;
       });
       console.log("-------------Into Albums End------------");
@@ -152,18 +183,20 @@ export default {
     deleteItem() {
       console.log("-------------delete Item Start------------");
       console.log("삭제할 아이템목록 : ", this.ids);
-      this.DELETE_ITEM(this.ids).then((data) => {
-        console.log("결과값 : ", data);
-        if (data == 1) {
-          alert("파일이 앨범에서 삭제되었습니다.");
-          this.ids = [];
-          this.intoAlbum(this.$route.params.id);
-        } else {
-          alert("파일 삭제에 실패했습니다.");
-          this.ids = [];
-          this.intoAlbum(this.$route.params.id);
+      this.DELETE_ITEM({ album_id: this.album_id, ids: this.ids }).then(
+        (data) => {
+          console.log("결과값 : ", data);
+          if (data == 1) {
+            alert("파일이 앨범에서 삭제되었습니다.");
+            this.ids = [];
+            this.intoAlbum(this.album_id);
+          } else {
+            alert("파일 삭제에 실패했습니다.");
+            this.ids = [];
+            this.intoAlbum(this.album_id);
+          }
         }
-      });
+      );
       console.log("-------------delete Item End------------");
     },
     checkType(id) {
@@ -173,25 +206,16 @@ export default {
       return temp;
     },
     all() {
-      this.folders = true;
       this.images = true;
       this.videos = true;
       this.noShow = true;
     },
-    onlyFolder() {
-      this.folders = true;
-      this.images = false;
-      this.videos = false;
-      this.noShow = false;
-    },
     onlyImage() {
-      this.folders = false;
       this.images = true;
       this.videos = false;
       this.noShow = false;
     },
     onlyVideo() {
-      this.folders = false;
       this.images = false;
       this.videos = true;
       this.noShow = false;
@@ -199,18 +223,52 @@ export default {
     selectAll: function() {
       this.ids = [];
       if (!this.allSelected) {
-        for (this.folder in this.folderList) {
-          this.ids.push(this.folderList[this.folder].id);
+        for (this.album in this.album) {
+          this.ids.push(this.albums[this.album].album_id);
         }
       }
     },
     select: function() {
       this.allSelected = false;
-      this.ids.push(this.folderList[this.folder].id);
+      this.ids.push(this.albums[this.album].album_id);
     },
     roadImg(data) {
       const result = "data:image;base64," + data;
       return result;
+    },
+    openImageModal() {
+      this.imageModal = true;
+    },
+    openVideoModal() {
+      this.videoModal = true;
+    },
+    closeImageModal() {
+      this.imageModal = false;
+      this.intoAlbum(this.album_id);
+    },
+    closeVideoModal() {
+      this.videoModal = false;
+      this.intoAlbum(this.album_id);
+    },
+    getImg(imageId) {
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        this.idOfImage = data;
+      });
+      this.folderId = this.$route.params.id;
+      this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
+        this.imageList = result;
+      });
+      this.openImageModal();
+    },
+    getVideo(videoId) {
+      this.idOfVideo = videoId;
+      this.GET_VIDEO_LIST({
+        folderId: this.$route.params.id,
+        videoId: videoId,
+      }).then((result) => {
+        this.videoList = result;
+      });
+      this.openVideoModal();
     },
   },
 };

@@ -8,8 +8,8 @@
             <label for="a1"></label>
           </div>
         </div>
-        <button class="b1" @click="doNewAlbum()">새앨범</button>
-        <div v-if="this.albumId > 0">
+        <button class="b1" @click="openModal">새앨범</button>
+        <div v-if="this.albumIds > 0">
           <button class="b2" @click="deleteAlbum()">삭제</button>
         </div>
         <NewFolderModal @close="closeModal" v-if="modal">
@@ -53,20 +53,24 @@
 
       <div class="bottom-content">
         <ul class="table">
-          <li v-for="album in this.albums" v-bind:key="album.key" class="li">
+          <li
+            v-for="album in this.albums"
+            v-bind:key="album.album_id"
+            class="li"
+          >
             <div>
               <div class="agree2">
                 <input
                   class="a2"
-                  :id="'a2' + album.id"
+                  :id="'a2' + album.album_id"
                   type="checkbox"
                   v-model="ids"
-                  @click="select(folalbumder.id)"
-                  :value="album.id"
+                  @click="select(album.album_id)"
+                  :value="album.album_id"
                 />
-                <label :for="'a2' + album.id"></label>
+                <label :for="'a2' + album.album_id"></label>
               </div>
-              <router-link :to="`/ownDocumentBox/${album.id}`">
+              <router-link :to="`/albumDocumentBox/${album.album_id}`">
                 <img
                   src="@/assets/image/album.png"
                   alt="folder.png"
@@ -105,44 +109,36 @@ export default {
       items: [],
       intoAlbumKey: "",
       ids: [],
-      albumId: "",
+      albumIds: [],
     };
   },
-  created() {},
+  created() {
+    this.getAlbums();
+  },
   watch: {
     $route: "getAlbums",
   },
   methods: {
-    ...mapActions(["NEW_ALBUM", "GET_ALBUMS", "INTO_ALBUM", "DELETE_ALBUM"]),
+    ...mapActions(["NEW_ALBUM", "GET_ALBUMS", "DELETE_ALBUM"]),
     getAlbums() {
       console.log("-------------Get Albums Start------------");
-      this.GET_ALBUMS({ userEmail: this.userInfo.useremail }).then((list) => {
+      this.GET_ALBUMS({ email: this.userInfo.useremail }).then((list) => {
         this.albums = list;
         console.log("albumList : ", this.albums);
       });
       console.log("-------------Get Albums End------------");
     },
-    intoAlbum(intoAlbumKey) {
-      console.log("-------------Into Albums Start------------");
-      this.intoAlbumKey = intoAlbumKey;
-      this.albumId = "";
-      console.log("intoAlbum : ", this.intoAlbum);
-      this.INTO_ALBUM({ intoAlbumKey: intoAlbumKey }).then((list) => {
-        this.items = list;
-      });
-      console.log("-------------Into Albums End------------");
-    },
     deleteAlbum() {
       console.log("-------------delete Album Start------------");
-      console.log("삭제할 앨범 : ", this.albumId);
-      this.DELETE_ALBUM({ id: this.albumId }).then((data) => {
+      console.log("삭제할 앨범 : ", this.albumIds);
+      this.DELETE_ALBUM(this.albumIds).then((data) => {
         if (data == 1) {
           alert("앨범이 삭제되었습니다.");
-          this.albumId = "";
+          this.albumIds = [];
           this.getAlbums();
         } else {
           alert("앨범 삭제에 실패했습니다.");
-          this.albumId = "";
+          this.albumIds = [];
           this.getAlbums();
         }
       });
@@ -155,7 +151,6 @@ export default {
       } else {
         console.log(this.newAlbumName + " : newAlbumName");
         this.NEW_ALBUM({
-          parent: this.intoParent,
           newAlbumName: this.newAlbumName,
           userEmail: this.userInfo.useremail,
         })
@@ -182,41 +177,17 @@ export default {
       this.modal = false;
       this.getAlbums();
     },
-    all() {
-      this.folders = true;
-      this.images = true;
-      this.videos = true;
-      this.noShow = true;
-    },
-    onlyFolder() {
-      this.folders = true;
-      this.images = false;
-      this.videos = false;
-      this.noShow = false;
-    },
-    onlyImage() {
-      this.folders = false;
-      this.images = true;
-      this.videos = false;
-      this.noShow = false;
-    },
-    onlyVideo() {
-      this.folders = false;
-      this.images = false;
-      this.videos = true;
-      this.noShow = false;
-    },
     selectAll: function() {
       this.ids = [];
       if (!this.allSelected) {
-        for (this.folder in this.folderList) {
-          this.ids.push(this.folderList[this.folder].id);
+        for (this.album in this.albums) {
+          this.ids.push(this.albums[this.album].id);
         }
       }
     },
     select: function() {
       this.allSelected = false;
-      this.ids.push(this.folderList[this.folder].id);
+      this.ids.push(this.albums[this.album].id);
     },
     roadImg(data) {
       const result = "data:image;base64," + data;
