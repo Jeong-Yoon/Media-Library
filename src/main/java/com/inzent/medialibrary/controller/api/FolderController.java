@@ -107,23 +107,5 @@ public class FolderController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@GetMapping("/getshareitems")
-	public ResponseEntity<List<Map<String, Object>>> getShareItems() throws IOException, JCodecException{
-		System.out.println("get share items");
-		List<String> list = folderService.getShareItems();
-		List<Map<String, Object>> itemList = new ArrayList<Map<String,Object>>();
-		for (String s : list) {
-			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
-			if (map.get("id").toString().startsWith("3")) {
-				if (map.get("content_type").toString().equals("I")) {
-					map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
-				} else if(map.get("content_type").toString().equals("V")) {
-					File file = new File(contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent_storage());
-					map.put("content",GetThumbnail.getThumbnail(file));
-				}
-			}
-			itemList.add(map);
-		}
-		return new ResponseEntity<List<Map<String, Object>>> (itemList, HttpStatus.OK);
-	}
+
 }

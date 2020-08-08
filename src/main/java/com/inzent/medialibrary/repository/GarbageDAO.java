@@ -49,18 +49,27 @@ public class GarbageDAO {
 //		for(int i = 0; i < contentIdList.size(); i++) {
 //			list.add(sqlSession.selectList("getharddeleteitem", contentIdList.get(i)));
 //		}
-		System.out.println(slist.size());
+		System.out.println("slist size : " + slist.size());
 		return slist;
 //		return sqlSession.delete("harddeleteitems",contentIdList);
 	}
 	
 	public int hardDelete(List<Long> contentIdList, List<ImageDTO> contentList, long sum, String email) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("===============");
+//		System.out.println(sqlSession.selectList("getharddeletefolderid",contentIdList));
 		map.put("sum", sum);
 		map.put("userId", email);
 		sqlSession.update("minususecapacity",map);
-		sqlSession.delete("harddeletecontent", contentList);
-		sqlSession.delete("harddeletefolder", contentIdList);
-		return 0;
+		List<Long> cList = new ArrayList<Long>();
+		for(ImageDTO i : contentList) {
+			cList.add(i.getContent_id());
+		}
+		if(contentList.size() != 0) {
+			sqlSession.delete("harddeletecontent", cList);
+		}
+		System.out.println(contentIdList.size());
+//		sqlSession.delete("harddeletefolder", contentIdList);
+		return sqlSession.delete("harddeletefolder", contentIdList);
 	}
 }

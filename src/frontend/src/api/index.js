@@ -221,9 +221,24 @@ export const restoreItems = {
 export const getShareItems = {
   getShareItems() {
     console.log("api / share");
-    return request("get", "/api/folders/getshareitems");
+    return request("get", "/api/shares/getshareitems");
   },
 };
+
+export const shareItems = {
+  shareItems(ids){
+    console.log("api / share : ", ids);
+    return request("put", "/api/shares/share", ids);
+  }
+};
+
+export const unshareItems = {
+  unshareItems(ids){
+    console.log("api / unshare : " + ids);
+    return request("put", "/api/shares/unshare", ids);
+  }
+};
+
 // export const getVideo = {
 //   getVideo({videoId}){
 //     return request("post", "/api/videos/full", {content_id : videoId});

@@ -73,16 +73,6 @@
         </div>
         <!-- video-con -->
 
-         <ImageViewingModal
-          :idOfImage="idOfImage"
-          :imageList="imageList"
-          v-if="imageModal"
-          @getImg="getImg"
-          @deletedImg="deletedImg"
-          @close="closeImageModal"
-        />
-
-
 
         <div class ="side-contanier">
             <a class="container-title">
@@ -94,7 +84,7 @@
               
                 <li 
                   class="media"
-                  v-for="list in this.videoList"
+                  v-for="list in this.vList"
                   v-bind:key="list.content_id"
                   style="margin-bottom : 11px; height : 110px;"
                 > 
@@ -143,15 +133,14 @@
 
 <script>
 import { mapActions } from "vuex";
-import ImageViewingModal from "./ImageViewingModal";
 export default {
   components: {
-    ImageViewingModal,
   },
   
   props : [
     "idOfVideo",
     "videoList",
+    "folderId"
   ],
    data() {
     return {
@@ -170,7 +159,7 @@ export default {
   created() {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
-    // this.vList = this.videoList;
+    this.vList = this.videoList;
     console.log(this.videoList)
   },
 
@@ -246,6 +235,13 @@ export default {
       this.videoId = id;
       console.log(this.videoId + ' get video method')
       this.src ="/api/videos/video/" + this.videoId;
+      this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: id }).then(
+        (result) => {
+          console.log(this.parent);
+          console.log("video list result : " + result[0]);
+          this.vList = result;
+        }
+      );
       var v1 = document.getElementById("video-div");
       // v1.parentNode.replaceChild(p);
       var p = '<video id="video"'

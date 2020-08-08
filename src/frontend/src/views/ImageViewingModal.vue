@@ -130,12 +130,12 @@
             v-if="this.idOfImage.content_type == 'V'"
             style="margin-right:5px; top : 0.5px"
           >
-            <img
-               src="@/assets/image/media_control.png" 
-               height="70px;" 
-               class="media-control"
-               @click="getVideo(content_id)"
-            />
+          <img
+            src="@/assets/image/media_control.png" 
+            height="70px;" 
+            class="media-control"
+            @click="getVideo"
+          />
        </a>
 
         <VideoViewingModal
@@ -164,10 +164,10 @@
         </div>
 
         <div class="slideshow">
-          <a class="v_btn_prev" @click="showDivs()"  title="이전사진">
+          <a class="v_btn_prev" @click="showDivs()" v-if="!isPrevDisabled" title="이전사진">
             <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs()"  title="다음사진">
+          <a class="v_btn_next" @click="plusDivs()" v-if="!isNextDisabled" title="다음사진">
             <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>
@@ -348,7 +348,6 @@ export default {
   props : [
     "idOfImage",
     "imageList",
-    "idOfVideo",
   ],
   data() {
     return {
@@ -380,7 +379,8 @@ export default {
       timer : null,
       imageData:"",
       imgList : [],
-      nextImageId:""
+      nextImageId:"",
+      idOfVideo:""
       // content_id : ""
       // image : ' this.roadImg(this.idOfImage.content)',
     };
@@ -432,11 +432,11 @@ export default {
       "GET_VIDEO_LIST",
     ]),
 
-     getVideo(videoId) {
-      console.log("getVideo : " + videoId);
-      this.idOfVideo = videoId;
+     getVideo() {
+      console.log("getVideo : " + this.idOfImage.content_id);
+      this.idOfVideo = this.idOfImage.content_id;
       console.log("get Video : " + this.idOfVideo)
-      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+      this.GET_VIDEO_LIST({ folderId: this.idOfImage.folder, videoId: this.idOfImage.content_id }).then(
         (result) => {
           console.log(this.parent);
           console.log("video list result : " + result[0]);

@@ -118,8 +118,16 @@ const actions = {
     return api.restoreItems.restoreItems(ids);
   },
   GET_SHARE_ITEMS() {
-    console.log("share actions");
+    console.log("get share actions");
     return api.getShareItems.getShareItems();
+  },
+  SHARE_ITEMS(_, ids){
+    console.log("share action : " + ids);
+    return api.shareItems.shareItems(ids);
+  },
+  UN_SHARE_ITEMS(_, ids) {
+    console.log("unshared action : " + ids)
+    return api.unshareItems.unshareItems(ids);
   },
 };
 

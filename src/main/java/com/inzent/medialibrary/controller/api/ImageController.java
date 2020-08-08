@@ -1,5 +1,6 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import com.inzent.medialibrary.dto.ImageIdDTO;
 import com.inzent.medialibrary.dto.ImageListDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.service.ContentService;
+import com.inzent.medialibrary.utils.GetThumbnail;
 
 @RestController
 @CrossOrigin("*")
@@ -34,7 +37,7 @@ public class ImageController {
 	private ContentService contentService;
 	
 	@PostMapping("/getimages")
-	public ResponseEntity<ImageDTO> getImage(@RequestBody ImageIdDTO imageIdDTO) throws IOException{
+	public ResponseEntity<ImageDTO> getImage(@RequestBody ImageIdDTO imageIdDTO) throws IOException, JCodecException{
 		System.out.println("image Controller");
 		System.out.println(imageIdDTO.getImage_id());
 		ImageDTO image = contentService.getContentById(imageIdDTO.getImage_id());
@@ -46,6 +49,9 @@ public class ImageController {
 		if(image.getContent_type().equals("I")) {
 			InputStream in = new FileInputStream(image.getContent_storage());
 			image.setContent(IOUtils.toByteArray(in));
+		} else if(image.getContent_type().equals("V")) {
+			File file = new File(image.getContent_storage());
+			image.setContent(GetThumbnail.getThumbnail(file));
 		}
 //		image.setContent_type("image/jpeg");
 		HttpHeaders headers = new HttpHeaders();
@@ -56,7 +62,7 @@ public class ImageController {
 	}
 	
 	@PostMapping("/getimagelist")
-	public ResponseEntity<List<ImageDTO>> getImages(@RequestBody FolderIdDTO folderIdDTO ){
+	public ResponseEntity<List<ImageDTO>> getImages(@RequestBody FolderIdDTO folderIdDTO ) throws IOException, JCodecException{
 		System.out.println("get image list============");
 		List<ImageDTO> list = contentService.getImageList(folderIdDTO);
 		System.out.println(list.get(0).getContent_origin_name());

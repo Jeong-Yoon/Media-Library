@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="share">
+
+	<select id="getshareitems" resultType="string">
+		select row_to_json(info) as info
+		from (select "folder_id" id, "folder_name" folder_name, "folder_path" path,
+		"folder_parent" parent, "folder_reg_date"
+		reg_date
+		from ml_schema.folders f
+		where f.folder_share = 'Y'
+		and f.folder_delete = 'N'
+		order by id, folder_reg_date ) info
+		union all
+		select row_to_json(info)as info
+		from (select c.content_id as id, "content_type" content_type,
+		"content_origin_name" content_name, "content_save_name" save_name,
+		"content_storage" content_storage, "content_size" content_size,
+		"content_reg_date" reg_date, "content_attribute"
+		content_attribute
+		from ml_schema.contents c, ml_schema.contents_details cd
+		where c.content_share = 'Y' 
+		and c.content_id = cd.content_id
+		and c.content_delete = 'N') info;
+	</select>
+	
+	<update id="unshareItems" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			<choose>
+			<when test="item/10000 == 2">
+				update folders set folder_share = 'N' where folder_id = #{item}
+			</when>
+			<otherwise>
+				update contents set content_share = 'N' where content_id = #{item}
+			</otherwise>
+			</choose>
+		</foreach>
+	</update>
+	
+	<update id="shareItems" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			<choose>
+			<when test="item/10000 == 2">
+				update folders set folder_share = 'Y' where folder_id = #{item}
+			</when>
+			<otherwise>
+				update contents set content_share = 'Y' where content_id = #{item}
+			</otherwise>
+			</choose>
+		</foreach>
+	</update>
+	
+</mapper>
