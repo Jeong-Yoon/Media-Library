@@ -16,6 +16,7 @@ public class ImageDTO {
     private byte[] content;
     private String content_type;
     private String content_save_name;
+    private String content_share;
     private long content_size;
     private long folder_id;
     private String path;

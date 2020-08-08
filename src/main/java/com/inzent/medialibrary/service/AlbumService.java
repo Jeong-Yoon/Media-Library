@@ -1,6 +1,9 @@
 package com.inzent.medialibrary.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.jcodec.api.JCodecException;
 
 import com.inzent.medialibrary.dto.AddAlbumDTO;
 import com.inzent.medialibrary.dto.AddConAlbumDTO;
@@ -17,7 +20,7 @@ public interface AlbumService {
 
 	List<AlbumVO> getAlbumList(String useremail);
 
-	List<ImageDTO> getContentInAlbum(Long album_id);
+	List<ImageDTO> getContentInAlbum(Long album_id) throws IOException, JCodecException;
 
 	int addContent(AddConAlbumDTO addConAlbumDTO);
 

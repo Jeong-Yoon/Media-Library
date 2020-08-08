@@ -66,10 +66,16 @@ public class ContentDAO {
 
 	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) {
 		Long folderId = folderIdDTO.getFolderId();
+		if(folderId == null) {
+			folderId = 0l;
+		}
 		return sqlSession.selectList("getimagelistbyfolderid", folderId);
 	}
 
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) {
+		if(videoListDTO.getFolderId() == null) {
+			videoListDTO.setFolderId(0l);
+		}
 		return sqlSession.selectList("getvideolistbyfolderid", videoListDTO);
 	}
 }

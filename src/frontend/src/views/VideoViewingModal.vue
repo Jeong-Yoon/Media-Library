@@ -88,7 +88,7 @@
               
                 <li 
                   class="media"
-                  v-for="list in this.vList"
+                  v-for="list in this.videoList"
                   v-bind:key="list.content_id"
                   style="margin-bottom : 11px; height : 110px;"
                 > 
@@ -164,13 +164,13 @@ export default {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
     this.vList = this.videoList;
-    console.log(this.videoList)
   },
 
    methods: {
     ...mapActions([
       "GET_VIDEO",
       "DELETE_FILE",
+      "GET_VIDEO_LIST"
     ]),
     
     openVideoNav() {
@@ -181,6 +181,10 @@ export default {
     },
     close() {
       document.getElementById("video_nav").style.display = "none";
+      document.getElementById("image_nav").style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.webkitExitFullscreen().style.display = "none";
     },
     
     roadImg(data) {
@@ -232,14 +236,18 @@ export default {
 
     // 다음동영상
     getVideoId(id){
+      console.log('created' + this.videoList[0].content_id)
+      console.log('created' + this.vList[0].content_id)
       console.log(id + ' get video method')
+      console.log(this.folderId)
       this.videoId = id;
       console.log(this.videoId + ' get video method')
       this.src ="/api/videos/video/" + this.videoId;
       this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: id }).then(
         (result) => {
           console.log(this.parent);
-          console.log("video list result : " + result[0]);
+          console.log("video list result : " + result[0].content_id);
+          this.vList=[]
           this.vList = result;
         }
       );
@@ -259,101 +267,7 @@ export default {
 </script>
 
 
-<script>
-import { mapActions } from "vuex";
-export default {
-  
-  props : [
-    "idOfVideo",
-    "videoList",
-  ],
-   data() {
-    return {
-        video: {},
-        // MediaTrackConstraints를 변수로 정의
-        mediaContraint: {
-            video: true
-        },
-        scr:"",
-        vList:"",
-        videoId :"",
-        nextVideoId:"",
-    };
-  },
-  created() {
-    this.videoId = this.idOfVideo;
-    this.src = "/api/videos/video/" + this.videoId;
-    // this.vList = this.videoList;
-    console.log(this.videoList)
-  },
 
-   methods: {
-    ...mapActions([
-      "GET_VIDEO",
-      "DELETE_FILE",
-    ]),
-    
-    openVideoNav() {
-      document.getElementById("video_nav").style.display = "block";
-      // this.openshareModal = [];
-      // event.target.reset();
-    },
-    close() {
-      document.getElementById("video_nav").style.display = "none";
-      document.getElementById("image_nav").style.display = "none";
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-      document.webkitExitFullscreen().style.display = "none";
-    },
-    roadImg(data) {
-      const result = "data:image;base64," + data;
-      return result;
-    },
-
-    // 삭제
-      deleteFile() {
-      console.log(this.idOfVideo);
-      if(this.idOfVideo === this.videoList[this.videoList.length-1].content_id){
-        this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
-      } else  {
-        for(var i = 0; i < this.videoList.length-1; i++){
-          if(this.idOfVideo.content_id === this.videoList[i].content_id){
-            this.nextVideoId = this.videoList[i+1].content_id;
-            break;
-          }
-        }
-      }
-      this.DELETE_FILE([this.idOfVideo]).then((data) => {
-        console.log(data);
-        if (data == 1) {
-          alert("파일 삭제에 성공하였습니다.");
-          this.$emit("getVideo", this.nextVideoId)
-           this.videoList.content_id;
-        } 
-      });
-    },
-
-
-    // 다음동영상
-    getVideoId(id){
-      console.log(id + ' get video method')
-      this.videoId = id;
-      console.log(this.videoId + ' get video method')
-      this.src ="/api/videos/video/" + this.videoId;
-      var v1 = document.getElementById("video-div");
-      // v1.parentNode.replaceChild(p);
-      var p = '<video id="video"'
-            + 'controls autoplay muted loop src="'+this.src+'"' 
-            + ' type="video/mp4"'
-            + 'style ="width :1040px; height : 600px;"'
-           + '> </video>';
-      v1.innerHTML = p;
-      // v1.  = p
-    },
-  
-  }
-};
-</script>
 
 
 <style scoped>

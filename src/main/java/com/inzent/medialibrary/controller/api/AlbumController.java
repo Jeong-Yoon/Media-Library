@@ -1,8 +1,10 @@
 package com.inzent.medialibrary.controller.api;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.jcodec.api.JCodecException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,7 @@ public class AlbumController {
 	}
 	
 	@GetMapping("/intoAlbum/{album_id}")
-	public ResponseEntity<List<ImageDTO>> getContentInAlbum(@PathVariable(value="album_id") Long album_id){
+	public ResponseEntity<List<ImageDTO>> getContentInAlbum(@PathVariable(value="album_id") Long album_id) throws IOException, JCodecException{
 		List<ImageDTO> list = albumService.getContentInAlbum(album_id);
 		return new ResponseEntity<List<ImageDTO>>(list, HttpStatus.OK);
 	}

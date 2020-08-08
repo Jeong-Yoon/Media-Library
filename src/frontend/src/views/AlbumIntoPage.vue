@@ -12,7 +12,7 @@
           />
           <label for="a1"></label>
         </div>
-        <div v-if="this.ids > 0">
+        <div v-if="this.ids.length > 0">
           <button class="b1" @click="deleteItem()">삭제</button>
         </div>
         <div v-else>
@@ -51,62 +51,62 @@
           <ul class="table">
             <li
               v-for="item in this.items"
-              v-bind:key="item.id"
-              @change="checkbox(item.id)"
+              v-bind:key="item.content_id"
+              @change="checkbox(item.content_id)"
               class="li"
             >
               <!-- 사진 -->
               <div
-                v-if="item.content_type == 'I' && checkType(item.id) == '3'"
+                v-if="item.content_type == 'I' && checkType(item.content_id) == '3'"
                 v-show="images"
               >
                 <div class="agree2">
                   <input
                     class="a2"
-                    :id="'a2' + item.id"
+                    :id="'a2' + item.content_id"
                     type="checkbox"
                     v-model="ids"
-                    @click="select(item.id)"
-                    :value="item.id"
+                    @click="select(item.content_id)"
+                    :value="item.content_id"
                   />
-                  <label :for="'a2' + item.id"></label>
+                  <label :for="'a2' + item.content_id"></label>
                 </div>
                 <img
                   :src="roadImg(item.content)"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getImg(item.id)"
+                  @click="getImg(item.content_id)"
                 />
                 <div class="info">
-                  <span class="title">{{ item.content_name }}</span>
+                  <span class="title">{{ item.content_origin_name }}</span>
                 </div>
               </div>
               <!-- 동영상 -->
               <div
-                v-if="item.content_type == 'V' && checkType(item.id) == '3'"
+                v-if="item.content_type == 'V' && checkType(item.content_id) == '3'"
                 v-show="videos"
               >
                 <div class="agree2">
                   <input
                     class="a2"
-                    :id="'a2' + item.id"
+                    :id="'a2' + item.content_id"
                     type="checkbox"
                     v-model="ids"
-                    @click="select(item.id)"
-                    :value="item.id"
+                    @click="select(item.content_id)"
+                    :value="item.content_id"
                   />
-                  <label :for="'a2' + item.id"></label>
+                  <label :for="'a2' + item.content_id"></label>
                 </div>
                 <img
                   :src="roadImg(item.content)"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getVideo(item.id)"
+                  @click="getVideo(item.content_id)"
                 />
                 <div class="info">
-                  <span class="title">{{ item.content_name }}</span>
+                  <span class="title">{{ item.content_origin_name }}</span>
                 </div>
               </div>
             </li>
@@ -170,20 +170,28 @@ export default {
     $route: "getAlbums",
   },
   methods: {
-    ...mapActions(["INTO_ALBUM", "DELETE_ALBUM_ITEMS"]),
+    ...mapActions([
+      "INTO_ALBUM", 
+      "DELETE_ALBUM_ITEMS",
+      "GET_IMAGE",
+      "GET_IMAGELIST",
+      "GET_VIDEO_LIST"
+      ]),
     intoAlbum() {
       console.log("-------------Into Albums Start------------");
       this.album_id = this.$route.params.album_id;
       console.log("intoAlbum : ", this.album_id);
       this.INTO_ALBUM({ album_id: this.album_id }).then((list) => {
+        console.log(list)
         this.items = list;
+        console.log(this.items)
       });
       console.log("-------------Into Albums End------------");
     },
     deleteItem() {
       console.log("-------------delete Item Start------------");
       console.log("삭제할 아이템목록 : ", this.ids);
-      this.DELETE_ITEM({ album_id: this.album_id, ids: this.ids }).then(
+      this.DELETE_ALBUM_ITEMS({ album_id: this.album_id, ids: this.ids }).then(
         (data) => {
           console.log("결과값 : ", data);
           if (data == 1) {
@@ -292,7 +300,41 @@ export default {
   border-radius: 4px;
   height: 30px;
 }
-
+.agree2 {
+  position: absolute;
+  z-index: 5;
+  opacity: 0.5;
+}
+.agree2:hover {
+  opacity: 1;
+}
+.agree2 input[type="checkbox"] {
+  display: none;
+}
+.agree2 input[type="checkbox"] + label {
+  width: 30px;
+  height: 30px;
+  background: #d2cdc5;
+  cursor: pointer;
+  border-radius: 3px;
+  float: left;
+  margin-right: 10px;
+}
+.agree2 input[type="checkbox"] + label:hover {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+.agree2 input[type="checkbox"]:checked + label {
+  background: url(../assets/image/check.png) #d2cdc5 no-repeat center/20px 20px;
+  float: left;
+  opacity: initial;
+  background-color: #a6c4c7;
+}
+.agree2 input[type="checkbox"] + label span {
+  position: absolute;
+  left: 0px;
+  display: block;
+}
 hr {
   margin-bottom: 30px;
 }

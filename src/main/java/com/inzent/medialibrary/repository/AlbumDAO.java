@@ -1,6 +1,7 @@
 package com.inzent.medialibrary.repository;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,8 @@ public class AlbumDAO {
 	public int deleteContents(AddConAlbumDTO addConAlbumDTO) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("albumId", addConAlbumDTO.getAlbum_id());
-		map.put("ids", addConAlbumDTO.getIds());
+		HashSet<Long> hashSet = new HashSet<>(addConAlbumDTO.getIds());
+		map.put("ids", hashSet);
 		return sqlSession.insert("deletecontentsinalbum", map);
 	}
 	

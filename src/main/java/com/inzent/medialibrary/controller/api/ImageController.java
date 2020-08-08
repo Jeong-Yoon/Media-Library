@@ -64,6 +64,7 @@ public class ImageController {
 	@PostMapping("/getimagelist")
 	public ResponseEntity<List<ImageDTO>> getImages(@RequestBody FolderIdDTO folderIdDTO ) throws IOException, JCodecException{
 		System.out.println("get image list============");
+		System.out.println(folderIdDTO.getFolderId());
 		List<ImageDTO> list = contentService.getImageList(folderIdDTO);
 		System.out.println(list.get(0).getContent_origin_name());
 		return new ResponseEntity<List<ImageDTO>>(list, HttpStatus.OK);

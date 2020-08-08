@@ -39,9 +39,9 @@
 	</insert>
 
 	<delete id="deletecontentsinalbum" parameterType="map">
-		delete from albums_contents where album_id = #{albumId}
-		<foreach collection="ids" item="item" index="index" separator=",">
-			#{item}
+		<foreach collection="ids" item="item" index="index" separator=";">
+			delete from albums_contents 
+			where album_id = #{albumId} and content_id = #{item}
 		</foreach>
 	</delete>
 	
@@ -57,10 +57,10 @@
 			</foreach>
 	</delete>
 	
-	<select id="getcontentsinalbum" parameterType="long">
-		select c.* 
-		from contents c, albums_contents ac
+	<select id="getcontentsinalbum" parameterType="long" resultType="imagedto">
+		select c.*
+		from albums_contents ac, contents c
 		where ac.content_id = c.content_id
-		and ac.album_id = #{album_id}
+		and ac.album_id =  #{album_id};
 	</select>
 </mapper>

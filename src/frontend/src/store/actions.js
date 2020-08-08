@@ -141,7 +141,7 @@ const actions = {
   DELETE_ALBUM_ITEMS(_, { album_id, ids }) {
     console.log("action : ", album_id);
     console.log("action : ", ids);
-    return api.deleteAlbumItems.deleteAlbumItems(ids);
+    return api.deleteAlbumItems.deleteAlbumItems( { album_id, ids });
   },
   ADD_ALBUM(_, { album_id, ids }) {
     console.log("action : ", album_id);

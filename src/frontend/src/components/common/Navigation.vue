@@ -106,6 +106,7 @@ export default {
     goTrash() {
       if (this.$route.path == "/trashDocumentBox") {
         // route.path가 트래쉬 페이지면은 액티브 클래스 없애기
+        
         console.log;
       }
     },

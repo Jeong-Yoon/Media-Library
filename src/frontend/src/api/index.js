@@ -270,7 +270,7 @@ export const deleteAlbum = {
 export const intoAlbum = {
   intoAlbum({ album_id }) {
     console.log("api : ", album_id);
-    return request("post", "/api/albums/intoAlbum", { album_id });
+    return request("get", `/api/albums/intoAlbum/${album_id}`);
   },
 };
 

@@ -5,17 +5,36 @@
 <mapper namespace="content">
 	
 	<select id="getimagelistbyfolderid" parameterType="long" resultType="imagedto">
-		<![CDATA[
-			select * 
-			from contents
-			where folder_id = #{folderId}
-			and content_delete = 'N'
-			order by content_id
-		]]>
+		<choose>
+			<when test="folderId == 0">
+				select * 
+				from contents
+				where content_delete = 'N'
+				and content_share = 'Y'
+				order by content_id
+			</when>
+			<otherwise>
+				select * 
+				from contents
+				where folder_id = #{folderId}
+				and content_delete = 'N'
+				order by content_id
+			</otherwise>
+		</choose>
 	</select>
 	
 	<select id="getvideolistbyfolderid" parameterType="videolistdto" resultType="imagedto">
-		<![CDATA[
+		<choose>
+			<when test="folderId == 0">
+			select * 
+			from contents
+			where content_type = 'V'
+			and content_delete = 'N'
+			and content_share = 'Y'
+			and content_id != #{videoId}
+			order by content_id
+			</when>
+			<otherwise>
 			select * 
 			from contents
 			where folder_id = #{folderId}
@@ -23,7 +42,8 @@
 			and content_delete = 'N'
 			and content_id != #{videoId}
 			order by content_id
-		]]>
+			</otherwise>
+		</choose>
 	</select>
 	
 	<insert id="uploadcontent" parameterType="uploadcontentdto">
