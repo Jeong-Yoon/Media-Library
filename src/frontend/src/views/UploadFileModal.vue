@@ -93,7 +93,11 @@ export default {
       } else {
         let formData = new FormData();
         formData.append("regUser", this.regUser.useremail);
-        formData.append("folder", this.$route.params.id);
+        if(this.$route.params.id){
+          formData.append("folder", this.$route.params.id);
+        } else {
+          formData.append("folder", this.folder)
+        }
         if (this.attachFiles.length !== 0) {
           for (var i = 0, file; (file = this.attachFiles[i]); i++) {
             console.log(this.attachFiles[i]);

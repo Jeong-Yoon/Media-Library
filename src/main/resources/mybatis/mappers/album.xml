@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="album">
+
+	<select id="getalbumlist" parameterType="string" resultType="albumvo">
+		select a.* 
+		from albums a, users u
+		where a.album_reg_user = u.user_id
+		and u.user_email = #{userEmail} 
+	</select>
+	
+	<select id="getalbumnamelist" parameterType="string">
+		select album_name
+		from albums a, users u
+		where a.album_reg_user = u.user_id
+		and u.user_email = #{userEmail} 
+	</select>
+	
+	<select id="getitemlistinalbum" parameterType="long" resultType="imagedto">
+		select c.*
+		from albums_contents ac, contents c
+		where ac.content_id = c.content_id
+		and ac.album_id = #{album_id}
+	</select>
+	
+	<insert id="addalbum" parameterType="addalbumdto">
+		insert into albums(album_id, album_name, album_reg_user)
+		values (NEXTVAL('seq_album'), #{newAlbumName}, (select user_id from users where user_email = #{userEmail})) 
+	</insert>
+	
+	<insert id="addcontentsinalbum" parameterType="map">
+				insert into albums_contents(album_id, content_id)
+				values 
+		<foreach collection="ids" item="item" index="index" separator=",">
+				(#{albumId}, #{item})
+		</foreach>
+	</insert>
+
+	<delete id="deletecontentsinalbum" parameterType="map">
+		delete from albums_contents where album_id = #{albumId}
+		<foreach collection="ids" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deletealbums" parameterType="java.util.List">
+		with del1 as(
+			delete from albums_contents where album_id IN
+			<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		) delete from albums where album_id IN
+		 	<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+	</delete>
+	
+	<select id="getcontentsinalbum" parameterType="long">
+		select c.* 
+		from contents c, albums_contents ac
+		where ac.content_id = c.content_id
+		and ac.album_id = #{album_id}
+	</select>
+</mapper>

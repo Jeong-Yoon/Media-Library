@@ -45,7 +45,5 @@ public class FolderDAO {
 		return sqlSession.selectList("getfolderlistbyparentid", id);
 	}
 
-	public List<String> getShareItems() {
-		return sqlSession.selectList("getshare");
-	}
+
 }

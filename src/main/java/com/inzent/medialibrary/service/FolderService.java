@@ -20,5 +20,4 @@ public interface FolderService {
 
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO);
 
-	public List<String> getShareItems();
 }

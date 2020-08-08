@@ -13,14 +13,13 @@
   
     </div> -->
 
-
     <!-- 이미지 모달 -->
     <div class="overlay" id="image_nav" tabindex="1" role="dialog" >
       <!-- header -->
       <div class="header">
         <!-- 나가기 -->
           <!-- <a class="v_btn_close" id="reset" @click="closeImageNav()" style="color:#fff; font-size: 15px; z-index :10; "> -->
-          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; z-index :10;">
+          <a class="v_btn_close" @click="$emit('close')" style="color:#fff; font-size: 15px; ">
             나가기
           </a>
 
@@ -32,6 +31,7 @@
             id="in" 
             title="확대" 
             @click="zoomIn()" 
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; "
           >
             <img src="@/assets/image/v_task_zoomin.png" height="16px"  style="top : 2px;"/>
@@ -41,6 +41,7 @@
             id="out" 
             title="축소" 
             @click="zoomOut()" 
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; /"
           >
             <img src="@/assets/image/v_task_zoomout.png" height="16px"  style="top : 2px;"/>
@@ -51,6 +52,7 @@
             class="v_ta_rotate"
             @click="rotate()"
             title="회전"
+            v-if="this.idOfImage.content_type == 'I'"
             style="margin-right:5px; top : 0.5px;"
           >
             <img src="@/assets/image/v_task_rotate.png" height="17.5px"  style="top : 2px;" />
@@ -84,6 +86,7 @@
             @click="openInfoModal()"
             title="정보"
             style="margin-right:5px; top : 0.5px"
+            v-if="this.idOfImage.content_type == 'I'"
           >
             <img src="@/assets/image/v_task_info.png" height="16px; " />
           </a>
@@ -106,6 +109,7 @@
             </a>
             <div class="dropdown-content" style="float:right;">
               <a
+                v-if="this.idOfImage.content_type == 'I'"
                 class="slider_option"
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();">
                 슬라이드쇼
@@ -120,6 +124,31 @@
       </div>
       <!-- header 끝 -->
 
+
+<!-- media-control-->
+       <a 
+            class="v_ta_trash" 
+            v-if="this.idOfImage.content_type == 'V'"
+            style="margin-right:5px; top : 0.5px"
+          >
+          <img
+            src="@/assets/image/media_control.png" 
+            height="70px;" 
+            class="media-control"
+            @click="getVideo"
+          />
+       </a>
+
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          :videoList="videoList"
+          v-if="videoModal"
+          @getVideo="getVideo"
+          @close="closeVideoModal"
+        />
+<!-- ------------ -->
+       
+
      <!-- content -->
       <div class="content" id="page"> 
          <div class="image-container" id="imgContainer">
@@ -128,15 +157,16 @@
                   :src="roadImg(this.idOfImage.content)"
                   class="image" 
                   id="img"
+
                 >
           </div>
         </div>
 
         <div class="slideshow">
-          <a class="v_btn_prev" @click="showDivs()"  title="이전사진">
+          <a class="v_btn_prev" @click="showDivs()" v-if="!isPrevDisabled" title="이전사진">
             <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs()"  title="다음사진">
+          <a class="v_btn_next" @click="plusDivs()" v-if="!isNextDisabled" title="다음사진">
             <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>
@@ -220,16 +250,16 @@
                       <td style=" color : #d3d3d3;">파일정보</td>
                   </tr>
                   <tr>
-                      <td width = "100px;">해상도</td>
-                      <td>&nbsp;{{idOfImage.content_attribute}}</td>
-                  </tr>
-                  <tr>
-                      <td>파일크기</td>
+                      <td  width = "100px;">파일크기</td>
                       <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
                   </tr>
                   <tr>
                       <td> 업로드일시</td>
                       <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
+                  </tr>
+                  <tr>
+                      <td width = "100px;">올린사람</td>
+                      <td>&nbsp;{{idOfImage.content_reg_user}}</td>
                   </tr>
               </table>
           </div>
@@ -243,9 +273,9 @@
          
             <table border="0" style="margin-right : 20px; margin-bottom: 0.15em;">
                     <tr>
-                        <td style=" color : #d3d3d3">폴더 경로</td>
                     </tr>
                     <tr>
+                        <td style=" color : #d3d3d3">폴더 경로</td>
                         <td><a herf="">{{idOfImage.path}}</a></td>
                     </tr>
             </table>
@@ -285,10 +315,15 @@
           <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{bannerList.length}}</strong></span> -->
 
           <!-- 이미지 -->
-          <div class ="slide-image-container">
+          <div class ="slide-image-container" >
             <ul style="  list-style-type: none;" z-index:10 > 
               <li v-for="(list, index) in imageList" :key="index" :class="{ on: index === currentIndex }">
-                <img :src="roadImg(list.content)" :alt="index" style=" vertical-align: middle;" />
+                <img 
+                  :src="roadImg(list.content)" 
+                  :alt="index" 
+                  style=" vertical-align: middle;" 
+                  v-if="idOfImage.content_type == 'I'"
+                />
               </li>
             </ul>
           </div>
@@ -302,6 +337,7 @@
 <script>
 // import VueMagnifier from './test.vue' 
 // import Cropper from '../utils/cropper.js'
+import VideoViewingModal from "./VideoViewingModal";
 import { mapActions } from "vuex";
 // import ImageMagnifier from "vue-image-magnifier";
 
@@ -310,6 +346,7 @@ export default {
   // el: "#app",
   
   components : {
+    VideoViewingModal,
     // ImageMagnifier
   },
   props : [
@@ -325,7 +362,9 @@ export default {
 
       // src:'../assets/image/sample.jpg',
       // srcLarge:'../assets/image/sample.jpg',
-     
+      videoModal: false,
+      imageModal : false,
+   
       playing: false,
       //   bannerList: [
       //     {imgsrc : this.roadImg(this.idOfImage.content) },       
@@ -345,7 +384,9 @@ export default {
       timer : null,
       imageData:"",
       imgList : [],
-      nextImageId:""
+      nextImageId:"",
+      idOfVideo:"",
+      videoList: [],
       // content_id : ""
       // image : ' this.roadImg(this.idOfImage.content)',
     };
@@ -393,7 +434,32 @@ export default {
     ...mapActions([
       "GET_IMAGE",
       "DELETE_FILE",
+      "GET_VIDEO",
+      "GET_VIDEO_LIST",
     ]),
+
+     getVideo() {
+      console.log("getVideo : " + this.idOfImage.content_id);
+      this.idOfVideo = this.idOfImage.content_id;
+      console.log("get Video : " + this.idOfVideo)
+      this.GET_VIDEO_LIST({ folderId: this.idOfImage.folder_id, videoId: this.idOfImage.content_id }).then(
+        (result) => {
+          console.log(this.parent);
+          console.log("video list result : " + result[0]);
+          this.videoList = result;
+        }
+      );
+      this.openVideoModal();
+    },
+
+    openVideoModal() {
+      this.videoModal = true;
+    },
+
+    closeVideoModal() {
+      this.videoModal = false;
+      document.getElementById("image_nav").style.display = "none";
+    },
    
     openImageNav() {
       console.log("이미지모달");
@@ -706,6 +772,7 @@ export default {
   top: 10px;
   cursor: pointer;
   left: 10px;
+  z-index: 15;
 }
 
 .v_task {
@@ -715,7 +782,7 @@ export default {
   right: 5px;
   font-size: 18px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 15;
 }
 
 /* footer */
@@ -744,7 +811,7 @@ export default {
 
 #toggle + label {
   font-style: italic;
-  z-index: 600;
+  z-index: 15;
   position: absolute;
   bottom: 20px;
   right: 5px;
@@ -1051,7 +1118,7 @@ export default {
   display: block;
 }
 
-/* paginate */
+/* 전 후 이미지 */
 .v_btn_prev {
   overflow: hidden;
   position: absolute;
@@ -1087,7 +1154,6 @@ export default {
   line-height: 100%;
   vertical-align: middle;
   margin-top: 2%;
-  
 }
 
 .element li {
@@ -1166,10 +1232,19 @@ export default {
 ::-webkit-scrollbar-button { display: none; }
 
 
-
-
-
 /*  */
+.media-control{
+  --current-rotate-cycle: 0;
+  --current-rotate: rotate(0deg);
+  --current-scale: scale(1);
+  transform: var(--current-rotate) var(--current-scale) translate(-50%, -50%);
+  transform-origin: 0 0;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  z-index: 15;
+  cursor: pointer;
+}
 
 
 

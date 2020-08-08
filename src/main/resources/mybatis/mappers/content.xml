@@ -9,7 +9,6 @@
 			select * 
 			from contents
 			where folder_id = #{folderId}
-			and content_type = 'I'
 			and content_delete = 'N'
 			order by content_id
 		]]>
@@ -112,16 +111,44 @@
 		</foreach>
 	</select>
 	
-	<delete id="harddelete">
+	<delete id="harddeletecontent" parameterType="java.util.List">
 		with del1 as (delete from contents where content_id IN
 		<foreach collection="list" item="item" open="(" close=")"
 			separator=",">
 			#{item}
 		</foreach>
-		) delete from contents_details where content_id IN 		
-			<foreach collection="list" item="item" open="(" close=")"
+		) delete from contents_details where content_id IN	
+ 			<foreach collection="list" item="item" open="(" close=")"
 			separator=",">
 			#{item}
-		</foreach>
+			</foreach>
 	</delete>
+	
+	<delete id="harddeletefolder">
+		<foreach collection="list" item="item" index="index"
+		separator=";">
+		<choose>
+		<when test="item/10000 == 2">
+		with del1 as (
+		with recursive id_list(folder_id) as (
+ 			select f.folder_id
+ 			from folders f
+ 			where f.folder_parent = #{item}
+ 			union
+ 			select f.folder_id
+			from folders f, id_list i
+ 			where f.folder_parent = i.folder_id
+		)
+ 		delete from folders where folder_id IN (select folder_id from id_list)
+ 		) delete from folders where folder_id = #{item}	
+ 		</when>
+ 		</choose>
+ 		</foreach>
+	</delete>
+	
+	<update id="minususecapacity" parameterType="map">
+		update capacities 
+		set use_capacity = use_capacity - #{sum} 
+		where user_id = (select user_id from users where user_email = #{email})
+	</update>
 </mapper>

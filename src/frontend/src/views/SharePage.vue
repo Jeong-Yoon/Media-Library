@@ -126,13 +126,20 @@
                   />
                   <label :for="'a2' + item.id"></label>
                 </div>
-                <video
+                <!-- <video
                   :src="item.content"
                   width="130"
                   height="130"
                   preload="metadata"
                   id="video1"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  @click="getVideo(item.id)"
+                /> -->
+                <img
+                  :src="roadImg(item.content)"
+                  width="130px"
+                  height="130px"
+                  style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(item.id)"
                 />
                 <div class="info">
@@ -151,7 +158,7 @@
 
       <!-- footer 슬롯 콘텐츠 -->
       <template slot="footer">
-        <button class="button1" @click="deleteItems">해제</button>
+        <button class="button1" @click="unshareItems">해제</button>
         <button class="button2" @click="closeUnShareModal">취소</button>
       </template>
     </un-share-modal>
@@ -184,7 +191,11 @@ export default {
     // this.unShared();
   },
   methods: {
-    ...mapActions(["GET_SHARE_ITEMS"]),
+    ...mapActions([
+      "GET_SHARE_ITEMS",
+      "UN_SHARE_ITEMS",
+      "DOWNLOAD_FILE"
+    ]),
     getItems() {
       this.GET_SHARE_ITEMS().then((list) => {
         console.log("share page list : " + list[0]);
@@ -213,6 +224,22 @@ export default {
       var temp = String(id);
       temp = temp.substring(0, 1);
       return temp;
+    },
+    unshareItems(){
+      this.UN_SHARE_ITEMS(this.ids).then((data)=>{
+        console.log(data)
+        if (data == 1) {
+          alert("해제가 완료되었습니다.");
+          this.ids = [];
+          this.closeUnShareModal();
+          this.getItems();
+        } else {
+          alert("해제에 실패했습니다.");
+          this.ids = [];
+          this.closeUnShareModal();
+          this.getItems();
+        }
+      })
     },
     all() {
       this.folders = true;
@@ -247,18 +274,23 @@ export default {
     },
     async download() {
       console.log("downloadFile실행..");
+      console.log(this.ids)
+      console.log(this.items)
+      console.log(this.ids.length)
+      console.log(this.items.length)
       for (var j = 0; j < this.ids.length; j++) {
         this.downloadId = this.ids[j];
         this.fileName = "";
+
         await this.DOWNLOAD_FILE({ id: this.ids[j] })
           .then((res) => {
             const url = window.URL.createObjectURL(new Blob([res.data]), {
               type: "*",
             }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-            for (var i = 0; i < this.folderList.length; i++) {
+            for (var i = 0; i < this.items.length; i++) {
               // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
-              if (this.downloadId === this.folderList[i].id) {
-                this.fileName = this.folderList[i].content_name;
+              if (this.downloadId === this.items[i].id) {
+                this.fileName = this.items[i].content_name;
               }
             }
             const link = document.createElement("a");

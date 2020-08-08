@@ -16,7 +16,7 @@
           <button class="download" @click="download" v-show="noShow">
             받기
           </button>
-          <button class="share">공유</button>
+          <button class="share" @click="shareItem">공유</button>
           <button class="album" @click="openAlbumModal">앨범</button>
           <button class="delete" @click="deleteFile">삭제</button>
           <ChooseAlbumModal @close="closeAlbumModal" v-if="albumModal">
@@ -139,9 +139,9 @@
                 </div>
                 <img
                   :src="roadImg(folder.content)"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  width="130px"
+                  height="130px"
+                  style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getImg(folder.id)"
                 />
                 <div class="info">
@@ -173,9 +173,9 @@
                 /> -->
                 <img
                   :src="roadImg(folder.content)"
-                  width="130"
-                  height="130"
-                  style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                  width="130px"
+                  height="130px"
+                  style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
                 />
                 <div class="info">
@@ -321,6 +321,7 @@ export default {
       "GET_IMAGELIST",
       "DELETE_FILE",
       "GET_VIDEO_LIST",
+      "SHARE_ITEMS",
     ]),
     addAlbum() {
       console.log("----------------addAlbum start---------------");
@@ -356,10 +357,10 @@ export default {
         document.getElementById("video1").currentTime = 0;
       }
     },
-
     getVideo(videoId) {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
+      console.log("get Video : " + this.idOfVideo);
       this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
         (result) => {
           console.log(this.parent);
@@ -376,13 +377,11 @@ export default {
         if (data == 1) {
           alert("삭제된 파일이 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders(this.intoParent);
-          this.intoFolder();
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("파일 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders(this.intoParent);
-          this.intoFolder();
+          this.intoFolder(this.$route.params.id);
         }
       });
     },
@@ -393,11 +392,41 @@ export default {
         if (data == 1) {
           alert("삭제된 폴더가 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders(this.$route.params.id);
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("폴더 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders(this.$route.params.id);
+          this.intoFolder(this.$route.params.id);
+        }
+      });
+    },
+    deleteItems() {
+      console.log(this.ids);
+      this.DELETE_ITEMS(this.ids).then((data) => {
+        console.log(data);
+        if (data == 1) {
+          alert("삭제된 폴더 및 파일이 휴지통으로 이동하였습니다.");
+          this.ids = [];
+          this.intoFolder(this.$route.params.id);
+        } else {
+          alert("폴더 및 파일 삭제에 실패했습니다.");
+          this.ids = [];
+          this.intoFolder(this.$route.params.id);
+        }
+      });
+    },
+    shareItem() {
+      console.log(this.ids + " : share item");
+      this.SHARE_ITEMS(this.ids).then((data) => {
+        if (data == 1) {
+          console.log(data);
+          alert("공유에 성공했습니다.");
+          this.ids = [];
+          this.intoFolder(this.$route.params.id);
+        } else {
+          alert("공유에 실패했습니다.");
+          this.ids = [];
+          this.intoFolder(this.$route.params.id);
         }
       });
     },
@@ -458,19 +487,6 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
-    /*
-    deletedImg(imageId) {
-      console.log("삭제삭제");
-      console.log(this.imageList);
-      this.getFolders(this.imageList[0].content_id);
-      this.getImg(imageId);
-    },
-    deletedVideo(videoId) {
-      console.log("삭제삭제");
-      this.getFolders(this.videoList[0].content_id);
-      this.getVideo(videoId);
-    },
-    */
     all() {
       this.folders = true;
       this.images = true;

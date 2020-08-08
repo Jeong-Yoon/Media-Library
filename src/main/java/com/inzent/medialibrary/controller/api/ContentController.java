@@ -231,10 +231,11 @@ public class ContentController {
 		contentService.getContentDetail(contentId);
 	}
 	
+	// 아이템 삭제 -> 폴더 컨트롤러로 옮길 것.
 	@DeleteMapping()
-	public ResponseEntity<Integer> deleteContent(@RequestBody List<Long> contentIdList) {
+	public ResponseEntity<Integer> deleteContent(@RequestBody List<Long> ids) {
 		System.out.println("content delete");
-		int result = contentService.deleteContent(contentIdList);
+		int result = contentService.deleteContent(ids);
 		if(result == 0) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

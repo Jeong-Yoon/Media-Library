@@ -20,12 +20,18 @@
 			<typeAlias type="com.inzent.medialibrary.dto.ImageListDTO" alias="imagelistdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.CapacityDTO" alias="capacitydto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.VideoListDTO" alias="videolistdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.AddAlbumDTO" alias="addalbumdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.AddConAlbumDTO" alias="addconalbumdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.AlbumVO" alias="albumvo"/>
 	</typeAliases>
 
 	<mappers>
 		<mapper resource="mybatis/mappers/user.xml"/>
 		<mapper resource="mybatis/mappers/folder.xml"/>
 		<mapper resource="mybatis/mappers/content.xml"/>
+		<mapper resource="mybatis/mappers/album.xml"/>
+		<mapper resource="mybatis/mappers/share.xml"/>
+		
 	</mappers>
 
 </configuration>
