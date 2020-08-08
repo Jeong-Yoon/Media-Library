@@ -31,7 +31,7 @@
                   :value="album.album_id"
                   :key="album.album_id"
                 >
-                  {{ album.title }}
+                  {{ album.album_name }}
                 </option>
               </select>
             </div>
@@ -916,9 +916,9 @@ user agent stylesheet div {
 button:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
 }
-select:hover {
+/* select:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
-}
+} */
 input:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
 }
@@ -948,9 +948,9 @@ input:hover {
   outline: none;
   vertical-align: middle;
 }
-option {
+/* option {
   background-color: #a49988;
-}
+} */
 option:before {
   content: ">";
   font-size: 20px;
