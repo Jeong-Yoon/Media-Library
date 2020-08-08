@@ -333,6 +333,7 @@ export default {
       "GET_IMAGELIST",
       "DELETE_FILE",
       "GET_VIDEO_LIST",
+      "SHARE_ITEMS"
     ]),
     resetImg() {
       this.idOfImage = "";
@@ -367,11 +368,11 @@ export default {
         if (data == 1) {
           alert("삭제된 파일이 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders(this.intoParent);
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("파일 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders(this.intoParent);
+          this.intoFolder(this.$route.params.id);
         }
       });
     },
@@ -382,11 +383,11 @@ export default {
         if (data == 1) {
           alert("삭제된 폴더가 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("폴더 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         }
       });
     },
@@ -397,11 +398,11 @@ export default {
         if (data == 1) {
           alert("삭제된 폴더 및 파일이 휴지통으로 이동하였습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("폴더 및 파일 삭제에 실패했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         }
       });
     },
@@ -412,11 +413,11 @@ export default {
           console.log(data)
           alert("공유에 성공했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         } else {
           alert("공유에 실패했습니다.");
           this.ids = [];
-          this.getFolders();
+          this.intoFolder(this.$route.params.id);
         }
       }
       )
