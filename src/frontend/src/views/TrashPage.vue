@@ -105,7 +105,7 @@
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(item.id)"
-                /> -->
+                />
                 <div class="info">
                   <span class="title">{{ item.content_name }}</span>
                 </div>

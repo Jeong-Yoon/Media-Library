@@ -32,7 +32,11 @@
               <!-- 더보기 -->
           <div class="dropdown">
             <!-- <button class="dropbtn">Dropdown</button> -->
-            <a class="dropbtn" title="더보기" style="left:-3px; top:1px;">
+            <a 
+              class="dropbtn"
+              title="더보기" 
+              style="left:-3px; top:1px;"
+            >
               <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
             <div class="dropdown-content" style="float:right;">
@@ -177,11 +181,8 @@ export default {
     },
     close() {
       document.getElementById("video_nav").style.display = "none";
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-      document.getElementById("image_nav").style.display = "block";
-      document.webkitExitFullscreen().style.display = "none";
     },
+    
     roadImg(data) {
       const result = "data:image;base64," + data;
       return result;

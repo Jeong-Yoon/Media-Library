@@ -506,17 +506,6 @@ export default {
       temp = temp.substring(0, 1);
       return temp;
     },
-    deletedImg(imageId) {
-      console.log("삭제삭제");
-      console.log(this.imageList);
-      this.getFolders(this.imageList[0].content_id);
-      this.getImg(imageId);
-    },
-    deletedVideo(videoId) {
-      console.log("삭제삭제");
-      this.getFolders(this.videoList[0].content_id);
-      this.getVideo(videoId);
-    },
 
     all() {
       this.folders = true;
