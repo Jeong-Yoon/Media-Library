@@ -114,7 +114,11 @@
                 onclick="var el = document.getElementById('element'); el.webkitRequestFullscreen();">
                 슬라이드쇼
               </a>
-              <a class="publicfolder">공유 문서함 추가</a>
+               <a 
+                @click="shareItem"
+                class="publicfolder">
+                공유 문서함 추가
+              </a>
               <!-- <a class="publicalbum">공유 앨범 추가</a> -->
             </div>
           </div>
@@ -162,11 +166,13 @@
           </div>
         </div>
 
-        <div class="slideshow">
-          <a class="v_btn_prev" @click="showDivs()" v-if="!isPrevDisabled" title="이전사진">
+        <div 
+          class="slideshow"
+        >
+          <a class="v_btn_prev" @click="showDivs()"  title="이전사진">
             <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs()" v-if="!isNextDisabled" title="다음사진">
+          <a class="v_btn_next" @click="plusDivs()"  title="다음사진">
             <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>
@@ -312,7 +318,7 @@
           <!-- slide in 끝 -->
             
           <!-- 테스트 후 삭제할 코드 -->
-          <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{bannerList.length}}</strong></span> -->
+          <!-- <span style="margin-left : 15px;"><strong>{{currentIndex + 1}} / {{imagelist.length}}</strong></span> -->
 
           <!-- 이미지 -->
           <div class ="slide-image-container" >
@@ -322,7 +328,6 @@
                   :src="roadImg(list.content)" 
                   :alt="index" 
                   style=" vertical-align: middle;" 
-                  v-if="idOfImage.content_type == 'I'"
                 />
               </li>
             </ul>
@@ -355,7 +360,6 @@ export default {
   ],
   data() {
     return {
-      slideIndex: 1,
       // rotate : false,
       // zoomIn:undefined,
       // zoomOut:undefined
@@ -387,6 +391,7 @@ export default {
       nextImageId:"",
       idOfVideo:"",
       videoList: [],
+      ids:[],
       // content_id : ""
       // image : ' this.roadImg(this.idOfImage.content)',
     };
@@ -436,9 +441,10 @@ export default {
       "DELETE_FILE",
       "GET_VIDEO",
       "GET_VIDEO_LIST",
+      "SHARE_ITEMS",
     ]),
 
-     getVideo() {
+    getVideo() {
       console.log("getVideo : " + this.idOfImage.content_id);
       this.idOfVideo = this.idOfImage.content_id;
       console.log("get Video : " + this.idOfVideo)
@@ -455,12 +461,10 @@ export default {
     openVideoModal() {
       this.videoModal = true;
     },
-
     closeVideoModal() {
       this.videoModal = false;
       document.getElementById("image_nav").style.display = "none";
     },
-   
     openImageNav() {
       console.log("이미지모달");
       document.getElementById("image_nav").style.display = "block";
@@ -699,6 +703,24 @@ export default {
     //   }
     //   x[this.slideIndex - 1].style.display = "block";
     // }
+
+    
+    // 공유 
+    shareItem(){
+      console.log(this.idOfImage.content_id + " : share item");
+      this.ids.push(this.idOfImage.content_id);
+      this.SHARE_ITEMS(this.ids).then((data) => {
+        if(data == 1){
+          console.log(data)
+          alert("공유에 성공했습니다.");
+          this.ids  = [];
+        } else {
+          alert("공유에 실패했습니다.");
+          this.ids  = [];
+        }
+      }
+      )
+    },
 
   // thumb 
     imaginate(imaginate){

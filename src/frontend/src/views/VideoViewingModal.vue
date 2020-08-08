@@ -36,6 +36,7 @@
               class="dropbtn"
               title="더보기" 
               style="left:-3px; top:1px;"
+              
             >
               <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
@@ -46,7 +47,11 @@
               >
                 삭제
               </a> -->
-              <a class="publicfolder">공유 문서함 추가</a>
+             <a 
+                @click="shareItem"
+                class="publicfolder">
+                공유 문서함 추가
+              </a>
               <!-- <a class="publicalbum">공유 앨범 추가</a> -->
             </div>
           </div>
@@ -77,6 +82,16 @@
         </div>
         <!-- video-con -->
 
+         <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @deletedImg="deletedImg"
+          @close="closeImageModal"
+        />
+
+
 
         <div class ="side-contanier">
             <a class="container-title">
@@ -88,7 +103,7 @@
               
                 <li 
                   class="media"
-                  v-for="list in this.vList"
+                  v-for="list in this.videoList"
                   v-bind:key="list.content_id"
                   style="margin-bottom : 11px; height : 110px;"
                 > 
@@ -137,14 +152,15 @@
 
 <script>
 import { mapActions } from "vuex";
+import ImageViewingModal from "./ImageViewingModal";
 export default {
   components: {
+    ImageViewingModal,
   },
   
   props : [
     "idOfVideo",
     "videoList",
-    "folderId"
   ],
    data() {
     return {
@@ -158,12 +174,13 @@ export default {
         videoId :"",
         nextVideoId:"",
         videoModal: false,
+        ids:[],
     };
   },
   created() {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
-    this.vList = this.videoList;
+    // this.vList = this.videoList;
     console.log(this.videoList)
   },
 
@@ -171,6 +188,7 @@ export default {
     ...mapActions([
       "GET_VIDEO",
       "DELETE_FILE",
+         "SHARE_ITEMS",
     ]),
     
     openVideoNav() {
@@ -181,8 +199,11 @@ export default {
     },
     close() {
       document.getElementById("video_nav").style.display = "none";
+      document.getElementById("shareModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.getElementById("image_nav").style.display = "block";
+      document.webkitExitFullscreen().style.display = "none";
     },
-    
     roadImg(data) {
       const result = "data:image;base64," + data;
       return result;
@@ -224,113 +245,26 @@ export default {
            + '> </video>';
       v1.innerHTML = p;
 
-
         } 
       });
     },
 
 
-    // 다음동영상
-    getVideoId(id){
-      console.log(id + ' get video method')
-      this.videoId = id;
-      console.log(this.videoId + ' get video method')
-      this.src ="/api/videos/video/" + this.videoId;
-      this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: id }).then(
-        (result) => {
-          console.log(this.parent);
-          console.log("video list result : " + result[0]);
-          this.vList = result;
-        }
-      );
-      var v1 = document.getElementById("video-div");
-      // v1.parentNode.replaceChild(p);
-      var p = '<video id="video"'
-            + 'controls autoplay muted loop src="'+this.src+'"' 
-            + ' type="video/mp4"'
-            + 'style ="width :1040px; height : 600px;"'
-           + '> </video>';
-      v1.innerHTML = p;
-      // v1.  = p
-    },
-  
-  }
-};
-</script>
-
-
-<script>
-import { mapActions } from "vuex";
-export default {
-  
-  props : [
-    "idOfVideo",
-    "videoList",
-  ],
-   data() {
-    return {
-        video: {},
-        // MediaTrackConstraints를 변수로 정의
-        mediaContraint: {
-            video: true
-        },
-        scr:"",
-        vList:"",
-        videoId :"",
-        nextVideoId:"",
-    };
-  },
-  created() {
-    this.videoId = this.idOfVideo;
-    this.src = "/api/videos/video/" + this.videoId;
-    // this.vList = this.videoList;
-    console.log(this.videoList)
-  },
-
-   methods: {
-    ...mapActions([
-      "GET_VIDEO",
-      "DELETE_FILE",
-    ]),
-    
-    openVideoNav() {
-      document.getElementById("video_nav").style.display = "block";
-      // this.openshareModal = [];
-      // event.target.reset();
-    },
-    close() {
-      document.getElementById("video_nav").style.display = "none";
-      document.getElementById("image_nav").style.display = "none";
-      document.getElementById("shareModal").style.display = "none";
-      document.getElementById("infoModal").style.display = "none";
-      document.webkitExitFullscreen().style.display = "none";
-    },
-    roadImg(data) {
-      const result = "data:image;base64," + data;
-      return result;
-    },
-
-    // 삭제
-      deleteFile() {
-      console.log(this.idOfVideo);
-      if(this.idOfVideo === this.videoList[this.videoList.length-1].content_id){
-        this.nextVideoId = this.videoList[this.videoList.length-2].content_id;
-      } else  {
-        for(var i = 0; i < this.videoList.length-1; i++){
-          if(this.idOfVideo.content_id === this.videoList[i].content_id){
-            this.nextVideoId = this.videoList[i+1].content_id;
-            break;
-          }
+      // 공유 
+    shareItem() {
+      console.log(this.idOfVideo + " : share item");
+      this.ids.push(this.idOfVideo);
+      this.SHARE_ITEMS(this.ids).then((data) => {
+        if(data == 1){
+          console.log(data)
+          alert("공유에 성공했습니다.");
+          this.ids = [];
+        } else {
+          alert("공유에 실패했습니다.");
+          this.ids = [];
         }
       }
-      this.DELETE_FILE([this.idOfVideo]).then((data) => {
-        console.log(data);
-        if (data == 1) {
-          alert("파일 삭제에 성공하였습니다.");
-          this.$emit("getVideo", this.nextVideoId)
-           this.videoList.content_id;
-        } 
-      });
+      )
     },
 
 
@@ -354,6 +288,7 @@ export default {
   }
 };
 </script>
+
 
 
 <style scoped>
