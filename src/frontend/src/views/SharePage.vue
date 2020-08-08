@@ -162,16 +162,37 @@
         <button class="button2" @click="closeUnShareModal">취소</button>
       </template>
     </un-share-modal>
+
+      <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @close="closeImageModal"
+        />
+        <VideoViewingModal
+          :idOfVideo="idOfVideo"
+          :videoList="videoList"
+          v-if="videoModal"
+          @getVideo="getVideo"
+          @close="closeVideoModal"
+        />
+
+
   </content>
 </template>
 
 <script>
 import UnShareModal from "@/views/UnShareModal.vue";
 import { mapActions } from "vuex";
+import ImageViewingModal from "./ImageViewingModal";
+import VideoViewingModal from "./VideoViewingModal";
 
 export default {
   components: {
     UnShareModal,
+    ImageViewingModal,
+    VideoViewingModal,
   },
   data() {
     return {
@@ -184,6 +205,10 @@ export default {
       items: [],
       allSelected: true,
       downloadId: "",
+      videoModal: false,
+      imageModal : false,
+      videoList: [],
+      imageList: [],
     };
   },
   created() {
@@ -194,7 +219,11 @@ export default {
     ...mapActions([
       "GET_SHARE_ITEMS",
       "UN_SHARE_ITEMS",
-      "DOWNLOAD_FILE"
+      "DOWNLOAD_FILE",
+      "GET_IMAGE",
+      "GET_VIDEO",
+      "GET_IMAGELIST",
+      "GET_VIDEO_LIST",
     ]),
     getItems() {
       this.GET_SHARE_ITEMS().then((list) => {
@@ -241,6 +270,52 @@ export default {
         }
       })
     },
+   getImg(imageId) {
+      console.log("getImg...", imageId);
+      this.GET_IMAGE({ image_id: imageId }).then((data) => {
+        console.log(data);
+        this.idOfImage = data;
+      });
+      if(typeof(this.$route.params.id) === 'undefined'){
+        this.folderId = this.parent;
+      } else {
+        this.folderId = this.$route.params.id
+      }
+      console.log("folderId : " + this.folderId)
+      this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
+        //console.log(this.parent);
+        //console.log(result[0].content_id + " : image list");
+        this.imageList = result;
+      });
+      this.openImageModal();
+    },
+
+    getVideo(videoId) {
+      console.log("getVideo : " + videoId);
+      this.idOfVideo = videoId;
+      console.log("get Video : " + this.idOfVideo)
+      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+        (result) => {
+          console.log(this.parent);
+          console.log("video list result : " + result[0]);
+          this.videoList = result;
+        });
+      this.openVideoModal();
+    },
+
+    openImageModal() {
+      this.imageModal = true;
+    },
+    closeImageModal() {
+      this.imageModal = false;
+    },
+    openVideoModal() {
+      this.videoModal = true;
+    },
+     closeVideoModal() {
+      this.videoModal = false;
+    },
+
     all() {
       this.folders = true;
       this.images = true;

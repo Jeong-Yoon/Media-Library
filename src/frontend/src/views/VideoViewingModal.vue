@@ -87,7 +87,6 @@
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
-          @deletedImg="deletedImg"
           @close="closeImageModal"
         />
 
