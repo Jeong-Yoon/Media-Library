@@ -18,11 +18,12 @@
 		and u.user_email = #{userEmail} 
 	</select>
 	
-	<select id="getitemlistinalbum" parameterType="long" resultType="imagedto">
+	<select id="getcontentsinalbum" parameterType="long" resultType="imagedto">
 		select c.*
 		from albums_contents ac, contents c
 		where ac.content_id = c.content_id
 		and ac.album_id = #{album_id}
+		order by c.content_id		
 	</select>
 	
 	<insert id="addalbum" parameterType="addalbumdto">
@@ -56,11 +57,5 @@
 				#{item}
 			</foreach>
 	</delete>
-	
-	<select id="getcontentsinalbum" parameterType="long" resultType="imagedto">
-		select c.*
-		from albums_contents ac, contents c
-		where ac.content_id = c.content_id
-		and ac.album_id =  #{album_id};
-	</select>
+
 </mapper>

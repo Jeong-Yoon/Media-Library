@@ -329,7 +329,7 @@ export default {
       console.log("ids : ", this.ids);
       this.ADD_ALBUM({ album_id: this.albumId, ids: this.ids }).then((data) => {
         console.log("data : ", data);
-        if (data == 1) {
+        if (data == this.ids.length) {
           alert("앨범에 파일이 추가되었습니다.");
           this.albumId = "";
           this.ids = [];
@@ -417,8 +417,9 @@ export default {
     },
     shareItem() {
       console.log(this.ids + " : share item");
+      console.log(this.ids.length)
       this.SHARE_ITEMS(this.ids).then((data) => {
-        if (data == 1) {
+        if (data == this.ids.length) {
           console.log(data);
           alert("공유에 성공했습니다.");
           this.ids = [];

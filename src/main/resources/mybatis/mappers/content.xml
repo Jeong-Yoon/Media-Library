@@ -13,6 +13,13 @@
 				and content_share = 'Y'
 				order by content_id
 			</when>
+			<when test="folderId/10000 == 4">
+				select c.*
+				from albums_contents ac, contents c
+				where ac.content_id = c.content_id
+				and ac.album_id = #{folderId}
+				order by c.content_id
+			</when>
 			<otherwise>
 				select * 
 				from contents
