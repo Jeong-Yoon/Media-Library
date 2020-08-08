@@ -36,6 +36,7 @@
               class="dropbtn"
               title="더보기" 
               style="left:-3px; top:1px;"
+              
             >
               <img src="@/assets/image/v_task_more.png" height="15px" />
             </a>
@@ -46,7 +47,11 @@
               >
                 삭제
               </a> -->
-              <a class="publicfolder">공유 문서함 추가</a>
+             <a 
+                @click="shareItem"
+                class="publicfolder">
+                공유 문서함 추가
+              </a>
               <!-- <a class="publicalbum">공유 앨범 추가</a> -->
             </div>
           </div>
@@ -76,6 +81,16 @@
 
         </div>
         <!-- video-con -->
+
+         <ImageViewingModal
+          :idOfImage="idOfImage"
+          :imageList="imageList"
+          v-if="imageModal"
+          @getImg="getImg"
+          @deletedImg="deletedImg"
+          @close="closeImageModal"
+        />
+
 
 
         <div class ="side-contanier">
@@ -137,14 +152,15 @@
 
 <script>
 import { mapActions } from "vuex";
+import ImageViewingModal from "./ImageViewingModal";
 export default {
   components: {
+    ImageViewingModal,
   },
   
   props : [
     "idOfVideo",
     "videoList",
-    "folderId"
   ],
    data() {
     return {
@@ -158,19 +174,23 @@ export default {
         videoId :"",
         nextVideoId:"",
         videoModal: false,
+        ids:[],
     };
   },
   created() {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
     this.vList = this.videoList;
+    // this.vList = this.videoList;
+    console.log(this.videoList)
   },
 
    methods: {
     ...mapActions([
       "GET_VIDEO",
       "DELETE_FILE",
-      "GET_VIDEO_LIST"
+      "GET_VIDEO_LIST",
+      "SHARE_ITEMS",
     ]),
     
     openVideoNav() {
@@ -181,12 +201,11 @@ export default {
     },
     close() {
       document.getElementById("video_nav").style.display = "none";
-      document.getElementById("image_nav").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
+      document.getElementById("image_nav").style.display = "block";
       document.webkitExitFullscreen().style.display = "none";
     },
-    
     roadImg(data) {
       const result = "data:image;base64," + data;
       return result;
@@ -228,7 +247,6 @@ export default {
            + '> </video>';
       v1.innerHTML = p;
 
-
         } 
       });
     },
@@ -261,12 +279,25 @@ export default {
       v1.innerHTML = p;
       // v1.  = p
     },
-  
+    // 공유
+    shareItem() {
+      console.log(this.idOfVideo + " : share item");
+      this.ids.push(this.idOfVideo);
+      this.SHARE_ITEMS(this.ids).then((data) => {
+        if(data == 1){
+          console.log(data)
+          alert("공유에 성공했습니다.");
+          this.ids = [];
+        } else {
+          alert("공유에 실패했습니다.");
+          this.ids = [];
+        }
+      }
+      )
+    },
   }
 };
 </script>
-
-
 
 
 
