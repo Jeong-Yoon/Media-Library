@@ -115,12 +115,11 @@
             </li>
           </ul>
         </div>
-        <ImageViewingModal
+       <ImageViewingModal
           :idOfImage="idOfImage"
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
-          @deletedImg="deletedImg"
           @close="closeImageModal"
         />
         <VideoViewingModal
@@ -128,7 +127,6 @@
           :videoList="videoList"
           v-if="videoModal"
           @getVideo="getVideo"
-          @deletedVideo="deletedVideo"
           @close="closeVideoModal"
         />
       </div>
@@ -156,6 +154,8 @@ export default {
       items: [],
       album_id: "",
       ids: [],
+      idOfImage: "",
+      idOfVideo: "",
       imageModal: false,
       videoModal: false,
       imageList: [],
@@ -262,12 +262,12 @@ export default {
       this.videoModal = false;
       this.intoAlbum(this.album_id);
     },
+    
     getImg(imageId) {
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
         this.idOfImage = data;
       });
-      this.folderId = this.$route.params.id;
-      this.GET_IMAGELIST({ folderId: this.folderId }).then((result) => {
+      this.GET_IMAGELIST({ folderId: this.album_id }).then((result) => {
         this.imageList = result;
       });
       this.openImageModal();
@@ -275,7 +275,6 @@ export default {
     getVideo(videoId) {
       this.idOfVideo = videoId;
       this.GET_VIDEO_LIST({
-        folderId: this.$route.params.id,
         videoId: videoId,
       }).then((result) => {
         this.videoList = result;

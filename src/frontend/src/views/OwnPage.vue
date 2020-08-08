@@ -191,7 +191,6 @@
           :imageList="imageList"
           v-if="imageModal"
           @getImg="getImg"
-          @deletedImg="deletedImg"
           @close="closeImageModal"
         />
         <VideoViewingModal
@@ -199,7 +198,6 @@
           :videoList="videoList"
           v-if="videoModal"
           @getVideo="getVideo"
-          @deletedVideo="deletedVideo"
           @close="closeVideoModal"
         />
         <!--<p>selected ids : {{ ids }}</p>-->
@@ -295,8 +293,6 @@ export default {
   created() {
     console.log("------create------");
     this.getFolders();
-    //this.deletedImg();
-    //this.deletedVideo();
   },
   watch: {
     // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다

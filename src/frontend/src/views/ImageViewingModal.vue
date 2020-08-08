@@ -96,7 +96,18 @@
             class="v_ta_trash" 
             title="휴지통"
             @click="deleteFile"
-             style="margin-right:5px; top : 0.5px"
+            v-if="this.idOfImage.content_type == 'I'"
+            style="margin-right:5px; top : 0.5px"
+          >
+            <img src="@/assets/image/v_task_delete.png" height="16px;" />
+          </a>
+
+          <a 
+            class="v_ta_trash" 
+            title="해제"
+            v-if="this.idOfImage.content_share == 'Y'" 
+            @click="unshareItems"
+            style="margin-right:5px; top : 0.5px"
           >
             <img src="@/assets/image/v_task_delete.png" height="16px;" />
           </a>
@@ -166,17 +177,16 @@
           </div>
         </div>
 
-        <div 
-          class="slideshow"
-        >
-          <a class="v_btn_prev" @click="showDivs()"  title="이전사진">
+        <div class="prev-next">
+          <a class="v_btn_prev" @click="showDivs()" v-if="!isPrevDisabled" title="이전사진">
             <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs()"  title="다음사진">
+          <a class="v_btn_next" @click="plusDivs()" v-if="!isNextDisabled" title="다음사진">
             <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>
-        <!-- slideshow 끝-->
+        <!-- prev-next 끝-->
+
       </div>
       <!-- contrent 끝 -->
 
@@ -335,6 +345,20 @@
       </div>
     </div>
     <!-- 더보기 slide 끝 -->
+
+
+
+ <un-share-modal @close="closeUnShareModal" v-if="unShareModal">
+      <p class="p1">{{ ids.length }}개의 항목의 공유를 해제하시겠습니까?</p>
+      <p class="p2">해제된 파일은 기존 개인문서함에서 확인이 가능합니다.</p>
+
+      <!-- footer 슬롯 콘텐츠 -->
+      <template slot="footer">
+        <button class="button1" @click="unshareItems">해제</button>
+        <button class="button2" @click="closeUnShareModal">취소</button>
+      </template>
+    </un-share-modal>
+
   </div>
 </template>
 
@@ -392,6 +416,7 @@ export default {
       idOfVideo:"",
       videoList: [],
       ids:[],
+      unShareModal: false,
       // content_id : ""
       // image : ' this.roadImg(this.idOfImage.content)',
     };
@@ -442,6 +467,7 @@ export default {
       "GET_VIDEO",
       "GET_VIDEO_LIST",
       "SHARE_ITEMS",
+      "UN_SHARE_ITEMS",
     ]),
 
     getVideo() {
@@ -495,6 +521,13 @@ export default {
       console.log("정보모달 닫아");
       document.getElementById("infoModal").style.display = "none";
       document.getElementById("shareModal").style.display = "none";
+    },
+     openUnShareModal() {
+      this.unShareModal = true;
+    },
+    closeUnShareModal() {
+      this.unShareModal = false;
+      this.getItems();
     },
 
     // 확대/ 축소
@@ -587,6 +620,32 @@ export default {
           this.imageList.content_id;
         } 
       });
+    },
+
+    // 해제
+    unshareItems(){
+      this.ids.push(this.idOfImage.content_id);
+        if(this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id){
+        this.nextImageId = this.imageList[this.imageList.length-2].content_id;
+      } else  {
+        for(var i = 0; i < this.imageList.length-1; i++){
+          if(this.idOfImage.content_id === this.imageList[i].content_id){
+            this.nextImageId = this.imageList[i+1].content_id;
+            break;
+          }
+        }
+      }
+      this.UN_SHARE_ITEMS(this.ids).then((data)=>{
+        if (data == 1) {
+          console.log(data)
+          alert("해제가 완료되었습니다.");
+          this.$emit("getImg", this.nextImageId)
+          this.content_id = [];
+        } else {
+          alert("해제에 실패했습니다.");
+          this.content_id = [];
+        }
+      })
     },
 
     
@@ -735,9 +794,6 @@ export default {
       return result;
     },
     
-
-
-
   }
 };
 </script>
