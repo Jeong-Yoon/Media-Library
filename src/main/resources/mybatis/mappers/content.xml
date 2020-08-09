@@ -18,6 +18,7 @@
 				from albums_contents ac, contents c
 				where ac.content_id = c.content_id
 				and ac.album_id = #{folderId}
+				and c.content_delete = 'N'
 				order by c.content_id
 			</when>
 			<otherwise>
@@ -40,6 +41,16 @@
 			and content_share = 'Y'
 			and content_id != #{videoId}
 			order by content_id
+			</when>
+			<when test="folderId / 10000 == 4">
+				select c.*
+				from albums_contents ac, contents c
+				where ac.content_id = c.content_id
+				and ac.album_id = #{folderId}
+				and c.content_type = 'V'
+				and c.content_delete = 'N'
+				and c.content_id != #{videoId}
+				order by c.content_id
 			</when>
 			<otherwise>
 			select * 

@@ -68,7 +68,7 @@
         <div class="video-container" id="video-div">
           <video 
             id="video"
-            controls autoplay muted loop :src="src" 
+            controls autoplay muted loop :src="this.src" 
             type="video/mp4"
             style ="width :1040px; height : 600px;"
            >
@@ -82,16 +82,6 @@
         </div>
         <!-- video-con -->
 
-         <ImageViewingModal
-          :idOfImage="idOfImage"
-          :imageList="imageList"
-          v-if="imageModal"
-          @getImg="getImg"
-          @close="closeImageModal"
-        />
-
-
-
         <div class ="side-contanier">
             <a class="container-title">
                 다음동영상
@@ -102,7 +92,7 @@
               
                 <li 
                   class="media"
-                  v-for="list in this.videoList"
+                  v-for="list in this.vList"
                   v-bind:key="list.content_id"
                   style="margin-bottom : 11px; height : 110px;"
                 > 
@@ -120,7 +110,6 @@
                               z-index : 500000;
                             "
                     />
-
                     <!-- {{ list.content_id }} -->
                     <div class="media-body" style="height : 110px; float : left;" > 
                     <!-- 파일명, 업로드일시, 올린사람 -->
@@ -150,16 +139,15 @@
 
 
 <script>
-import { mapActions } from "vuex";
-import ImageViewingModal from "./ImageViewingModal";
+import { mapActions, mapState } from "vuex";
 export default {
   components: {
-    ImageViewingModal,
   },
   
   props : [
     "idOfVideo",
     "videoList",
+    "folderId"
   ],
    data() {
     return {
@@ -174,16 +162,23 @@ export default {
         nextVideoId:"",
         videoModal: false,
         ids:[],
+        fId : ""
     };
   },
   created() {
     this.videoId = this.idOfVideo;
     this.src = "/api/videos/video/" + this.videoId;
-    this.vList = this.videoList;
+    this.getvideoList(this.videoId);
+    this.fId = this.folderId;
+    // this.vList = this.videoList;
     // this.vList = this.videoList;
     console.log(this.videoList)
   },
-
+  computed: {
+    ...mapState({
+      parent: "root_folder",
+    }),
+  },
    methods: {
     ...mapActions([
       "GET_VIDEO",
@@ -249,25 +244,50 @@ export default {
         } 
       });
     },
-
-
-    // 다음동영상
-    getVideoId(id){
-      console.log('created' + this.videoList[0].content_id)
-      console.log('created' + this.vList[0].content_id)
-      console.log(id + ' get video method')
-      console.log(this.folderId)
-      this.videoId = id;
-      console.log(this.videoId + ' get video method')
-      this.src ="/api/videos/video/" + this.videoId;
-      this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: id }).then(
+    getvideoList(id){
+      console.log("=================" + this.folderId)
+      if(this.$route.params.album_id) {
+        this.fId = this.$route.params.album_id;
+        console.log(this.fId)
+      } else if (this.$route.params.id) {
+        this.fId = this.$route.params.id;
+        console.log(this.fId)
+      } else if(this.$route.path === '/ownDocumentBox'){
+        this.fId = this.parent;
+      } 
+      console.log(this.fId)
+      console.log(this.$route.params.id)
+        this.GET_VIDEO_LIST({ folderId: this.fId, videoId: id }).then(
         (result) => {
           console.log(this.parent);
           console.log("video list result : " + result[0].content_id);
-          this.vList=[]
           this.vList = result;
         }
       );
+    },
+    // 다음동영상
+    getVideoId(id){
+      this.$emit("getVideo", id)
+      // console.log('created' + this.videoList[0].content_id)
+      // console.log('created' + this.vList[0].content_id)
+      // console.log(id + ' get video method')
+      // console.log(this.folderId)
+      this.videoId = id;
+      console.log(this.$route.params.id + ' get video method')
+      this.src ="/api/videos/video/" + this.videoId;
+      if (typeof this.$route.params.id === "undefined") {
+        this.folderId = this.parent;
+      } else {
+        this.folderId = this.$route.params.id;
+      }
+      this.getvideoList(id)
+      // this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: id }).then(
+      //   (result) => {
+      //     console.log(this.parent);
+      //     console.log("video list result : " + result[0].content_id);
+      //     this.vList = result;
+      //   }
+      // );
       var v1 = document.getElementById("video-div");
       // v1.parentNode.replaceChild(p);
       var p = '<video id="video"'

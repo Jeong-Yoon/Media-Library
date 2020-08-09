@@ -55,7 +55,6 @@
             <li
               v-for="item in this.items"
               v-bind:key="item.content_id"
-              @change="checkbox(item.content_id)"
               class="li"
             >
               <!-- 사진 -->
@@ -126,6 +125,7 @@
           :idOfVideo="idOfVideo"
           :videoList="videoList"
           v-if="videoModal"
+          :folderId="folderId"
           @getVideo="getVideo"
           @close="closeVideoModal"
         />
@@ -164,6 +164,7 @@ export default {
       videos: true,
       noShow: true,
       allSelected: true,
+      folderId:""
     };
   },
   created() {
@@ -256,17 +257,15 @@ export default {
     },
     closeImageModal() {
       this.imageModal = false;
-      this.intoAlbum(this.album_id);
     },
     closeVideoModal() {
       this.videoModal = false;
-      this.intoAlbum(this.album_id);
     },
-    
     getImg(imageId) {
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
         this.idOfImage = data;
       });
+      console.log(this.album_id + "-------------")
       this.GET_IMAGELIST({ folderId: this.album_id }).then((result) => {
         this.imageList = result;
       });
@@ -274,11 +273,13 @@ export default {
     },
     getVideo(videoId) {
       this.idOfVideo = videoId;
-      this.GET_VIDEO_LIST({
-        videoId: videoId,
-      }).then((result) => {
-        this.videoList = result;
-      });
+      console.log("album id : " + this.$route.params.album_id);
+      this.folderId = this.$route.params.album_id;
+      // this.GET_VIDEO_LIST({ folderId: this.album_id,
+      //   videoId: videoId,
+      // }).then((result) => {
+      //   this.videoList = result;
+      // });
       this.openVideoModal();
     },
   },

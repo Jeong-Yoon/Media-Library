@@ -261,9 +261,9 @@ export const doNewAlbum = {
 };
 
 export const deleteAlbum = {
-  deleteAlbum(albumIds) {
-    console.log("api : ", albumIds);
-    return request("delete", "/api/albums", albumIds);
+  deleteAlbum(ids) {
+    console.log("api : ", ids);
+    return request("delete", "/api/albums", ids);
   },
 };
 

@@ -357,7 +357,13 @@ export default {
       console.log("getVideo : " + videoId);
       this.idOfVideo = videoId;
       console.log("get Video : " + this.idOfVideo);
-      this.GET_VIDEO_LIST({ folderId: this.parent, videoId: videoId }).then(
+      console.log(this.$route.params.id + "=---0-0-0-0")
+      if (typeof this.$route.params.id === "undefined") {
+        this.folderId = this.parent;
+      } else {
+        this.folderId = this.$route.params.id;
+      }
+      this.GET_VIDEO_LIST({ folderId: this.folderId, videoId: videoId }).then(
         (result) => {
           console.log(this.parent);
           console.log("video list result : " + result[0]);
@@ -613,6 +619,12 @@ export default {
         alert("폴더명을 입력해주세요.");
       } else {
         console.log(this.newFolderName + " : newFolderName");
+        if(this.$route.params.id){
+          this.intoParent = this.$route.params.id;
+        } else {
+          this.intoParent = this.parent
+        }
+        console.log(this.$route.params.id + " : intoParent")
         this.NEW_FOLDER({
           parent: this.intoParent,
           newFolderName: this.newFolderName,

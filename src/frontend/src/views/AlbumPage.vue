@@ -9,9 +9,7 @@
           </div>
         </div>
         <button class="b1" @click="openModal">새앨범</button>
-        <div v-if="this.albumIds > 0">
-          <button class="b2" @click="deleteAlbum()">삭제</button>
-        </div>
+        <button v-if="this.ids.length > 0" class="b2" @click="deleteAlbum()">삭제</button>
         <NewFolderModal @close="closeModal" v-if="modal">
           <!-- default 슬롯 콘텐츠 -->
           <p>앨범 이름을 입력해주세요.</p>
@@ -131,14 +129,14 @@ export default {
     deleteAlbum() {
       console.log("-------------delete Album Start------------");
       console.log("삭제할 앨범 : ", this.albumIds);
-      this.DELETE_ALBUM(this.albumIds).then((data) => {
+      this.DELETE_ALBUM(this.ids).then((data) => {
         if (data == 1) {
           alert("앨범이 삭제되었습니다.");
-          this.albumIds = [];
+          this.ids = [];
           this.getAlbums();
         } else {
           alert("앨범 삭제에 실패했습니다.");
-          this.albumIds = [];
+          this.ids = [];
           this.getAlbums();
         }
       });

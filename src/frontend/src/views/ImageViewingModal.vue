@@ -438,6 +438,7 @@ export default {
         }
       },
       isPrevDisabled(){
+        console.log(this.idOfImage.content_id + '111111111111111')
         return this.idOfImage.content_id === this.imageList[0].content_id;
       },
       isNextDisabled(){
@@ -640,10 +641,10 @@ export default {
           console.log(data)
           alert("해제가 완료되었습니다.");
           this.$emit("getImg", this.nextImageId)
-          this.content_id = [];
+          this.ids = [];
         } else {
           alert("해제에 실패했습니다.");
-          this.content_id = [];
+          this.ids = [];
         }
       })
     },

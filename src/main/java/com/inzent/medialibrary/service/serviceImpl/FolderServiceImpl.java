@@ -30,7 +30,13 @@ public class FolderServiceImpl implements FolderService{
 		String path = userDAO.getFolderPathById(addFolderDTO.getParent());
 		addFolderDTO.setReg_user(user_id);
 		addFolderDTO.setUpdate_user(user_id);
-		addFolderDTO.setPath(path + "/" + addFolderDTO.getNewFolderName());
+		System.out.println(path.length());
+		System.out.println(path + addFolderDTO.getNewFolderName());
+		if(path.length() == 1) {
+			addFolderDTO.setPath(path + addFolderDTO.getNewFolderName());
+		} else {
+			addFolderDTO.setPath(path + "/" + addFolderDTO.getNewFolderName());			
+		}
 		return folderDAO.addFolder(addFolderDTO);
 	}
 

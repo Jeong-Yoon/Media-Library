@@ -130,9 +130,9 @@ const actions = {
     console.log("action : ", userEmail);
     return api.doNewAlbum.doNewAlbum({ newAlbumName, userEmail });
   },
-  DELETE_ALBUM(_, albumIds) {
-    console.log("action : ", albumIds);
-    return api.deleteAlbum.deleteAlbum(albumIds);
+  DELETE_ALBUM(_, ids) {
+    console.log("action : ", ids);
+    return api.deleteAlbum.deleteAlbum(ids);
   },
   INTO_ALBUM(_, { album_id }) {
     console.log("action : ", album_id);
