@@ -336,7 +336,7 @@
                     <img src="@/assets/image/view_slideshow_next.png" height="17px" />
                 </a>
 
-                <a class="slide_playstop" @click="closeFullscreen()" title="슬라이드쇼 마침">
+                <a class="slide_playstop" @click="closeFullscreen" title="슬라이드쇼 마침">
                 <img src="@/assets/image/view_slideshow_back.png" height="17px" />
               </a>
           </div>
@@ -395,7 +395,8 @@ export default {
   props : [
     "idOfImage",
     "imageList",
-    "album_id"
+    "album_id",
+    "idx"
   ],
   data() {
     return {
@@ -423,7 +424,7 @@ export default {
       //     {imgsrc : this.roadImg(this.idOfImage.content) },       
       //     {imgsrc : this.roadImg(this.idOfImage.content) },       
       // ],
-      currentIndex: 0,
+      currentIndex:this.idx,
       timer : null,
       imageData:"",
       imgList : [],
@@ -454,10 +455,14 @@ export default {
       },
       isPrevDisabled(){
         console.log(this.idOfImage.content_id + '111111111111111')
+        console.log(this.imageList[0].content_id + '222222222222222222222222')
         return this.idOfImage.content_id === this.imageList[0].content_id;
       },
       isNextDisabled(){
         return this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id;
+      },
+      setCurr(){
+        return this.idx;
       }
     },
   created() {
@@ -474,6 +479,8 @@ export default {
     //   cropper.show();
     //  this.zoomIn = document.getElementById("in")
     //  this.zoomOut = document.getElementById("out")
+    this.currentIndex = this.idx;
+    console.log(this.currentIndex + ' startssdadadhlaskdhlksjlkjl')
   },
 
   methods: {
@@ -486,7 +493,15 @@ export default {
       "SHARE_ITEMS",
       "UN_SHARE_ITEMS",
     ]),
+    setCurrentIndex(){
+      for(var i = 0; i < this.imageList.length; i++){
+        if(this.idOfImage.content_id === this.imageList[i].content_id){
+          this.currentIndex = i;
+          console.log("currentIndex : " + this.currentIndex)
+        }
+      }
 
+    },
     checkPath(path){
       var check = this.$route.path;      
       return (check.startsWith(path));
@@ -703,10 +718,11 @@ export default {
         for(var i = 0; i < this.imageList.length-1; i++){
           if(this.imageList[i].content_id === this.idOfImage.content_id){
             this.computedImageData = this.imageList[i+1].content_id;
+            this.setCurrentIndex();
             break;
           }
         }
-      } 
+      }
     },
     showDivs() {
       console.log(this.computedImageData.content_id - " : minus");
@@ -714,6 +730,8 @@ export default {
         for(var i = this.imageList.length-1; i > 0; i--){
           if(this.imageList[i].content_id === this.idOfImage.content_id){
             this.computedImageData = this.imageList[i-1].content_id;
+            this.setCurrentIndex();
+            this.currentIndex = i;
             break;
           }
         }
@@ -735,24 +753,35 @@ export default {
 
     // 슬라이드쇼
     closeFullscreen() {
+      this.pause();
       if(document.exitFullscreen) {
+        this.pause();
         document.exitFullscreen();
+        this.imaginate(this.imageList[this.currentIndex].content_id)
       }else if (document.webkitExitFullscreen) {
+        this.pause();
         document.webkitExitFullscreen();
       }
     },
 
     setAutoRoll() {
+      console.log('5555555555555555555555')
       let vueSelf = this;
       this.timer = setInterval(function() {
         vueSelf.addIndex();
       }, 2000);
     },
     addIndex() {
+      console.log('00000000000000000000')
+      console.log(this.currentIndex)
+      if(this.currentIndex.length === 0){
+        this.currentIndex = this.setCurr()
+      }
       let newIndex = this.currentIndex + 1;
       this.currentIndex = newIndex === this.imageList.length ? 0 : newIndex;
     },
     roll(direction) {
+      console.log('222222222222222222222')
       let diff = direction === "prev" ? -1 : 1;
       this.currentIndex = this.getTargetIndex(diff);
       if(this.playing) {
@@ -769,7 +798,11 @@ export default {
       this.playing = false;
     },
     getTargetIndex(diff) {
+      console.log('65656565656566565656' + this.currentIndex)
       let length = this.imageList.length;
+      if(this.currentIndex.length === 0){
+        this.currentIndex = this.idx
+      }
       let index = this.currentIndex + diff;
       if (index === -1) {
         return length - 1;
@@ -831,7 +864,8 @@ export default {
     imaginate(imaginate){
       console.log("imaginate-----------")
       console.log(imaginate)
-      this.computedImageData=this.computedImageData.content_id = imaginate;
+      this.computedImageData = this.computedImageData.content_id = imaginate;
+      this.setCurrentIndex();
     },
 
   // base 64

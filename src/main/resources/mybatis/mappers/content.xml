@@ -7,26 +7,29 @@
 	<select id="getimagelistbyfolderid" parameterType="long" resultType="imagedto">
 		<choose>
 			<when test="folderId == 0">
-				select * 
-				from contents
-				where content_delete = 'N'
-				and content_share = 'Y'
-				order by content_id
+				select c.*, u.user_name
+				from contents c, users u
+				where c.content_reg_user = u.user_id
+				and c.content_delete = 'N'
+				and c.content_share = 'Y'
+				order by c.content_id
 			</when>
 			<when test="folderId/10000 == 4">
-				select c.*
-				from albums_contents ac, contents c
+				select c.*, u.user_name
+				from albums_contents ac, contents c, users u
 				where ac.content_id = c.content_id
+				and c.content_reg_user = u.user_id
 				and ac.album_id = #{folderId}
 				and c.content_delete = 'N'
 				order by c.content_id
 			</when>
 			<otherwise>
-				select * 
-				from contents
-				where folder_id = #{folderId}
-				and content_delete = 'N'
-				order by content_id
+				select c.*, u.user_name 
+				from contents c, users u
+				where c.content_reg_user = u.user_id
+				and c.folder_id = #{folderId}
+				and c.content_delete = 'N'
+				order by c.content_id
 			</otherwise>
 		</choose>
 	</select>
@@ -34,18 +37,20 @@
 	<select id="getvideolistbyfolderid" parameterType="videolistdto" resultType="imagedto">
 		<choose>
 			<when test="folderId == 0">
-			select * 
-			from contents
-			where content_type = 'V'
-			and content_delete = 'N'
-			and content_share = 'Y'
-			and content_id != #{videoId}
-			order by content_id
+			select c.* , u.user_name
+			from contents c, users u
+			where c.content_reg_user = u.user_id
+			and c.content_type = 'V'
+			and c.content_delete = 'N'
+			and c.content_share = 'Y'
+			and c.content_id != #{videoId}
+			order by c.content_id
 			</when>
 			<when test="folderId / 10000 == 4">
-				select c.*
-				from albums_contents ac, contents c
+				select c.*, u.user_name
+				from albums_contents ac, contents c, users u
 				where ac.content_id = c.content_id
+				and c.content_reg_user = u.user_id
 				and ac.album_id = #{folderId}
 				and c.content_type = 'V'
 				and c.content_delete = 'N'
@@ -53,13 +58,14 @@
 				order by c.content_id
 			</when>
 			<otherwise>
-			select * 
-			from contents
-			where folder_id = #{folderId}
-			and content_type = 'V'
-			and content_delete = 'N'
-			and content_id != #{videoId}
-			order by content_id
+			select c.* , u.user_name
+			from contents c, users u
+			where c.content_reg_user = u.user_id
+			and c.folder_id = #{folderId}
+			and c.content_type = 'V'
+			and c.content_delete = 'N'
+			and c.content_id != #{videoId}
+			order by c.content_id
 			</otherwise>
 		</choose>
 	</select>
@@ -125,10 +131,11 @@
 	</update>
 	
 	<select id="getcontentbyid" parameterType="long" resultType="imagedto">
-		select c.*, f.folder_path as path , cd.content_attribute as content_attribute
-		from contents c, folders f, contents_details cd 
+		select c.*, f.folder_path as path , cd.content_attribute as content_attribute, u.user_name
+		from contents c, folders f, contents_details cd, users u
 		where c.folder_id = f.folder_id
 		and cd.content_id = c.content_id
+		and c.content_reg_user = u.user_id
 		and c.content_id = #{imageId}
 	</select>
 	
@@ -150,12 +157,19 @@
 	</select>
 	
 	<delete id="harddeletecontent" parameterType="java.util.List">
-		with del1 as (delete from contents where content_id IN
-		<foreach collection="list" item="item" open="(" close=")"
-			separator=",">
-			#{item}
-		</foreach>
-		) delete from contents_details where content_id IN	
+		with del1 as (
+			delete from albums_contents where content_id IN
+			<foreach collection="list" item="item" open="(" close=")"
+				separator=",">
+				#{item}
+			</foreach>
+		) , del2 as (
+			delete from contents where content_id IN
+			<foreach collection="list" item="item" open="(" close=")"
+				separator=",">
+				#{item}
+			</foreach>
+		)delete from contents_details where content_id IN	
  			<foreach collection="list" item="item" open="(" close=")"
 			separator=",">
 			#{item}

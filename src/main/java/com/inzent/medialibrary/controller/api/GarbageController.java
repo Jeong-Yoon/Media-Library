@@ -79,6 +79,7 @@ public class GarbageController {
 //		int result = garbageService.hardDelete(deleteDTO.getContentIdList(), deleteDTO.getEmail());
 		System.out.println("hard delete : " + deleteDTO.getIds().get(0) + ", " + deleteDTO.getEmail());
 		int result = garbageService.hardDelete(deleteDTO);
+		System.out.println("hard delete result : " + result);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 }

@@ -59,17 +59,20 @@ public class GarbageDAO {
 		System.out.println("===============");
 //		System.out.println(sqlSession.selectList("getharddeletefolderid",contentIdList));
 		map.put("sum", sum);
-		map.put("userId", email);
+		map.put("email", email);
 		sqlSession.update("minususecapacity",map);
+		System.out.println("delete sum : " + sum);
 		List<Long> cList = new ArrayList<Long>();
+		int result2 = 0;
 		for(ImageDTO i : contentList) {
 			cList.add(i.getContent_id());
 		}
 		if(contentList.size() != 0) {
-			sqlSession.delete("harddeletecontent", cList);
+			result2 = sqlSession.delete("harddeletecontent", cList);
 		}
 		System.out.println(contentIdList.size());
+		int result1 = sqlSession.delete("harddeletefolder", contentIdList);
 //		sqlSession.delete("harddeletefolder", contentIdList);
-		return sqlSession.delete("harddeletefolder", contentIdList);
+		return Math.max(result1, result2);
 	}
 }

@@ -173,6 +173,7 @@
         <VideoViewingModal
           :idOfVideo="idOfVideo"
           :videoList="videoList"
+          :folderId="0"
           v-if="videoModal"
           @getVideo="getVideo"
           @close="closeVideoModal"

@@ -73,9 +73,7 @@ public class ContentDAO {
 	}
 
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) {
-		if(videoListDTO.getFolderId() == null) {
-			videoListDTO.setFolderId(0l);
-		}
+	
 		return sqlSession.selectList("getvideolistbyfolderid", videoListDTO);
 	}
 }

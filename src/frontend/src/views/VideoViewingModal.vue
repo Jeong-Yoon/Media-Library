@@ -253,8 +253,10 @@ export default {
         this.fId = this.$route.params.id;
         console.log(this.fId)
       } else if(this.$route.path === '/ownDocumentBox'){
-        this.fId = this.folderId;
-      } 
+        this.fId = this.parent;
+      } else if(this.$route.path === '/shareDocumentBox'){
+        this.fId = 0;
+      }
       console.log(this.fId)
       console.log(this.$route.params.id)
         this.GET_VIDEO_LIST({ folderId: this.fId, videoId: id }).then(

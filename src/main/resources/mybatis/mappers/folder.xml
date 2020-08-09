@@ -126,7 +126,7 @@
 		from ml_schema.contents c, ml_schema.users u, ml_schema.contents_details cd
 		where c.content_reg_user = u.user_id and c.content_id = cd.content_id
 		and c.content_delete = 'N'
-		and folder_id = #{id}) info;
+		and folder_id = #{id} order by c.content_id ) info;
 	</select>
 	
 	<select id="gettrash" parameterType="string" resultType="string">
@@ -149,6 +149,7 @@
 		where c.content_reg_user = u.user_id
 		and u.user_email = #{email}
 		and c.content_delete = 'Y'
+		order by c.content_id
 	    ) info;
 	</select>
 	
@@ -157,10 +158,11 @@
 			separator=";">
 			<choose>
 			<when test="item/10000 == 2">
-				update folders set folder_delete = 'Y' where folder_id = #{item}
+				update folders set folder_delete = 'Y', folder_share ='N' where folder_id = #{item}
 			</when>
 			<otherwise>
-				update contents set content_delete = 'Y' where content_id = #{item}
+				with del1 as (delete from albums_contents where content_id = #{item})
+				update contents set content_delete = 'Y', content_share = 'N' where content_id = #{item}				
 			</otherwise>
 			</choose>
 		</foreach>

@@ -190,6 +190,7 @@
           :idOfImage="idOfImage"
           :imageList="imageList"
           v-if="imageModal"
+          :idx="idx"
           @getImg="getImg"
           @close="closeImageModal"
         />
@@ -288,6 +289,7 @@ export default {
       folderId: "",
       albumId: "",
       albums: [],
+      idx:""
     };
   },
   created() {
@@ -323,6 +325,12 @@ export default {
       console.log("----------------addAlbum start---------------");
       console.log("albumId : ", this.albumId);
       console.log("ids : ", this.ids);
+      for(var i = 0; i < this.ids.length; i++){
+        if(Math.floor(this.ids[i] / 10000) === 2){
+          alert('폴더는 앨범에 추가할 수 없습니다.')
+          return;
+        }
+      }
       this.ADD_ALBUM({ album_id: this.albumId, ids: this.ids }).then((data) => {
         console.log("data : ", data);
         if (data == this.ids.length) {
@@ -421,7 +429,7 @@ export default {
       console.log(this.ids + " : share item");
       console.log(this.ids.length)
       this.SHARE_ITEMS(this.ids).then((data) => {
-        if (data == this.ids.length) {
+        if (data === 1) {
           console.log(data);
           alert("공유에 성공했습니다.");
           this.ids = [];
@@ -482,6 +490,11 @@ export default {
         //console.log(result[0].content_id + " : image list");
         this.imageList = result;
       });
+      for(var i = 0; i < this.imageList.length; i++){
+        if(this.idOfImage.content_id === this.imageList[i].content_id){
+          this.idx = i
+        }
+      }
       this.openImageModal();
     },
     checkType(id) {
@@ -517,8 +530,11 @@ export default {
     intoFolder(intoParent) {
       console.log("--------into the folder start--------");
       this.intoParent = intoParent;
+      if(typeof this.intoParent === 'undefined'){
+        this.intoParent = this.parent;
+      }
       console.log(this.intoParent);
-      this.GET_FOLDERS({ parent: intoParent }).then((list) => {
+      this.GET_FOLDERS({ parent: this.intoParent }).then((list) => {
         //console.log("intoParent List : ", list);
         this.folderList = list;
       });

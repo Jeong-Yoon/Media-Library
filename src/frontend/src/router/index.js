@@ -21,7 +21,8 @@ const routes = [
   },
   {
     path: "/",
-    component: () => import("@/views/OwnPage.vue"),
+    redirect: "/ownDocumentBox",
+    // component: () => import("@/views/OwnPage.vue"),
     beforeEnter: requireAuth(),
   },
   {

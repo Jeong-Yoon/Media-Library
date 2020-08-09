@@ -11,6 +11,7 @@ public class ImageDTO {
     private Long content_id;
     private String content_origin_name;
     private String content_reg_user;
+    private String user_name;
     private String content_reg_date;
     private String content_storage;
     private byte[] content;

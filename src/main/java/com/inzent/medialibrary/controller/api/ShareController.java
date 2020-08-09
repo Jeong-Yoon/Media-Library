@@ -62,6 +62,7 @@ public class ShareController {
 	@PutMapping("/share")
 	public ResponseEntity<Integer> shareItems(@RequestBody List<Long> ids){
 		int result = shareService.shareItems(ids);
+		System.out.println(result);
 		return new ResponseEntity<Integer>(result, HttpStatus.OK);
 	}
 }
