@@ -53,62 +53,61 @@
         <div>
           <ul class="table">
             <li
-              v-for="item in this.items"
-              v-bind:key="item.content_id"
+              v-for="album in this.items"
+              v-bind:key="album.content_id"
               class="li"
             >
+            
               <!-- 사진 -->
               <div
-                v-if="item.content_type == 'I' && checkType(item.content_id) == '3'"
+                v-if="album.content_type == 'I' && checkType(album.content_id) == '3'"
                 v-show="images"
               >
                 <div class="agree2">
                   <input
                     class="a2"
-                    :id="'a2' + item.content_id"
+                    :id="'a2' + album.content_id"
                     type="checkbox"
                     v-model="ids"
-                    @click="select(item.content_id)"
-                    :value="item.content_id"
+                    :value="album.content_id"
                   />
-                  <label :for="'a2' + item.content_id"></label>
+                  <label :for="'a2' + album.content_id"></label>
                 </div>
                 <img
-                  :src="roadImg(item.content)"
+                  :src="roadImg(album.content)"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getImg(item.content_id)"
+                  @click="getImg(album.content_id)"
                 />
                 <div class="info">
-                  <span class="title">{{ item.content_origin_name }}</span>
+                  <span class="title">{{ album.content_origin_name }}</span>
                 </div>
               </div>
               <!-- 동영상 -->
               <div
-                v-if="item.content_type == 'V' && checkType(item.content_id) == '3'"
+                v-if="album.content_type == 'V' && checkType(album.content_id) == '3'"
                 v-show="videos"
               >
                 <div class="agree2">
                   <input
                     class="a2"
-                    :id="'a2' + item.content_id"
+                    :id="'a2' + album.content_id"
                     type="checkbox"
                     v-model="ids"
-                    @click="select(item.content_id)"
-                    :value="item.content_id"
+                    :value="album.content_id"
                   />
-                  <label :for="'a2' + item.content_id"></label>
+                  <label :for="'a2' + album.content_id"></label>
                 </div>
                 <img
-                  :src="roadImg(item.content)"
+                  :src="roadImg(album.content)"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
-                  @click="getVideo(item.content_id)"
+                  @click="getVideo(album.content_id)"
                 />
                 <div class="info">
-                  <span class="title">{{ item.content_origin_name }}</span>
+                  <span class="title">{{ album.content_origin_name }}</span>
                 </div>
               </div>
             </li>
@@ -132,6 +131,8 @@
           @close="closeVideoModal"
         />
       </div>
+          <p>selected ids : {{ ids }}</p>
+
     </div>
   </content>
 </template>
@@ -155,7 +156,7 @@ export default {
     return {
       items: [],
       album_id: "",
-      ids: [],
+      chkids: [],
       idOfImage: "",
       idOfVideo: "",
       imageModal: false,
@@ -198,16 +199,16 @@ export default {
     deleteItem() {
       console.log("-------------delete Item Start------------");
       console.log("삭제할 아이템목록 : ", this.ids);
-      this.DELETE_ALBUM_ITEMS({ album_id: this.album_id, ids: this.ids }).then(
+      this.DELETE_ALBUM_ITEMS({ album_id: this.album_id, ids: this.chkids }).then(
         (data) => {
           console.log("결과값 : ", data);
           if (data !== 0) {
             alert("파일이 앨범에서 삭제되었습니다.");
-            this.ids = [];
+            this.chkids = [];
             this.intoAlbum(this.album_id);
           } else {
             alert("파일 삭제에 실패했습니다.");
-            this.ids = [];
+            this.chkids = [];
             this.intoAlbum(this.album_id);
           }
         }
@@ -236,16 +237,16 @@ export default {
       this.noShow = false;
     },
     selectAll: function() {
-      this.ids = [];
+      this.chkids = [];
       if (!this.allSelected) {
-        for (this.album in this.album) {
-          this.ids.push(this.albums[this.album].album_id);
+        for (this.album in this.items) {
+          this.chkids.push(this.items[this.album].content_id);
         }
       }
     },
     select: function() {
       this.allSelected = false;
-      this.ids.push(this.albums[this.album].album_id);
+      this.chkids.push(this.items[this.album].content_id);
     },
     roadImg(data) {
       const result = "data:image;base64," + data;
@@ -287,10 +288,13 @@ export default {
   },
   async download() {
       console.log("downloadFile실행..");
-      for (var j = 0; j < this.ids.length; j++) {
-        this.downloadId = this.ids[j];
+      console.log(this.chkids.length)
+      for (var j = 0; j < this.chkids.length; j++) {
+        console.log(this.chkids[j])
+        this.downloadId = this.chkids[j];
+        console.log(this.downloadId)
         this.fileName = "";
-        await this.DOWNLOAD_FILE({ id: this.ids[j] })
+        await this.DOWNLOAD_FILE({ id: this.chkids[j] })
           .then((res) => {
             const url = window.URL.createObjectURL(new Blob([res.data]), {
               type: "*",
@@ -315,7 +319,7 @@ export default {
           });
       }
       alert("다운로드가 완료되었습니다.");
-      this.ids = [];
+      this.chkids = [];
     },
 };
 </script>

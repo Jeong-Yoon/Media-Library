@@ -21,12 +21,12 @@
           <div class="document">
             <perfect-scrollbar>
               <li
-                v-for="item in items"
+                v-for="item in menus"
                 @click="choose(item)"
                 :class="{ active: item == selected }"
                 :key="item.id"
               >
-                <router-link :to="`${item.link}`" class="a">
+              <router-link :to="`${item.link}`" class="a">
                   <h3>{{ item.title }}</h3>
                 </router-link>
                 <hr class="middle2" />
@@ -60,6 +60,7 @@
                 alt="trash logo"
                 height="30px"
                 @click="goTrash()"
+                
               />
               <p class="p4">
                 휴지통
@@ -83,7 +84,7 @@ export default {
       total: "",
       percent: 0,
       spare_capacity: "",
-      items: [
+      menus: [
         { id: 1, title: "개인 문서함", link: "/ownDocumentBox" },
         { id: 2, title: "공유 문서함", link: "/shareDocumentBox" },
         { id: 3, title: "앨범", link: "/albumDocumentBox" },
@@ -104,9 +105,10 @@ export default {
   methods: {
     ...mapActions(["GET_CAPACITY"]),
     goTrash() {
+      this.selected = null;
       if (this.$route.path == "/trashDocumentBox") {
         // route.path가 트래쉬 페이지면은 액티브 클래스 없애기
-        
+        // var ss = document.querySelector.getElementsByClassName('active').remove();
         console.log;
       }
     },
