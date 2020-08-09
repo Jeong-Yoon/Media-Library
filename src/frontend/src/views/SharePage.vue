@@ -151,7 +151,7 @@
         </div>
       </div>
     </div>
-    <p>selected ids : {{ ids }}</p>
+    <!-- <p>selected ids : {{ ids }}</p> -->
     <un-share-modal @close="closeUnShareModal" v-if="unShareModal">
       <p class="p1">{{ ids.length }}개의 항목의 공유를 해제하시겠습니까?</p>
       <p class="p2">해제된 파일은 기존 개인문서함에서 확인이 가능합니다.</p>

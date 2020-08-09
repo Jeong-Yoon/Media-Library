@@ -288,10 +288,10 @@
                       <td> 업로드일시</td>
                       <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                       <td width = "100px;">올린사람</td>
                       <td>&nbsp;{{idOfImage.content_reg_user}}</td>
-                  </tr>
+                  </tr> -->
               </table>
           </div>
         </div>

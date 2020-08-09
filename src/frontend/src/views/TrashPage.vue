@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-    <p>selected ids : {{ ids }}</p>
+    <!-- <p>selected ids : {{ ids }}</p> -->
     <delete-modal @close="closeDeleteModal" v-if="deleteModal">
       <p class="p1">{{ ids.length }}개의 항목을 삭제하시겠습니까?</p>
       <p class="p2">휴지통에서 삭제하신 항목을 복구할 수 없습니다.</p>
