@@ -13,6 +13,9 @@
           <label for="a1"></label>
         </div>
         <div v-if="this.ids.length > 0">
+          <button class="download" @click="download" v-show="noShow">
+            받기
+          </button>
           <button class="b1" @click="deleteItem()">삭제</button>
         </div>
         <div v-else>
@@ -177,7 +180,8 @@ export default {
       "DELETE_ALBUM_ITEMS",
       "GET_IMAGE",
       "GET_IMAGELIST",
-      "GET_VIDEO_LIST"
+      "GET_VIDEO_LIST",
+      "DOWNLOAD_FILE"
       ]),
     intoAlbum() {
       console.log("-------------Into Albums Start------------");
@@ -196,7 +200,7 @@ export default {
       this.DELETE_ALBUM_ITEMS({ album_id: this.album_id, ids: this.ids }).then(
         (data) => {
           console.log("결과값 : ", data);
-          if (data == 1) {
+          if (data !== 0) {
             alert("파일이 앨범에서 삭제되었습니다.");
             this.ids = [];
             this.intoAlbum(this.album_id);
@@ -280,6 +284,38 @@ export default {
       this.openVideoModal();
     },
   },
+  async download() {
+      console.log("downloadFile실행..");
+      for (var j = 0; j < this.ids.length; j++) {
+        this.downloadId = this.ids[j];
+        this.fileName = "";
+        await this.DOWNLOAD_FILE({ id: this.ids[j] })
+          .then((res) => {
+            const url = window.URL.createObjectURL(new Blob([res.data]), {
+              type: "*",
+            }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+            for (var i = 0; i < this.folderList.length; i++) {
+              // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
+              if (this.downloadId === this.folderList[i].id) {
+                this.fileName = this.folderList[i].content_name;
+              }
+            }
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", this.fileName);
+            document.body.appendChild(link);
+            link.click();
+            // this.ids = [];
+            // return res;
+          })
+          .catch((err) => {
+            console.log("err~!");
+            console.error(err);
+          });
+      }
+      alert("다운로드가 완료되었습니다.");
+      this.ids = [];
+    },
 };
 </script>
 
@@ -381,9 +417,9 @@ user agent stylesheet div {
   display: block;
 }
 .b1 {
-  background-color: white;
-  color: #474346;
-  border: 1px solid #d2cdc5;
+  background-color: #a6c4c7;
+  color: white;
+  border: none;
   margin-right: 10px;
   border-radius: 4px;
   width: 60px;
@@ -538,5 +574,17 @@ img {
   overflow: hidden;
   width: 130px;
   padding-bottom: 5px;
+}
+.download {
+  background-color: #dee8eb;
+  color: white;
+  border: none;
+  margin-right: 10px;
+  border-radius: 4px;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  text-align: center;
+  outline: none;
 }
 </style>
