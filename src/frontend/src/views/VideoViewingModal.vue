@@ -253,7 +253,7 @@ export default {
         this.fId = this.$route.params.id;
         console.log(this.fId)
       } else if(this.$route.path === '/ownDocumentBox'){
-        this.fId = this.parent;
+        this.fId = this.folderId;
       } 
       console.log(this.fId)
       console.log(this.$route.params.id)

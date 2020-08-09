@@ -92,21 +92,35 @@
           </a>
           
           <!-- 삭제 -->
+          <!-- 개인문서함 -->
           <a 
             class="v_ta_trash" 
             title="휴지통"
             @click="deleteFile"
-            v-if="this.idOfImage.content_type == 'I'"
+            v-if="checkPath('/ownDocumentBox')"
             style="margin-right:5px; top : 0.5px"
           >
             <img src="@/assets/image/v_task_delete.png" height="16px;" />
           </a>
 
+          <!-- 개인앨범 삭제 -->
+          <a 
+            class="v_ta_trash" 
+            title="삭제"
+            @click="deleteItem()"
+            v-if="checkPath('/albumDocumentBox')"
+            style="margin-right:5px; top : 0.5px"
+          >
+            <img src="@/assets/image/v_task_delete.png" height="16px;" />
+          </a>
+
+
+          <!-- 공유문서함 해제 -->
           <a 
             class="v_ta_trash" 
             title="해제"
-            v-if="this.idOfImage.content_share == 'Y'" 
             @click="unshareItems"
+            v-if="this.$route.path == '/shareDocumentBox'" 
             style="margin-right:5px; top : 0.5px"
           >
             <img src="@/assets/image/v_task_delete.png" height="16px;" />
@@ -127,6 +141,7 @@
               </a>
                <a 
                 @click="shareItem"
+                v-if="checkPath('/ownDocumentBox')"
                 class="publicfolder">
                 공유 문서함 추가
               </a>
@@ -273,10 +288,10 @@
                       <td> 업로드일시</td>
                       <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                       <td width = "100px;">올린사람</td>
                       <td>&nbsp;{{idOfImage.content_reg_user}}</td>
-                  </tr>
+                  </tr> -->
               </table>
           </div>
         </div>
@@ -347,17 +362,16 @@
     <!-- 더보기 slide 끝 -->
 
 
-
+<!-- 
  <un-share-modal @close="closeUnShareModal" v-if="unShareModal">
       <p class="p1">{{ ids.length }}개의 항목의 공유를 해제하시겠습니까?</p>
       <p class="p2">해제된 파일은 기존 개인문서함에서 확인이 가능합니다.</p>
 
-      <!-- footer 슬롯 콘텐츠 -->
       <template slot="footer">
         <button class="button1" @click="unshareItems">해제</button>
         <button class="button2" @click="closeUnShareModal">취소</button>
       </template>
-    </un-share-modal>
+    </un-share-modal> -->
 
   </div>
 </template>
@@ -381,6 +395,7 @@ export default {
   props : [
     "idOfImage",
     "imageList",
+    "album_id"
   ],
   data() {
     return {
@@ -417,7 +432,7 @@ export default {
       videoList: [],
       ids:[],
       unShareModal: false,
-      // content_id : ""
+      content_id : "",
       // image : ' this.roadImg(this.idOfImage.content)',
     };
   },
@@ -463,6 +478,7 @@ export default {
 
   methods: {
     ...mapActions([
+      "DELETE_ALBUM_ITEMS",
       "GET_IMAGE",
       "DELETE_FILE",
       "GET_VIDEO",
@@ -470,6 +486,11 @@ export default {
       "SHARE_ITEMS",
       "UN_SHARE_ITEMS",
     ]),
+
+    checkPath(path){
+      var check = this.$route.path;      
+      return (check.startsWith(path));
+    },
 
     getVideo() {
       console.log("getVideo : " + this.idOfImage.content_id);
@@ -599,7 +620,7 @@ export default {
     // to be ...
 
 
-    // 삭제
+    // 개인문서함 삭제
       deleteFile() {
       console.log(this.idOfImage.content_id);
       if(this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id){
@@ -623,7 +644,31 @@ export default {
       });
     },
 
-    // 해제
+    // 앨범 삭제 
+    deleteItem() {
+      this.ids.push(this.idOfImage.content_id);
+        if(this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id){
+        this.nextImageId = this.imageList[this.imageList.length-2].content_id;
+      } else  {
+        for(var i = 0; i < this.imageList.length-1; i++){
+          if(this.idOfImage.content_id === this.imageList[i].content_id){
+            this.nextImageId = this.imageList[i+1].content_id;
+            break;
+          }
+        }
+      }
+      console.log(this.album_id + "-----------");
+      this.DELETE_ALBUM_ITEMS( { album_id : this.album_id, ids : this.ids }).then((data) => {
+          if (data == 1) {
+            alert("파일이 앨범에서 삭제되었습니다.");
+            this.$emit("getImg", this.nextImageId)
+            this.ids = [];
+          } 
+        }
+      );
+    },
+
+    // 공용문서함 해제
     unshareItems(){
       this.ids.push(this.idOfImage.content_id);
         if(this.idOfImage.content_id === this.imageList[this.imageList.length-1].content_id){
@@ -1324,13 +1369,6 @@ export default {
   z-index: 15;
   cursor: pointer;
 }
-
-
-
-
-
-
-
 
 
 </style>
