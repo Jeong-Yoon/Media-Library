@@ -116,6 +116,7 @@
           :idOfImage="idOfImage"
           :imageList="imageList"
           v-if="imageModal"
+          :album_id="album_id"
           @getImg="getImg"
           @close="closeImageModal"
         />
@@ -123,6 +124,7 @@
           :idOfVideo="idOfVideo"
           :videoList="videoList"
           v-if="videoModal"
+          :album_id="album_id"
           @getVideo="getVideo"
           @close="closeVideoModal"
         />
