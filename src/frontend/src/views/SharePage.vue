@@ -71,13 +71,15 @@
                     :value="item.id"
                   />
                   <label :for="'a2' + item.id"></label>
-                </div>
+                </div> 
+                <router-link :to="`/shareDocumentBox/${item.id}`">
                 <img
                   src="@/assets/image/folder.png"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                 />
+                </router-link>
                 <div class="info">
                   <span class="title">{{ item.folder_name }}</span>
                 </div>
@@ -216,6 +218,10 @@ export default {
     this.getItems();
     // this.unShared();
   },
+  watch: {
+    // 라우터 객체를 감시하고 있다가 fetchData() 함수를 호출한다
+    $route: "getItems",
+  },
   methods: {
     ...mapActions([
       "GET_SHARE_ITEMS",
@@ -225,13 +231,21 @@ export default {
       "GET_VIDEO",
       "GET_IMAGELIST",
       "GET_VIDEO_LIST",
+      "GET_FOLDERS"
     ]),
     getItems() {
-      this.GET_SHARE_ITEMS().then((list) => {
-        console.log("share page list : " + list[0]);
+      console.log(this.$route.params.id)
+      if(this.$route.params.id){
+        this.GET_FOLDERS({ parent: this.$route.params.id}).then((list) => {
+          this.items = list;
+        })
+      } else {
+        this.GET_SHARE_ITEMS().then((list) => {
+          console.log("share page list : " + list[0]);
         this.items = list;
         console.log("share page folderlist : " + this.items);
       });
+      }
     },
     selectAll: function() {
       this.ids = [];

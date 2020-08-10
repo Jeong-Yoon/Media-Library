@@ -122,7 +122,7 @@ export default {
         this.total = Math.floor(list.total_capacity / 1000000000);
         this.use = Math.floor(list.use_capacity / 10000000);
         this.percent = Math.floor((this.use / this.total) * 100);
-        this.spare_capacity = this.total - this.use;
+        this.spare_capacity = Math.floor(this.total - this.use -1);
         /*console.log(
           "total : ",
           this.total,

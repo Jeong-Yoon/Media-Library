@@ -50,6 +50,11 @@ const routes = [
     component: () => import("@/views/SharePage.vue"),
   },
   {
+    path: "/shareDocumentBox/:id",
+    name: "shareDocumentBox",
+    component: () => import("@/views/SharePage.vue"),
+  },
+  {
     path: "/albumDocumentBox",
     name: "albumDocumentBox",
     component: () => import("@/views/AlbumPage.vue"),
