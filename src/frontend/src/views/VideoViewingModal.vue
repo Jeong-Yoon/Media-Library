@@ -115,7 +115,7 @@
                     <!-- 파일명, 업로드일시, 올린사람 -->
                     <h4 class="media-heading">{{list.content_origin_name }}</h4>
                     <p class="by-author">{{list.content_reg_date}} </p>
-                    <p class="by-author">{{list.content_reg_user}} </p>
+                    <p class="by-author">{{list.user_name}} </p>
 
                     
 
