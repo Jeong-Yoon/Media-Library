@@ -282,16 +282,16 @@
                   </tr>
                   <tr>
                       <td  width = "100px;">파일크기</td>
-                      <td>&nbsp;{{idOfImage.content_size}} <a>byte</a></td>
+                      <td>&nbsp;{{idOfImage.content_size}}<a>byte</a></td>
                   </tr>
                   <tr>
                       <td> 업로드일시</td>
                       <td>&nbsp;&nbsp;{{idOfImage.content_reg_date}}</td>
                   </tr>
-                  <!-- <tr>
+                  <tr>
                       <td width = "100px;">올린사람</td>
-                      <td>&nbsp;{{idOfImage.content_reg_user}}</td>
-                  </tr> -->
+                      <td>&nbsp;{{idOfImage.user_name}}</td>
+                  </tr>
               </table>
           </div>
         </div>
