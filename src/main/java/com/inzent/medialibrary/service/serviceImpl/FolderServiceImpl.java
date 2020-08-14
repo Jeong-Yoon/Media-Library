@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inzent.medialibrary.dto.AddFolderDTO;
+import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
@@ -63,6 +64,11 @@ public class FolderServiceImpl implements FolderService{
 	@Override
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO) {
 		return folderDAO.selectTarget(selectTargetDTO.getParent());
+	}
+
+	@Override
+	public List<ChildFolderDTO> getChild(Long parent) {
+		return folderDAO.getChild(parent);
 	}
 
 

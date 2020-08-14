@@ -25,6 +25,7 @@ import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.dto.ImageListDTO;
+import com.inzent.medialibrary.dto.MoveFolderDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
@@ -175,5 +176,10 @@ public class ContentServiceImpl implements ContentService {
 			i.setContent(GetThumbnail.getThumbnail(file));
 		}
 		return list;
+	}
+
+	@Override
+	public int moveFolder(MoveFolderDTO moveFolderDTO) {
+		return contentDAO.moveFolder(moveFolderDTO);
 	}
 }

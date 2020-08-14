@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.inzent.medialibrary.dto.AddFolderDTO;
+import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
 
@@ -43,6 +44,10 @@ public class FolderDAO {
 
 	public List<FolderVO> selectTarget(Long id) {
 		return sqlSession.selectList("getfolderlistbyparentid", id);
+	}
+
+	public List<ChildFolderDTO> getChild(Long parent) {
+		return sqlSession.selectList("getchild", parent);
 	}
 
 

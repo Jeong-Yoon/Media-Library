@@ -13,6 +13,7 @@ import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.dto.ImageListDTO;
+import com.inzent.medialibrary.dto.MoveFolderDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.UploadContentDTO;
@@ -75,5 +76,9 @@ public class ContentDAO {
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) {
 	
 		return sqlSession.selectList("getvideolistbyfolderid", videoListDTO);
+	}
+
+	public int moveFolder(MoveFolderDTO moveFolderDTO) {
+		return sqlSession.update("movefolder", moveFolderDTO);
 	}
 }

@@ -107,6 +107,12 @@
 		<result property="info" column="info" typeHandler="com.inzent.medialibrary.utils.JSONTypeHandler"/>
 	</resultMap>
 	
+	<select id="getchild" parameterType="long" resultType="childfolderdto">
+		select folder_id, folder_name, folder_parent
+		from folders
+		where folder_parent = #{parent}
+	</select>
+	
 	<select id="getchildren" parameterType="long" resultType="string">
 		select row_to_json(info) as info
 		from (select "folder_id" id, "folder_name" folder_name, "folder_path" path,

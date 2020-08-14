@@ -12,7 +12,7 @@
           />
           <label for="a1"></label>
         </div>
-        <div v-if="this.ids.length > 0">
+        <div v-if="this.chkids.length > 0">
           <button class="download" @click="download" v-show="noShow">
             받기
           </button>
@@ -57,10 +57,12 @@
               v-bind:key="album.content_id"
               class="li"
             >
-            
               <!-- 사진 -->
               <div
-                v-if="album.content_type == 'I' && checkType(album.content_id) == '3'"
+                v-if="
+                  album.content_type == 'I' &&
+                    checkType(album.content_id) == '3'
+                "
                 v-show="images"
               >
                 <div class="agree2">
@@ -68,7 +70,7 @@
                     class="a2"
                     :id="'a2' + album.content_id"
                     type="checkbox"
-                    v-model="ids"
+                    v-model="chkids"
                     :value="album.content_id"
                   />
                   <label :for="'a2' + album.content_id"></label>
@@ -86,7 +88,10 @@
               </div>
               <!-- 동영상 -->
               <div
-                v-if="album.content_type == 'V' && checkType(album.content_id) == '3'"
+                v-if="
+                  album.content_type == 'V' &&
+                    checkType(album.content_id) == '3'
+                "
                 v-show="videos"
               >
                 <div class="agree2">
@@ -94,7 +99,7 @@
                     class="a2"
                     :id="'a2' + album.content_id"
                     type="checkbox"
-                    v-model="ids"
+                    v-model="chkids"
                     :value="album.content_id"
                   />
                   <label :for="'a2' + album.content_id"></label>
@@ -113,7 +118,7 @@
             </li>
           </ul>
         </div>
-       <ImageViewingModal
+        <ImageViewingModal
           :idOfImage="idOfImage"
           :imageList="imageList"
           v-if="imageModal"
@@ -131,8 +136,7 @@
           @close="closeVideoModal"
         />
       </div>
-          <p>selected ids : {{ ids }}</p>
-
+      <!-- <p>selected chkids : {{ chkids }}</p> -->
     </div>
   </content>
 </template>
@@ -167,7 +171,9 @@ export default {
       videos: true,
       noShow: true,
       allSelected: true,
-      folderId:""
+      folderId: "",
+      downloadId: "",
+      fileName: "",
     };
   },
   created() {
@@ -178,41 +184,42 @@ export default {
   },
   methods: {
     ...mapActions([
-      "INTO_ALBUM", 
+      "INTO_ALBUM",
       "DELETE_ALBUM_ITEMS",
       "GET_IMAGE",
       "GET_IMAGELIST",
       "GET_VIDEO_LIST",
-      "DOWNLOAD_FILE"
-      ]),
+      "DOWNLOAD_FILE",
+    ]),
     intoAlbum() {
       console.log("-------------Into Albums Start------------");
       this.album_id = this.$route.params.album_id;
       console.log("intoAlbum : ", this.album_id);
       this.INTO_ALBUM({ album_id: this.album_id }).then((list) => {
-        console.log(list)
+        console.log(list);
         this.items = list;
-        console.log(this.items)
+        console.log(this.items);
       });
       console.log("-------------Into Albums End------------");
     },
     deleteItem() {
       console.log("-------------delete Item Start------------");
-      console.log("삭제할 아이템목록 : ", this.ids);
-      this.DELETE_ALBUM_ITEMS({ album_id: this.album_id, ids: this.chkids }).then(
-        (data) => {
-          console.log("결과값 : ", data);
-          if (data !== 0) {
-            alert("파일이 앨범에서 삭제되었습니다.");
-            this.chkids = [];
-            this.intoAlbum(this.album_id);
-          } else {
-            alert("파일 삭제에 실패했습니다.");
-            this.chkids = [];
-            this.intoAlbum(this.album_id);
-          }
+      console.log("삭제할 아이템목록 : ", this.chkids);
+      this.DELETE_ALBUM_ITEMS({
+        album_id: this.album_id,
+        ids: this.chkids,
+      }).then((data) => {
+        console.log("결과값 : ", data);
+        if (data !== 0) {
+          alert("파일이 앨범에서 삭제되었습니다.");
+          this.chkids = [];
+          this.intoAlbum(this.album_id);
+        } else {
+          alert("파일 삭제에 실패했습니다.");
+          this.chkids = [];
+          this.intoAlbum(this.album_id);
         }
-      );
+      });
       console.log("-------------delete Item End------------");
     },
     checkType(id) {
@@ -268,7 +275,7 @@ export default {
       this.GET_IMAGE({ image_id: imageId }).then((data) => {
         this.idOfImage = data;
       });
-      console.log(this.album_id + "-------------")
+      console.log(this.album_id + "-------------");
       this.GET_IMAGELIST({ folderId: this.album_id }).then((result) => {
         this.imageList = result;
       });
@@ -287,40 +294,39 @@ export default {
     },
   },
   async download() {
-      console.log("downloadFile실행..");
-      console.log(this.chkids.length)
-      for (var j = 0; j < this.chkids.length; j++) {
-        console.log(this.chkids[j])
-        this.downloadId = this.chkids[j];
-        console.log(this.downloadId)
-        this.fileName = "";
-        await this.DOWNLOAD_FILE({ id: this.chkids[j] })
-          .then((res) => {
-            const url = window.URL.createObjectURL(new Blob([res.data]), {
-              type: "*",
-            }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
-            for (var i = 0; i < this.folderList.length; i++) {
-              // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
-              if (this.downloadId === this.folderList[i].id) {
-                this.fileName = this.folderList[i].content_name;
-              }
+    console.log("downloadFile실행..");
+    for (var j = 0; j < this.chkids.length; j++) {
+      console.log(this.chkids[j]);
+      this.downloadId = this.chkids[j];
+      console.log(this.downloadId);
+      this.fileName = "";
+      await this.DOWNLOAD_FILE({ id: this.chkids[j] })
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]), {
+            type: "*",
+          }); // = window.URL.createObjectURL(new Blob([res.data], { type: 'application/zip' }));
+          for (var i = 0; i < this.items.length; i++) {
+            // console.log(i + ',' + this.folderList[i].id + ',' + this.folderList[i].content_name)
+            if (this.downloadId === this.items[i].content_id) {
+              this.fileName = this.items[i].content_origin_name;
             }
-            const link = document.createElement("a");
-            link.href = url;
-            link.setAttribute("download", this.fileName);
-            document.body.appendChild(link);
-            link.click();
-            // this.ids = [];
-            // return res;
-          })
-          .catch((err) => {
-            console.log("err~!");
-            console.error(err);
-          });
-      }
-      alert("다운로드가 완료되었습니다.");
-      this.chkids = [];
-    },
+          }
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", this.fileName);
+          document.body.appendChild(link);
+          link.click();
+          // this.ids = [];
+          // return res;
+        })
+        .catch((err) => {
+          console.log("err~!");
+          console.error(err);
+        });
+    }
+    alert("다운로드가 완료되었습니다.");
+    this.chkids = [];
+  },
 };
 </script>
 

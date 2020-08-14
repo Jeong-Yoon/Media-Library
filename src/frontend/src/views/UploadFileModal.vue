@@ -17,6 +17,7 @@
             @dragenter.prevent
             @drop.prevent="onDrop"
           />
+          <img :scr="imageSrc">
           <div class="input-group-append">
             <div class="filebox">
               <label for="ex_file">파일선택</label>
@@ -83,12 +84,14 @@ export default {
     ...mapActions(["UPLOAD_FILE"]),
     selectFile() {
       //console.log("select File 함수");
+      console.log(this.$refs.fileTag.files)
       this.attachFiles = this.$refs.fileTag.files;
       //console.log("selectFile << file >> : ", this.$refs.fileTag.files);
     },
     onSubmit() {
       console.log("--------------------upload start------------------");
-      if (this.attachFiles.length == 0) {
+      console.log(this.$refs.fileTag.files)
+      if (this.attachFiles.length === 0) {
         alert("파일을 업로드 해주세요.");
       } else {
         let formData = new FormData();
@@ -98,6 +101,7 @@ export default {
         } else {
           formData.append("folder", this.folder)
         }
+
         if (this.attachFiles.length !== 0) {
           for (var i = 0, file; (file = this.attachFiles[i]); i++) {
             console.log(this.attachFiles[i]);
@@ -134,10 +138,11 @@ export default {
       this.inputImageFile(event.target.files);
     },
     inputImageFile(files) {
+      console.log('input image file', files);
       if (files.length) {
         let file = files[0];
-        if (!/^image\//.test(file.type)) {
-          alert("이미지 파일만 등록이 가능합니다");
+        if (!/^image\//.test(file.type) && !/^video\//.test(file.type)) {
+          alert("이미지 파일 또는 비디오 파일만 등록이 가능합니다");
           return false;
         }
         this.filename = file.name;
@@ -148,6 +153,7 @@ export default {
       this.preview(this.filename);
     },
     preview(file) {
+      console.log("------file @@@-------" ,file)
       if (typeof file === "string") {
         this.imageSrc = file;
       } else {
@@ -156,7 +162,10 @@ export default {
         reader.onload = () => {
           vm.imageSrc = reader.result;
         };
+        reader.restult
         reader.readAsDataURL(file);
+        this.attachFiles.push(reader.result)
+        this.attachFiles.push(file);
       }
     },
   },

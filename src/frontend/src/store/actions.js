@@ -35,6 +35,10 @@ const actions = {
     //console.log("----------------------email-------", email);
     return api.getCapacity.getCapacity({ email });
   },
+  GET_CHILD(_, { parent }){
+    console.log("get child action : ", parent)
+    return api.getchild.getchild({ parent });
+  },
   NEW_FOLDER(_, { parent, newFolderName, userEmail }) {
     console.log(newFolderName + " : actions");
     return api.newFolder.newFolder({
@@ -108,6 +112,10 @@ const actions = {
   GET_ITEMS(_, { email }) {
     console.log("action / getItems : ", { email });
     return api.getItems.getItems({ email });
+  },
+  MOVE_FILE(_, { folder, file }){
+    console.log('move file : ', folder, file);
+    return api.moveFile.moveFile({ folder, file });
   },
   HARD_DELETE_ITEMS(_, { ids, email }) {
     console.log("action / deleteItems : ", { ids, email });

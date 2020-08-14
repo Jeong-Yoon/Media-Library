@@ -3,6 +3,7 @@ package com.inzent.medialibrary.service;
 import java.util.List;
 
 import com.inzent.medialibrary.dto.AddFolderDTO;
+import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
@@ -19,5 +20,7 @@ public interface FolderService {
 	public Long createRootFolder(Long user_id);
 
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO);
+
+	public List<ChildFolderDTO> getChild(Long parent);
 
 }

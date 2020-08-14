@@ -69,6 +69,12 @@ export const getCapacity = {
   },
 };
 
+export const getchild = {
+  getchild({parent}){
+    return request("get", `/api/folders/getchild/${parent}`);
+  }
+};
+
 export const newFolder = {
   newFolder(data) {
     // console.log(parent);
@@ -195,6 +201,13 @@ export const deleteItems = {
     console.log("api / deleteItems", ids);
     return request("delete", "/api/folders", ids);
   },
+};
+
+export const moveFile ={
+  moveFile({ folder, file }){
+    console.log("api move file : ", folder, file);
+    return request("put", "/api/contents/movefolder", { folder, file });
+  }
 };
 
 export const getItems = {

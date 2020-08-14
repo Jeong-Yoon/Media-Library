@@ -36,6 +36,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inzent.medialibrary.dto.AddFolderDTO;
+import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
@@ -83,11 +84,19 @@ public class FolderController {
 		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
 	}  
 	
+	@GetMapping("/getchild/{parent}")
+	public ResponseEntity<List<ChildFolderDTO>> getChild(@PathVariable(value="parent") Long parent){
+		List<ChildFolderDTO> result = folderService.getChild(parent);
+		return new ResponseEntity<List<ChildFolderDTO>>(result, HttpStatus.OK);
+		
+	}
+	
 	@PutMapping
 	public ResponseEntity<?> changeFolderName(@RequestBody FolderNameDTO folderNameDTO){
 		folderService.changeFolderName(folderNameDTO);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+	
 	
 	@PostMapping("/bytarget")
 	public ResponseEntity<?> selectTarget(@RequestBody SelectTargetDTO selectTargetDTO){

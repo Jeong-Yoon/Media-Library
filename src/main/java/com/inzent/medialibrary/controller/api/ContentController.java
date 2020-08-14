@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +44,7 @@ import com.inzent.medialibrary.dto.ContentIdDTO;
 import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.dto.DownloadIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
+import com.inzent.medialibrary.dto.MoveFolderDTO;
 import com.inzent.medialibrary.service.ContentService;
 
 @RestController
@@ -239,6 +241,12 @@ public class ContentController {
 		if(result == 0) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@PutMapping("/movefolder")
+	public ResponseEntity<?> moveFolder(@RequestBody MoveFolderDTO moveFolderDTO){
+		int result = contentService.moveFolder(moveFolderDTO);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	

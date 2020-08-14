@@ -31,6 +31,20 @@
                 </router-link>
                 <hr class="middle2" />
               </li>
+              <div>
+              <div 
+              v-for="folder in this.folders" 
+              v-bind:key="folder.folder_id">
+              <router-link :to="`/ownDocumentBox/${folder.folder_id}`">
+                <p @click="getchild(folder.folder_id)">{{ folder.folder_name }}</p>
+              </router-link>
+              </div>
+                <tree-item v-for="child in this.children" v-bind:key="child.folder_id">
+                  <router-link :to="`/ownDocumentBox/${child.folder_id}`">
+                  <p @click="getchild(child.folder_id)">{{ child.folder_name }}</p>
+                 </router-link>              
+                </tree-item>
+              </div>
               <!--
               <li  :class="{ active: own == selected }">
                 <router-link to="/ownDocumentBox" class="a">
@@ -90,20 +104,25 @@ export default {
         { id: 3, title: "앨범", link: "/albumDocumentBox" },
       ],
       selected: null,
+      folders:[],
+      children:[]
     };
   },
   created() {
     this.getcapacity();
+    this.getparent()
+    this.getchild(this.parent);
     // this.use_capacity;
     // this.total_capacity;
   },
   computed: {
     ...mapState({
       userInfo: "userInfo",
+      parent : "root_folder"
     }),
   },
   methods: {
-    ...mapActions(["GET_CAPACITY"]),
+    ...mapActions(["GET_CAPACITY", "GET_CHILD"]),
     goTrash() {
       this.selected = null;
       if (this.$route.path == "/trashDocumentBox") {
@@ -115,12 +134,23 @@ export default {
     choose: function(index) {
       this.selected = index;
     },
+    getparent(){
+      this.GET_CHILD({ parent : this.parent }).then((list) => {
+        this.folders = list;
+      })
+    },
+    getchild(id){
+      this.GET_CHILD({ parent : id }).then((list) => {
+        this.children = list;
+      })
+      this.$emit('get child : ' + id)
+    },
     getcapacity() {
       //console.log("method", this.userInfo.useremail);
       this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
         //console.log(list);
         this.total = Math.floor(list.total_capacity / 1000000000);
-        this.use = Math.floor(list.use_capacity / 10000000);
+        this.use = Math.floor(list.use_capacity / 5000000);
         this.percent = Math.floor((this.use / this.total) * 100);
         this.spare_capacity = Math.floor(this.total - this.use -1);
         /*console.log(

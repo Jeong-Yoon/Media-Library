@@ -203,4 +203,10 @@
 		set use_capacity = use_capacity - #{sum} 
 		where user_id = (select user_id from users where user_email = #{email})
 	</update>
+	
+	<update id="movefolder" parameterType="movefolderdto">
+		update contents
+		set folder_id = #{folder}
+		where content_id = #{file}
+	</update>
 </mapper>

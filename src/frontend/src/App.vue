@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <AppHeader />
-    <router-view />
+    <router-view :selectFolderId="selectFolderId"/>
     <div
       v-if="token !== null"
       class="app-contents"
     >
-      <Navigation />
+      <Navigation v-on:getFolderId="getFolderId"/>
     </div>
   </div>
 </template>
@@ -22,13 +22,22 @@ export default {
     Navigation,
   },
   data() {
-    return {};
+    return {
+      selectFolderId:""
+    };
   },
   computed: {
     ...mapState({
       token: (state) => state.token,
     }),
   },
+  methods:{
+    getFolderId(id){
+      this.selectFolderId = id;
+      console.log(this.selectFolderId , " : app.vue")
+      console.log("app vue : ", id)
+    }
+  }
 };
 </script>
 

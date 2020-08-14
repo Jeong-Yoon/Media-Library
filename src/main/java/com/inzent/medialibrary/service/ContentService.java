@@ -12,6 +12,7 @@ import com.inzent.medialibrary.dto.ContentVO;
 import com.inzent.medialibrary.dto.FolderIdDTO;
 import com.inzent.medialibrary.dto.ImageDTO;
 import com.inzent.medialibrary.dto.ImageListDTO;
+import com.inzent.medialibrary.dto.MoveFolderDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.dto.VideoListDTO;
@@ -26,4 +27,5 @@ public interface ContentService {
 	public List<ImageDTO> selectTarget(SelectTargetDTO selectTargetDTO);
 	public List<ImageDTO> getImageList(FolderIdDTO folderIdDTO) throws IOException, JCodecException;
 	public List<ImageDTO> getVideoList(VideoListDTO videoListDTO) throws IOException, JCodecException;
+	public int moveFolder(MoveFolderDTO moveFolderDTO);
 }

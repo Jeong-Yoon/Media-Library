@@ -97,7 +97,7 @@
             >
               <!-- 폴더 -->
               <div v-if="checkType(folder.id) == '2'" v-show="folders">
-                <div class="agree2">
+                <div class="agree2" >
                   <input
                     class="a2"
                     :id="'a2' + folder.id"
@@ -114,12 +114,15 @@
                     width="130"
                     height="130"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                    @dragover.prevent
+                    @drop.prevent="onDrop(folder.id)"
                   />
                 </router-link>
                 <div class="info">
                   <span class="title">{{ folder.folder_name }}</span>
                 </div>
               </div>
+
 
               <!-- 사진 -->
               <div
@@ -134,6 +137,7 @@
                     v-model="ids"
                     @click="select(folder.id)"
                     :value="folder.id"
+        
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
@@ -143,13 +147,16 @@
                   height="130px"
                   style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getImg(folder.id)"
+                  @dragstart="dragstart_handler(folder.id)"
+                  @dragend="dragend_handler()"
+                  draggable="true"
                 />
                 <div class="info">
                   <span class="title">{{ folder.content_name }}</span>
                 </div>
               </div>
               <!-- 동영상 -->
-              <div
+               <div
                 v-if="folder.content_type == 'V' && checkType(folder.id) == '3'"
                 v-show="videos"
               >
@@ -165,7 +172,7 @@
                   <label :for="'a2' + folder.id"></label>
                 </div>
                 <!-- <video
-                  :src="folder.content"
+                  :src="folder.cotent"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
@@ -177,6 +184,8 @@
                   height="130px"
                   style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
+                  @dragstart="dragstart_handler(folder.id)"
+                  @dragend="dragend_handler()"
                 />
                 <div class="info">
                   <span class="title">{{ folder.content_name }}</span>
@@ -245,6 +254,9 @@ export default {
     ChooseAlbumModal,
     //UploadFolderModal,
   },
+  props:[
+    "selectFolderId"
+  ],
   data() {
     return {
       // count: 2,
@@ -289,7 +301,10 @@ export default {
       folderId: "",
       albumId: "",
       albums: [],
-      idx:""
+      idx:"",
+      updatefolder:"",
+      updatefile:""
+      // selectedFolderId: "",
     };
   },
   created() {
@@ -320,7 +335,24 @@ export default {
       "DELETE_FILE",
       "GET_VIDEO_LIST",
       "SHARE_ITEMS",
+      "MOVE_FILE"
     ]),
+    onDrop(folder_id){
+      console.log("folerId:",folder_id)
+      this.updatefolder = folder_id;
+    },
+    dragend_handler(){
+      console.log("드래그 끝! 드래그 관련 변수를 비워주세용!")
+      this.MOVE_FILE({ folder : this.updatefolder, file : this.updatefile}).then(()=>{
+        this.getFolders();
+      })
+      this.updatefolder = "";
+      this.updatefile = "";
+    },
+    dragstart_handler(img_id){
+      console.log("dragstart! ", img_id)
+      this.updatefile = img_id;
+    },
     addAlbum() {
       console.log("----------------addAlbum start---------------");
       console.log("albumId : ", this.albumId);
@@ -549,6 +581,7 @@ export default {
       });
     },
     getFolders() {
+      console.log(this.selectedFolderId)
       let id = this.parent;
       if (this.$route.params.id) {
         id = this.$route.params.id;
@@ -557,9 +590,18 @@ export default {
       console.log("id : ", id);
 
       this.GET_FOLDERS({ parent: id }).then((list) => {
-        console.log("ownpage list : " + list[0]);
+        console.log("ownpage list : ", list[0]);
         this.folderList = list;
-        console.log("ownpage folderlist : " + this.folderList);
+        //민준
+        //폴더의 첫 select focus를 지정해줍니다.
+        // this.folderList.some((element)=>{
+        //   if(element.content){
+        //     this.selectedFolderId= element.id;
+        //     return true;
+        //   }
+        // })
+        // console.log('### selectedFolderId', this.selectedFolderId)
+        // console.log("ownpage folderlist : ", this.folderList);
       });
       console.log("---------------------get folders start----------------");
     },
@@ -665,6 +707,10 @@ export default {
       const result = "data:image;base64," + data;
       return result;
     },
+    selectedItem(id){
+        console.log('selectedItem', id);
+        this.selectedFolderId=id;
+    }
   },
 };
 </script>
@@ -1066,5 +1112,25 @@ video:focus {
   overflow: hidden;
   width: 130px;
   padding-bottom: 5px;
+}
+/* 민준 :: 선택된 항목의 css를 다르게
+                 */
+.selected-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 15px;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #222;
+  cursor: default;
+  text-decoration: none;
+  text-align: center;
+  overflow: hidden;
+  width: 130px;
+  padding-bottom: 5px;
+  background-color: #D9F1F1;
 }
 </style>
