@@ -193,10 +193,10 @@
         </div>
 
         <div class="prev-next">
-          <a class="v_btn_prev" @click="showDivs()" v-if="!isPrevDisabled" title="이전사진">
+          <a class="v_btn_prev" @click="showDivs()" @keyup.left="showDivs()" v-if="!isPrevDisabled" title="이전사진">
             <img src="@/assets/image/view_prev.png" height="30px" />
           </a>
-          <a class="v_btn_next" @click="plusDivs()" v-if="!isNextDisabled" title="다음사진">
+          <a class="v_btn_next" @click="plusDivs()" @keyup.right="plusDivs()"  v-if="!isNextDisabled" title="다음사진">
             <img src="@/assets/image/view_next.png" height="30px" />
           </a>
         </div>

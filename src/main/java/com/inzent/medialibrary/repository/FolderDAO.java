@@ -10,6 +10,7 @@ import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.SearchDTO;
 
 @Repository
 public class FolderDAO {
@@ -48,6 +49,10 @@ public class FolderDAO {
 
 	public List<ChildFolderDTO> getChild(Long parent) {
 		return sqlSession.selectList("getchild", parent);
+	}
+
+	public List<String> getSearchList(SearchDTO searchDTO) {
+		return sqlSession.selectList("getsearch", searchDTO);
 	}
 
 

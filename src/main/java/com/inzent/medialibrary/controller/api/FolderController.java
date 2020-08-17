@@ -39,6 +39,7 @@ import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.ParentIdDTO;
+import com.inzent.medialibrary.dto.SearchDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.service.ContentService;
 import com.inzent.medialibrary.service.FolderService;
@@ -62,6 +63,25 @@ public class FolderController {
 		}
 		int result = folderService.addFolder(addFolderDTO);
 		return new ResponseEntity<>(result, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/search")
+	public ResponseEntity<?> search(@RequestBody SearchDTO searchDTO) throws IOException, JCodecException{
+		List<String> list = folderService.getSearchList(searchDTO);
+		List<Map<String, Object>> folderlist = new ArrayList<Map<String,Object>>();
+		for (String s : list) {
+			Map<String, Object> map = new ObjectMapper().readValue(s, HashMap.class);
+			if (map.get("id").toString().startsWith("3")) {
+				if (map.get("content_type").toString().equals("I")) {
+					map.put("content", contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent());
+				} else if(map.get("content_type").toString().equals("V")) {
+					File file = new File(contentService.getContentById(Long.parseLong(map.get("id").toString())).getContent_storage());
+					map.put("content",GetThumbnail.getThumbnail(file));
+				}
+			}
+			folderlist.add(map);
+		}
+		return new ResponseEntity<List<Map<String, Object>>> (folderlist, HttpStatus.OK);
 	}
 	
 	@GetMapping("/getfolders/{parent}")

@@ -61,7 +61,7 @@
             <!-- /footer -->
           </NewFolderModal>
         </div>
-        <!--
+        
         <form class="search">
           <select id="key" name="keyword" class="key">
             <option value="file_origin_name">파일명</option>
@@ -72,6 +72,8 @@
             type="text"
             name="search"
             placeholder="Search.."
+            v-on:input="keyword = $event.target.value"
+            v-model="keyword"
             class="value"
           />
           <button type="submit" class="submit">
@@ -83,7 +85,7 @@
             />
           </button>
         </form>
-        -->
+        
       </div>
       <hr class="top-hr" />
 
@@ -114,6 +116,7 @@
                     width="130"
                     height="130"
                     style="opacity: 1; transition: opacity 0.2s ease 0s;"
+                    @mouseover.right="select"
                     @dragover.prevent
                     @drop.prevent="onDrop(folder.id)"
                   />
@@ -156,7 +159,7 @@
                 </div>
               </div>
               <!-- 동영상 -->
-               <div
+               <div :id="'video-div'+folder.id"
                 v-if="folder.content_type == 'V' && checkType(folder.id) == '3'"
                 v-show="videos"
               >
@@ -172,7 +175,7 @@
                   <label :for="'a2' + folder.id"></label>
                 </div>
                 <!-- <video
-                  :src="folder.cotent"
+                  :src="'/api/videos/video/'+ folder.id"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
@@ -183,6 +186,9 @@
                   width="130px"
                   height="130px"
                   style="overflow:hidden; opacity: 1; transition: opacity 0.2s ease 0s;"
+                  :id="'content'+folder.id"
+                  @mouseover="preview(folder.id)"
+                  @onmouseout="preEnd(folder.id)"
                   @click="getVideo(folder.id)"
                   @dragstart="dragstart_handler(folder.id)"
                   @dragend="dragend_handler()"
@@ -303,7 +309,8 @@ export default {
       albums: [],
       idx:"",
       updatefolder:"",
-      updatefile:""
+      updatefile:"",
+      keyword:""
       // selectedFolderId: "",
     };
   },
@@ -320,6 +327,10 @@ export default {
       userInfo: "userInfo",
       parent: "root_folder",
     }),
+    filteredList() {
+      return Object.values(this.folderList).filter((post) => {
+          return post.folder_name.toLowerCase().includes(this.keyword.toLowerCase()) || post.content_name.toLowerCase().includes(this.keyword.toLowerCase());
+    })},
   },
   methods: {
     ...mapActions([
@@ -337,6 +348,29 @@ export default {
       "SHARE_ITEMS",
       "MOVE_FILE"
     ]),
+    preview(id){  
+      var cId = 'content'+id
+      var v1 = document.getElementById(cId);
+      v1.hide();
+      var v = ' <video'
+                +'src="/api/videos/video/'+id+'"'
+                + 'width="130"'
+                + 'height="130"'
+                + 'style="opacity: 1; transition: opacity 0.2s ease 0s;"'
+                + 'autoplay muted '
+                + '@click="getVideo(folder.id)"'
+                +'/>';
+      var vId = 'video-div'+id
+      var dv = document.getElementById(vId);
+      dv.innerHTML = v;
+    },
+    preEnd(id){
+      var cId = 'content'+id
+      var v1 = document.getElementById(cId);
+      v1.show();
+      var dv = document.getElementById('video-div'+id);
+      dv.innerHTML = ''
+    },
     onDrop(folder_id){
       console.log("folerId:",folder_id)
       this.updatefolder = folder_id;

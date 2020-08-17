@@ -25,6 +25,7 @@
 			<typeAlias type="com.inzent.medialibrary.dto.AlbumVO" alias="albumvo"/>
 			<typeAlias type="com.inzent.medialibrary.dto.ChildFolderDTO" alias="childfolderdto"/>
 			<typeAlias type="com.inzent.medialibrary.dto.MoveFolderDTO" alias="movefolderdto"/>
+			<typeAlias type="com.inzent.medialibrary.dto.SearchDTO" alias="searchdto"/>
 	</typeAliases>
 
 	<mappers>

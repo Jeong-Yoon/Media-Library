@@ -6,6 +6,7 @@ import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.SearchDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 
 public interface FolderService {
@@ -22,5 +23,7 @@ public interface FolderService {
 	public List<FolderVO> selectTarget(SelectTargetDTO selectTargetDTO);
 
 	public List<ChildFolderDTO> getChild(Long parent);
+
+	public List<String> getSearchList(SearchDTO searchDTO);
 
 }

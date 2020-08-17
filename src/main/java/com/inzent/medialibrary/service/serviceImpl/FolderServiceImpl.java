@@ -9,6 +9,7 @@ import com.inzent.medialibrary.dto.AddFolderDTO;
 import com.inzent.medialibrary.dto.ChildFolderDTO;
 import com.inzent.medialibrary.dto.FolderNameDTO;
 import com.inzent.medialibrary.dto.FolderVO;
+import com.inzent.medialibrary.dto.SearchDTO;
 import com.inzent.medialibrary.dto.SelectTargetDTO;
 import com.inzent.medialibrary.repository.FolderDAO;
 import com.inzent.medialibrary.repository.UserDAO;
@@ -69,6 +70,11 @@ public class FolderServiceImpl implements FolderService{
 	@Override
 	public List<ChildFolderDTO> getChild(Long parent) {
 		return folderDAO.getChild(parent);
+	}
+
+	@Override
+	public List<String> getSearchList(SearchDTO searchDTO) {
+		return folderDAO.getSearchList(searchDTO);
 	}
 
 
