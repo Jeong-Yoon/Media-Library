@@ -66,13 +66,13 @@
       <!-- content -->
       <div class="content">
         <div class="video-container" id="video-div">
-          <video 
+          <object 
             id="video"
             controls autoplay muted loop :src="this.src" 
             type="video/mp4"
             style ="width :1040px; height : 600px;"
            >
-          </video>
+          </object>
             <!-- <div class="footer-info"  style="margin-right : 20px;">
               <h4 class="media-heading"  style="margin-right : 20px;">{{content_id.content_origin_name}}</h4>
               <p class="by-upload"  style="margin-right : 20px; ">2020.05.01 20:17:56</p>

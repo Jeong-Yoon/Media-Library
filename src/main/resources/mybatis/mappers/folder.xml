@@ -108,9 +108,17 @@
 	</resultMap>
 	
 	<select id="getchild" parameterType="long" resultType="childfolderdto">
-		select folder_id, folder_name, folder_parent
-		from folders
-		where folder_parent = #{parent}
+WITH RECURSIVE id_list (folder_id, folder_name, folder_parent, depth, path, cycle) as (
+ SELECT f.folder_id, f.folder_name, f.folder_parent, 1, array[f.folder_id], false
+ from ml_schema.folders f
+ WHERE f.folder_id = #{parent}
+ UNION ALL
+SELECT f2.folder_id, f2.folder_name, f2.folder_parent, i.depth+1, array_append(i.path, f2.folder_id),
+f2.folder_id = any(i.path)
+from ml_schema.folders f2
+JOIN id_list i ON i.folder_id = f2.folder_parent
+where not cycle
+) select folder_id, folder_name, folder_parent, depth, path from id_list order by folder_id, depth;
 	</select>
 	
 	<select id="getchildren" parameterType="long" resultType="string">
@@ -143,7 +151,7 @@
 		from ml_schema.folders f, ml_schema.users u
 		where f.folder_reg_user = u.user_id and folder_parent = #{id}
 		and f.folder_delete = 'N'
-		and folder_name like '%#{keyword}%'
+		and folder_name like CONCAT('%',#{keyword},'%')
 		order by id, folder_reg_date ) info
 		union all
 		select row_to_json(info)as info
@@ -155,7 +163,7 @@
 		from ml_schema.contents c, ml_schema.users u, ml_schema.contents_details cd
 		where c.content_reg_user = u.user_id and c.content_id = cd.content_id
 		and c.content_delete = 'N'
-		and content_origin_name like '%#{keyword}%'
+		and content_origin_name like CONCAT('%',#{keyword},'%')
 		and folder_id = #{id} order by c.content_id ) info;
 	</select>
 	

@@ -130,6 +130,13 @@ export const uploadFile = {
   },
 };
 
+export const search = {
+  search(keyword){
+    console.log(keyword);
+    return request("post", "/api/folders/search", keyword);
+  }
+}
+
 export const download = {
   download({ id }) {
     console.log("api " + id);

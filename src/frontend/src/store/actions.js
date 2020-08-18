@@ -164,6 +164,10 @@ const actions = {
     console.log("unshared action : " + ids);
     return api.unshareItems.unshareItems(ids);
   },
+  SEARCH_FILE(_, keyword){
+    console.log(keyword);
+    return api.search.search(keyword)
+  }
 };
 
 export default actions;

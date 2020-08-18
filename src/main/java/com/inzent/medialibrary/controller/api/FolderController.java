@@ -67,6 +67,7 @@ public class FolderController {
 	
 	@PostMapping("/search")
 	public ResponseEntity<?> search(@RequestBody SearchDTO searchDTO) throws IOException, JCodecException{
+		System.out.println(searchDTO.getKeyword());
 		List<String> list = folderService.getSearchList(searchDTO);
 		List<Map<String, Object>> folderlist = new ArrayList<Map<String,Object>>();
 		for (String s : list) {

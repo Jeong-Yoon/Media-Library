@@ -62,21 +62,21 @@
           </NewFolderModal>
         </div>
         
-        <form class="search">
-          <select id="key" name="keyword" class="key">
-            <option value="file_origin_name">파일명</option>
-            <option value="contents_atribute">확장자</option>
-            <option value="contents_reg_date">등록일</option>
-          </select>
-          <input
+        <!-- <form class="search"> -->
+          <!-- <select id="key" name="keyword" class="key">
+            <option value="file_origin_name">파일명</option> -->
+            <!-- <option value="contents_atribute">확장자</option>
+            <option value="contents_reg_date">등록일</option> -->
+          <!-- </select> -->
+          <!-- <input
             type="text"
             name="search"
             placeholder="Search.."
-            v-on:input="keyword = $event.target.value"
             v-model="keyword"
             class="value"
+            
           />
-          <button type="submit" class="submit">
+          <button @click="search" class="submit">
             <img
               src="@/assets/image/search.png"
               alt="search logo"
@@ -84,7 +84,7 @@
               class="search-icon"
             />
           </button>
-        </form>
+        </form> -->
         
       </div>
       <hr class="top-hr" />
@@ -140,7 +140,6 @@
                     v-model="ids"
                     @click="select(folder.id)"
                     :value="folder.id"
-        
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
@@ -174,14 +173,22 @@
                   />
                   <label :for="'a2' + folder.id"></label>
                 </div>
-                <!-- <video
+                <video
+                  :id="'video'+folder.id"
+                  :poster="roadImg(folder.content)"
                   :src="'/api/videos/video/'+ folder.id"
                   width="130"
                   height="130"
                   style="opacity: 1; transition: opacity 0.2s ease 0s;"
                   @click="getVideo(folder.id)"
-                /> -->
-                <img
+                  @dragstart="dragstart_handler(folder.id)"
+                  @dragend="dragend_handler()"
+                  draggable="true"
+                  @mouseover="preview(folder.id)"
+                  @mouseout="preEnd(folder.id)"
+                  muted
+                />
+                <!-- <img
                   :src="roadImg(folder.content)"
                   width="130px"
                   height="130px"
@@ -192,7 +199,7 @@
                   @click="getVideo(folder.id)"
                   @dragstart="dragstart_handler(folder.id)"
                   @dragend="dragend_handler()"
-                />
+                /> -->
                 <div class="info">
                   <span class="title">{{ folder.content_name }}</span>
                 </div>
@@ -329,7 +336,8 @@ export default {
     }),
     filteredList() {
       return Object.values(this.folderList).filter((post) => {
-          return post.folder_name.toLowerCase().includes(this.keyword.toLowerCase()) || post.content_name.toLowerCase().includes(this.keyword.toLowerCase());
+          console.log(post.content_name);
+          return post.folder_name.toLowerCase().includes(this.keyword.toLowerCase());
     })},
   },
   methods: {
@@ -346,30 +354,41 @@ export default {
       "DELETE_FILE",
       "GET_VIDEO_LIST",
       "SHARE_ITEMS",
-      "MOVE_FILE"
+      "MOVE_FILE",
+      // "SEARCH_FILE"
     ]),
+    // search(){
+    //   this.SEARCH_FILE({ keyword: this.keyword }).then((list) => {
+    //     this.folderList = list;
+    //     console.log("albumList : ", this.folderList);
+    //   });
+    // },
     preview(id){  
-      var cId = 'content'+id
+      var cId = 'video' + id
       var v1 = document.getElementById(cId);
-      v1.hide();
-      var v = ' <video'
-                +'src="/api/videos/video/'+id+'"'
-                + 'width="130"'
-                + 'height="130"'
-                + 'style="opacity: 1; transition: opacity 0.2s ease 0s;"'
-                + 'autoplay muted '
-                + '@click="getVideo(folder.id)"'
-                +'/>';
-      var vId = 'video-div'+id
-      var dv = document.getElementById(vId);
-      dv.innerHTML = v;
+      v1.play();
+      // var cId = 'content'+id
+      // var v1 = document.getElementById(cId);
+      // v1.hide();
+      // var v = ' <video'
+      //           +'src="/api/videos/video/'+id+'"'
+      //           + 'width="130"'
+      //           + 'height="130"'
+      //           + 'style="opacity: 1; transition: opacity 0.2s ease 0s;"'
+      //           + 'autoplay muted '
+      //           + '@click="getVideo(folder.id)"'
+      //           +'/>';
+      // var vId = 'video-div'+id
+      // var dv = document.getElementById(vId);
+      // dv.innerHTML = v;
     },
     preEnd(id){
-      var cId = 'content'+id
+      var cId = 'video'+id
       var v1 = document.getElementById(cId);
-      v1.show();
-      var dv = document.getElementById('video-div'+id);
-      dv.innerHTML = ''
+      v1.pause();
+      // v1.show();
+      // var dv = document.getElementById('video-div'+id);
+      // dv.innerHTML = ''
     },
     onDrop(folder_id){
       console.log("folerId:",folder_id)
@@ -622,9 +641,9 @@ export default {
       }
       console.log("---------------------get folders start ----------------");
       console.log("id : ", id);
-
+      
       this.GET_FOLDERS({ parent: id }).then((list) => {
-        console.log("ownpage list : ", list[0]);
+        console.log("ownpage list : ", list);
         this.folderList = list;
         //민준
         //폴더의 첫 select focus를 지정해줍니다.

@@ -32,19 +32,47 @@
                 <hr class="middle2" />
               </li>
               <div>
-              <div 
+              <!-- <div 
               v-for="folder in this.folders" 
               v-bind:key="folder.folder_id">
               <router-link :to="`/ownDocumentBox/${folder.folder_id}`">
                 <p @click="getchild(folder.folder_id)">{{ folder.folder_name }}</p>
               </router-link>
+              </div> -->
+              <div>
+                <div v-for="folder in this.folders" v-bind:key="folder.folder_id">
+                  <router-link :to="`/ownDocumentBox/${folder.folder_id}`">
+                    <div style="margin-left: 20px;">
+                      <p v-if="folder.folder_parent" @click="getchild(folder.folder_id)" style="margin-left : 10px;">{{ folder.folder_name }}</p>
+                    </div>
+ 
+                  </router-link>
+                </div>
+                <hr />
               </div>
-                <tree-item v-for="child in this.children" v-bind:key="child.folder_id">
+                <!-- <tree-item v-for="child in this.children" v-bind:key="child.folder_id">
                   <router-link :to="`/ownDocumentBox/${child.folder_id}`">
                   <p @click="getchild(child.folder_id)">{{ child.folder_name }}</p>
                  </router-link>              
-                </tree-item>
+                </tree-item> -->
               </div>
+
+              <div class="mx-0">
+          <!-- <v-subheader class="indigo lighten-5" style="margin-top:8px"
+            >사내 조직도</v-subheader
+          >
+          <v-treeview
+            v-model="selection"
+            :items="items"
+            selectable
+            selection-type="all"
+            open-all
+            open-on-click
+            return-object
+            @input="selectDept"
+          ></v-treeview> -->
+        </div>
+
               <!--
               <li  :class="{ active: own == selected }">
                 <router-link to="/ownDocumentBox" class="a">
@@ -123,6 +151,59 @@ export default {
   },
   methods: {
     ...mapActions(["GET_CAPACITY", "GET_CHILD"]),
+    // facthData() {
+    //   this.getparent();
+
+    //   list.forEach((item) => {
+    //       for (let i = 0; i < list.length; i++) {
+    //         if (item.folder_id === list[i].folder_id) {
+    //           item.folder_id = list[i].folder_id;
+    //           break;
+    //         }
+    //       }
+    //     });
+    //     console.log("foreach list", list);
+
+    //     let myTree = null;
+    //     list.forEach((item) => {
+    //       if (myTree === null) {
+    //         myTree = { id: item.id, name: item.deptName };
+    //         console.log(";", myTree);
+    //       } else {
+    //         this.Recursive(item, myTree);
+    //       }
+    //     });
+
+    //     let treeArr = [];
+    //     treeArr.push(myTree);
+
+    //     this.items = treeArr;
+    //     this.myTree = myTree;
+    // },
+    // Recursive(item, tree) {
+    //   //tree Id 와 item parentId가 같다면
+    //   if (tree.id === item.parentId) {
+    //     if (typeof tree.children === "undefined") {
+    //       // tree에 children이 없다면
+    //       tree.children = [];
+    //       tree.children.push({ id: item.id, name: item.deptName });
+    //     } else {
+    //       // tree에 children이 있다.
+    //       tree.children.push({ id: item.id, name: item.deptName });
+    //     }
+    //   } else {
+    //     //tree Id와 item parentId가 다름
+    //     if (typeof tree.children === "undefined") {
+    //       // tree에 children이 없다면
+    //       return;
+    //     } else {
+    //       // tree에 children이 있다면
+    //       tree.children.forEach((child) => {
+    //         this.Recursive(item, child);
+    //       });
+    //     }
+    //   }
+    // },
     goTrash() {
       this.selected = null;
       if (this.$route.path == "/trashDocumentBox") {
@@ -150,7 +231,8 @@ export default {
       this.GET_CAPACITY({ email: this.userInfo.useremail }).then((list) => {
         //console.log(list);
         this.total = Math.floor(list.total_capacity / 1000000000);
-        this.use = Math.floor(list.use_capacity / 5000000);
+        this.use = Math.floor(list.use_capacity / 1000000000);
+        // this.use = Math.floor(list.use_capacity / 5000000);
         this.percent = Math.floor((this.use / this.total) * 100);
         this.spare_capacity = Math.floor(this.total - this.use -1);
         /*console.log(
@@ -287,5 +369,13 @@ user agent stylesheet div {
 .document {
   margin-top: 25px;
   margin-bottom: 10px;
+}
+
+.intoP1 {
+  margin-left: 10px;
+}
+
+.intoP1 {
+  margin-left: 10px;
 }
 </style>
