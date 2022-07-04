@@ -8,28 +8,28 @@
 		<choose>
 			<when test="folderId == 0">
 				select c.*, u.user_name
-				from contents c, users u
-				where c.content_reg_user = u.user_id
-				and c.content_delete = 'N'
-				and c.content_share = 'Y'
-				order by c.content_id
+				  from contents c, users u
+				 where c.content_reg_user = u.user_id
+				   and c.content_delete = 'N'
+				   and c.content_share = 'Y'
+				 order by c.content_id
 			</when>
 			<when test="folderId/10000 == 4">
 				select c.*, u.user_name
-				from albums_contents ac, contents c, users u
-				where ac.content_id = c.content_id
-				and c.content_reg_user = u.user_id
-				and ac.album_id = #{folderId}
-				and c.content_delete = 'N'
-				order by c.content_id
+				  from albums_contents ac, contents c, users u
+				 where ac.content_id = c.content_id
+				   and c.content_reg_user = u.user_id
+				   and ac.album_id = #{folderId}
+				   and c.content_delete = 'N'
+				 order by c.content_id
 			</when>
 			<otherwise>
 				select c.*, u.user_name 
-				from contents c, users u
-				where c.content_reg_user = u.user_id
-				and c.folder_id = #{folderId}
-				and c.content_delete = 'N'
-				order by c.content_id
+				  from contents c, users u
+				 where c.content_reg_user = u.user_id
+				   and c.folder_id = #{folderId}
+				   and c.content_delete = 'N'
+				 order by c.content_id
 			</otherwise>
 		</choose>
 	</select>
@@ -37,14 +37,14 @@
 	<select id="getvideolistbyfolderid" parameterType="videolistdto" resultType="imagedto">
 		<choose>
 			<when test="folderId == 0">
-			select c.* , u.user_name
-			from contents c, users u
-			where c.content_reg_user = u.user_id
-			and c.content_type = 'V'
-			and c.content_delete = 'N'
-			and c.content_share = 'Y'
-			and c.content_id != #{videoId}
-			order by c.content_id
+			 select c.* , u.user_name
+			  from contents c, users u
+			 where c.content_reg_user = u.user_id
+			   and c.content_type = 'V'
+			   and c.content_delete = 'N'
+			   and c.content_share = 'Y'
+			   and c.content_id != #{videoId}
+			 order by c.content_id
 			</when>
 			<when test="folderId / 10000 == 4">
 				select c.*, u.user_name
